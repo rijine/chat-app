@@ -95,6 +95,16 @@ public class ChatClientView extends FrameView {
         }
         ChatClientApp.getApplication().show(aboutBox);
     }
+    
+    @Action
+    public void showSettingsBox() {
+        if (settingsBox == null) {
+            JFrame mainFrame = ChatClientApp.getApplication().getMainFrame();
+            settingsBox = new ChatClientSettingsBox(mainFrame);
+            settingsBox.setLocationRelativeTo(mainFrame);
+        }
+        ChatClientApp.getApplication().show(settingsBox);
+    }
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -115,6 +125,7 @@ public class ChatClientView extends FrameView {
         txtPass = new javax.swing.JPasswordField();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
         javax.swing.JMenuItem aboutMenuItem = new javax.swing.JMenuItem();
@@ -232,6 +243,16 @@ public class ChatClientView extends FrameView {
         fileMenu.setName("fileMenu"); // NOI18N
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(chatclient.ChatClientApp.class).getContext().getActionMap(ChatClientView.class, this);
+        jMenuItem1.setAction(actionMap.get("showSettingsBox")); // NOI18N
+        jMenuItem1.setText(resourceMap.getString("settingsMenuItem.text")); // NOI18N
+        jMenuItem1.setName("settingsMenuItem"); // NOI18N
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        fileMenu.add(jMenuItem1);
+
         exitMenuItem.setAction(actionMap.get("quit")); // NOI18N
         exitMenuItem.setName("exitMenuItem"); // NOI18N
         fileMenu.add(exitMenuItem);
@@ -569,6 +590,10 @@ public class ChatClientView extends FrameView {
         
     }//GEN-LAST:event_txtUserNameFocusLost
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // Open Settings window
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanChat;
     private javax.swing.JPanel PanNewUser;
@@ -577,6 +602,7 @@ public class ChatClientView extends FrameView {
     private javax.swing.JButton butLogin;
     private javax.swing.JButton butNewAcc;
     private javax.swing.JList jList1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField jTextField1;
@@ -620,4 +646,5 @@ public class ChatClientView extends FrameView {
     private int busyIconIndex = 0;
 
     private JDialog aboutBox;
+    private JDialog settingsBox;
 }
