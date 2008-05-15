@@ -319,10 +319,8 @@ public class ChatAppServerView extends FrameView {
             
             
        try{
-        
         Class.forName("com.mysql.jdbc.Driver");
-        connection=DriverManager.getConnection(
-                "jdbc:mysql://172.17.0.63/networks","networks", "eece450NetWorks");
+        connection=DriverManager.getConnection("jdbc:mysql://172.17.0.63/networks","networks", "eece450NetWorks");
         }
         catch(Exception e){
             System.out.println("Failed to get connection");
