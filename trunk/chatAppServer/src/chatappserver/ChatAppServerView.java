@@ -17,8 +17,6 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import java.sql.*;
 import java.util.logging.Level;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * The application's main frame.
@@ -114,8 +112,14 @@ public class ChatAppServerView extends FrameView {
         statusAnimationLabel = new javax.swing.JLabel();
         progressBar = new javax.swing.JProgressBar();
         loginPanel = new javax.swing.JPanel();
+        lblSQLip = new javax.swing.JLabel();
+        lblSQLport = new javax.swing.JLabel();
+        lblDB = new javax.swing.JLabel();
         lblUsername = new javax.swing.JLabel();
         lblPassword = new javax.swing.JLabel();
+        tfSQLip = new javax.swing.JTextField();
+        tfSQLport = new javax.swing.JTextField();
+        tfDB = new javax.swing.JTextField();
         tfUsername = new javax.swing.JTextField();
         tfPassword = new javax.swing.JPasswordField();
         btnLogin = new javax.swing.JButton();
@@ -125,6 +129,8 @@ public class ChatAppServerView extends FrameView {
         tfPort = new javax.swing.JTextField();
         btnStart = new javax.swing.JButton();
         btnExit2 = new javax.swing.JButton();
+        lblUsersLimit = new javax.swing.JLabel();
+        tfUsersLimit = new javax.swing.JTextField();
         mainPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtDebug = new javax.swing.JTextArea();
@@ -190,11 +196,39 @@ public class ChatAppServerView extends FrameView {
 
         loginPanel.setName("loginPanel"); // NOI18N
 
+        lblSQLip.setDisplayedMnemonic('I');
+        lblSQLip.setLabelFor(tfSQLip);
+        lblSQLip.setText(resourceMap.getString("lblSQLip.text")); // NOI18N
+        lblSQLip.setName("lblSQLip"); // NOI18N
+
+        lblSQLport.setDisplayedMnemonic('o');
+        lblSQLport.setLabelFor(tfSQLport);
+        lblSQLport.setText(resourceMap.getString("lblSQLport.text")); // NOI18N
+        lblSQLport.setName("lblSQLport"); // NOI18N
+
+        lblDB.setDisplayedMnemonic('d');
+        lblDB.setLabelFor(tfDB);
+        lblDB.setText(resourceMap.getString("lblDB.text")); // NOI18N
+        lblDB.setName("lblDB"); // NOI18N
+
+        lblUsername.setDisplayedMnemonic('u');
+        lblUsername.setLabelFor(tfUsername);
         lblUsername.setText(resourceMap.getString("lblUsername.text")); // NOI18N
         lblUsername.setName("lblUsername"); // NOI18N
 
+        lblPassword.setDisplayedMnemonic('p');
+        lblPassword.setLabelFor(tfPassword);
         lblPassword.setText(resourceMap.getString("lblPassword.text")); // NOI18N
         lblPassword.setName("lblPassword"); // NOI18N
+
+        tfSQLip.setText(resourceMap.getString("tfSQLip.text")); // NOI18N
+        tfSQLip.setName("tfSQLip"); // NOI18N
+
+        tfSQLport.setText(resourceMap.getString("tfSQLport.text")); // NOI18N
+        tfSQLport.setName("tfSQLport"); // NOI18N
+
+        tfDB.setText(resourceMap.getString("tfDB.text")); // NOI18N
+        tfDB.setName("tfDB"); // NOI18N
 
         tfUsername.setText(resourceMap.getString("tfUsername.text")); // NOI18N
         tfUsername.setName("tfUsername"); // NOI18N
@@ -226,44 +260,65 @@ public class ChatAppServerView extends FrameView {
             loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(loginPanelLayout.createSequentialGroup()
                 .addGap(97, 97, 97)
-                .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblPassword)
-                    .addComponent(btnLogin)
-                    .addComponent(lblUsername))
+                .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(lblSQLip)
+                    .addComponent(lblDB)
+                    .addComponent(lblPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblUsername)
+                    .addComponent(lblSQLport)
+                    .addComponent(btnLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnExit1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(tfPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
-                    .addComponent(tfUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE))
-                .addGap(100, 100, 100))
+                .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tfSQLip, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
+                    .addComponent(tfSQLport, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
+                    .addComponent(tfDB, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
+                    .addComponent(btnExit1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
+                    .addComponent(tfPassword, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
+                    .addComponent(tfUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE))
+                .addGap(102, 102, 102))
         );
         loginPanelLayout.setVerticalGroup(
             loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(loginPanelLayout.createSequentialGroup()
-                .addGap(85, 85, 85)
+                .addGap(33, 33, 33)
                 .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tfUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblUsername))
+                    .addComponent(lblSQLip)
+                    .addComponent(tfSQLip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblSQLport)
+                    .addComponent(tfSQLport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblDB)
+                    .addComponent(tfDB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblUsername)
+                    .addComponent(tfUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPassword)
                     .addComponent(tfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnLogin)
-                    .addComponent(btnExit1))
-                .addContainerGap(89, Short.MAX_VALUE))
+                    .addComponent(btnExit1)
+                    .addComponent(btnLogin))
+                .addContainerGap(69, Short.MAX_VALUE))
         );
 
         settingsPanel.setEnabled(false);
         settingsPanel.setName("settingsPanel"); // NOI18N
 
+        lblPort.setDisplayedMnemonic('o');
+        lblPort.setLabelFor(tfPort);
         lblPort.setText(resourceMap.getString("lblPort.text")); // NOI18N
         lblPort.setName("lblPort"); // NOI18N
 
         tfPort.setText(resourceMap.getString("tfPort.text")); // NOI18N
         tfPort.setName("tfPort"); // NOI18N
 
+        btnStart.setMnemonic('S');
         btnStart.setText(resourceMap.getString("btnStart.text")); // NOI18N
         btnStart.setName("btnStart"); // NOI18N
         btnStart.addActionListener(new java.awt.event.ActionListener() {
@@ -272,6 +327,7 @@ public class ChatAppServerView extends FrameView {
             }
         });
 
+        btnExit2.setMnemonic('x');
         btnExit2.setText(resourceMap.getString("btnExit2.text")); // NOI18N
         btnExit2.setName("btnExit2"); // NOI18N
         btnExit2.addActionListener(new java.awt.event.ActionListener() {
@@ -280,22 +336,35 @@ public class ChatAppServerView extends FrameView {
             }
         });
 
+        lblUsersLimit.setDisplayedMnemonic('m');
+        lblUsersLimit.setLabelFor(tfUsersLimit);
+        lblUsersLimit.setText(resourceMap.getString("lblUsersLimit.text")); // NOI18N
+        lblUsersLimit.setName("lblUsersLimit"); // NOI18N
+
+        tfUsersLimit.setText(resourceMap.getString("tfUsersLimit.text")); // NOI18N
+        tfUsersLimit.setName("tfUsersLimit"); // NOI18N
+
         javax.swing.GroupLayout settingsPanelLayout = new javax.swing.GroupLayout(settingsPanel);
         settingsPanel.setLayout(settingsPanelLayout);
         settingsPanelLayout.setHorizontalGroup(
             settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(settingsPanelLayout.createSequentialGroup()
-                .addGap(66, 66, 66)
-                .addComponent(btnStart)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, settingsPanelLayout.createSequentialGroup()
+                        .addGap(66, 66, 66)
+                        .addComponent(btnStart))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, settingsPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblUsersLimit)
+                            .addComponent(lblPort))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(tfUsersLimit)
+                            .addComponent(tfPort))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
                 .addComponent(btnExit2, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(62, 62, 62))
-            .addGroup(settingsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblPort)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tfPort, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(250, Short.MAX_VALUE))
         );
         settingsPanelLayout.setVerticalGroup(
             settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -304,7 +373,11 @@ public class ChatAppServerView extends FrameView {
                 .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPort)
                     .addComponent(tfPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 154, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblUsersLimit)
+                    .addComponent(tfUsersLimit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 130, Short.MAX_VALUE)
                 .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnStart)
                     .addComponent(btnExit2))
@@ -343,12 +416,12 @@ public class ChatAppServerView extends FrameView {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-            Statement statement = null;
-            Connection connection;
+            Statement statement = null; 
+            Connection connection; 
             
             try{
                 Class.forName("com.mysql.jdbc.Driver");
-                connection=DriverManager.getConnection("jdbc:mysql://172.17.0.63/networks",tfUsername.getText(), String.valueOf(tfPassword.getPassword()));
+                connection=DriverManager.getConnection("jdbc:mysql://"+tfSQLip.getText()+":"+tfSQLport.getText()+"/"+tfDB.getText(),tfUsername.getText(), String.valueOf(tfPassword.getPassword()));
                 loginPanel.setVisible(false); 
                 super.setComponent(settingsPanel);
             }
@@ -378,9 +451,13 @@ public class ChatAppServerView extends FrameView {
     private javax.swing.JButton btnLogin;
     private javax.swing.JButton btnStart;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblDB;
     private javax.swing.JLabel lblPassword;
     private javax.swing.JLabel lblPort;
+    private javax.swing.JLabel lblSQLip;
+    private javax.swing.JLabel lblSQLport;
     private javax.swing.JLabel lblUsername;
+    private javax.swing.JLabel lblUsersLimit;
     private javax.swing.JPanel loginPanel;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
@@ -389,9 +466,13 @@ public class ChatAppServerView extends FrameView {
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
+    private javax.swing.JTextField tfDB;
     private javax.swing.JPasswordField tfPassword;
     private javax.swing.JTextField tfPort;
+    private javax.swing.JTextField tfSQLip;
+    private javax.swing.JTextField tfSQLport;
     private javax.swing.JTextField tfUsername;
+    private javax.swing.JTextField tfUsersLimit;
     private javax.swing.JTextArea txtDebug;
     // End of variables declaration//GEN-END:variables
 

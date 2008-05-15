@@ -134,28 +134,49 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="97" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="lblPassword" alignment="1" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnLogin" alignment="1" min="-2" max="-2" attributes="1"/>
+                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                      <Component id="lblSQLip" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblDB" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblPassword" alignment="1" max="32767" attributes="1"/>
                       <Component id="lblUsername" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblSQLport" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnLogin" alignment="1" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="btnExit1" max="32767" attributes="1"/>
-                      <Component id="tfPassword" alignment="1" pref="51" max="32767" attributes="1"/>
-                      <Component id="tfUsername" alignment="1" pref="51" max="32767" attributes="1"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="tfSQLip" pref="61" max="32767" attributes="1"/>
+                      <Component id="tfSQLport" pref="61" max="32767" attributes="1"/>
+                      <Component id="tfDB" pref="61" max="32767" attributes="0"/>
+                      <Component id="btnExit1" alignment="1" pref="61" max="32767" attributes="1"/>
+                      <Component id="tfPassword" alignment="1" pref="61" max="32767" attributes="1"/>
+                      <Component id="tfUsername" alignment="0" pref="61" max="32767" attributes="1"/>
                   </Group>
-                  <EmptySpace min="-2" pref="100" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="102" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="85" max="-2" attributes="0"/>
+              <Group type="102" attributes="0">
+                  <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="tfUsername" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblSQLip" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="tfSQLip" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblSQLport" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="tfSQLport" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblDB" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="tfDB" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="lblUsername" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="tfUsername" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -164,25 +185,81 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="btnLogin" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnExit1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnLogin" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="89" max="32767" attributes="0"/>
+                  <EmptySpace pref="69" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
+        <Component class="javax.swing.JLabel" name="lblSQLip">
+          <Properties>
+            <Property name="displayedMnemonic" type="int" value="73"/>
+            <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="tfSQLip"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="lblSQLip.text"/>
+            <Property name="name" type="java.lang.String" value="lblSQLip" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblSQLport">
+          <Properties>
+            <Property name="displayedMnemonic" type="int" value="111"/>
+            <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="tfSQLport"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="lblSQLport.text"/>
+            <Property name="name" type="java.lang.String" value="lblSQLport" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblDB">
+          <Properties>
+            <Property name="displayedMnemonic" type="int" value="100"/>
+            <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="tfDB"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="lblDB.text"/>
+            <Property name="name" type="java.lang.String" value="lblDB" noResource="true"/>
+          </Properties>
+        </Component>
         <Component class="javax.swing.JLabel" name="lblUsername">
           <Properties>
+            <Property name="displayedMnemonic" type="int" value="117"/>
+            <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="tfUsername"/>
+            </Property>
             <Property name="text" type="java.lang.String" resourceKey="lblUsername.text"/>
             <Property name="name" type="java.lang.String" value="lblUsername" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblPassword">
           <Properties>
+            <Property name="displayedMnemonic" type="int" value="112"/>
+            <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="tfPassword"/>
+            </Property>
             <Property name="text" type="java.lang.String" resourceKey="lblPassword.text"/>
             <Property name="name" type="java.lang.String" value="lblPassword" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="tfSQLip">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="tfSQLip.text"/>
+            <Property name="name" type="java.lang.String" value="tfSQLip" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="tfSQLport">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="tfSQLport.text"/>
+            <Property name="name" type="java.lang.String" value="tfSQLport" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="tfDB">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="tfDB.text"/>
+            <Property name="name" type="java.lang.String" value="tfDB" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tfUsername">
@@ -229,18 +306,27 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
-                  <Component id="btnStart" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="36" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
+                          <Component id="btnStart" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="lblUsersLimit" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblPort" alignment="1" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="tfUsersLimit" max="32767" attributes="1"/>
+                              <Component id="tfPort" alignment="0" max="32767" attributes="1"/>
+                          </Group>
+                      </Group>
+                  </Group>
+                  <EmptySpace pref="34" max="32767" attributes="0"/>
                   <Component id="btnExit2" min="-2" pref="77" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="62" max="-2" attributes="0"/>
-              </Group>
-              <Group type="102" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="lblPort" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="tfPort" min="-2" pref="41" max="-2" attributes="0"/>
-                  <EmptySpace pref="250" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -252,7 +338,12 @@
                       <Component id="lblPort" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="tfPort" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="154" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblUsersLimit" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="tfUsersLimit" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="130" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btnStart" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnExit2" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -265,6 +356,10 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="lblPort">
           <Properties>
+            <Property name="displayedMnemonic" type="int" value="111"/>
+            <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="tfPort"/>
+            </Property>
             <Property name="text" type="java.lang.String" resourceKey="lblPort.text"/>
             <Property name="name" type="java.lang.String" value="lblPort" noResource="true"/>
           </Properties>
@@ -277,6 +372,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnStart">
           <Properties>
+            <Property name="mnemonic" type="int" value="83"/>
             <Property name="text" type="java.lang.String" resourceKey="btnStart.text"/>
             <Property name="name" type="java.lang.String" value="btnStart" noResource="true"/>
           </Properties>
@@ -286,12 +382,29 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnExit2">
           <Properties>
+            <Property name="mnemonic" type="int" value="120"/>
             <Property name="text" type="java.lang.String" resourceKey="btnExit2.text"/>
             <Property name="name" type="java.lang.String" value="btnExit2" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnExit2ActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblUsersLimit">
+          <Properties>
+            <Property name="displayedMnemonic" type="int" value="109"/>
+            <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="tfUsersLimit"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="lblUsersLimit.text"/>
+            <Property name="name" type="java.lang.String" value="lblUsersLimit" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="tfUsersLimit">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="tfUsersLimit.text"/>
+            <Property name="name" type="java.lang.String" value="tfUsersLimit" noResource="true"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>
