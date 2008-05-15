@@ -113,7 +113,7 @@ public class ChatAppServerView extends FrameView {
         statusMessageLabel = new javax.swing.JLabel();
         statusAnimationLabel = new javax.swing.JLabel();
         progressBar = new javax.swing.JProgressBar();
-        mainPanel = new javax.swing.JPanel();
+        loginPanel = new javax.swing.JPanel();
         lblUsername = new javax.swing.JLabel();
         lblPassword = new javax.swing.JLabel();
         tfUsername = new javax.swing.JTextField();
@@ -125,6 +125,9 @@ public class ChatAppServerView extends FrameView {
         tfPort = new javax.swing.JTextField();
         btnStart = new javax.swing.JButton();
         btnExit2 = new javax.swing.JButton();
+        mainPanel = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtDebug = new javax.swing.JTextArea();
 
         menuBar.setName("menuBar"); // NOI18N
 
@@ -185,7 +188,7 @@ public class ChatAppServerView extends FrameView {
                 .addGap(3, 3, 3))
         );
 
-        mainPanel.setName("mainPanel"); // NOI18N
+        loginPanel.setName("loginPanel"); // NOI18N
 
         lblUsername.setText(resourceMap.getString("lblUsername.text")); // NOI18N
         lblUsername.setName("lblUsername"); // NOI18N
@@ -199,6 +202,7 @@ public class ChatAppServerView extends FrameView {
         tfPassword.setText(resourceMap.getString("tfPassword.text")); // NOI18N
         tfPassword.setName("tfPassword"); // NOI18N
 
+        btnLogin.setMnemonic('l');
         btnLogin.setText(resourceMap.getString("btnLogin.text")); // NOI18N
         btnLogin.setName("btnLogin"); // NOI18N
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
@@ -207,6 +211,7 @@ public class ChatAppServerView extends FrameView {
             }
         });
 
+        btnExit1.setMnemonic('x');
         btnExit1.setText(resourceMap.getString("btnExit1.text")); // NOI18N
         btnExit1.setName("btnExit1"); // NOI18N
         btnExit1.addActionListener(new java.awt.event.ActionListener() {
@@ -215,36 +220,36 @@ public class ChatAppServerView extends FrameView {
             }
         });
 
-        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
-        mainPanel.setLayout(mainPanelLayout);
-        mainPanelLayout.setHorizontalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainPanelLayout.createSequentialGroup()
+        javax.swing.GroupLayout loginPanelLayout = new javax.swing.GroupLayout(loginPanel);
+        loginPanel.setLayout(loginPanelLayout);
+        loginPanelLayout.setHorizontalGroup(
+            loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(loginPanelLayout.createSequentialGroup()
                 .addGap(97, 97, 97)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblPassword)
                     .addComponent(btnLogin)
                     .addComponent(lblUsername))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnExit1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(tfPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
                     .addComponent(tfUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE))
                 .addGap(100, 100, 100))
         );
-        mainPanelLayout.setVerticalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainPanelLayout.createSequentialGroup()
+        loginPanelLayout.setVerticalGroup(
+            loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(loginPanelLayout.createSequentialGroup()
                 .addGap(85, 85, 85)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tfUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblUsername))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPassword)
                     .addComponent(tfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnLogin)
                     .addComponent(btnExit1))
                 .addContainerGap(89, Short.MAX_VALUE))
@@ -306,50 +311,51 @@ public class ChatAppServerView extends FrameView {
                 .addGap(31, 31, 31))
         );
 
-        setComponent(mainPanel);
+        mainPanel.setName("mainPanel"); // NOI18N
+
+        jScrollPane1.setName("jScrollPane1"); // NOI18N
+
+        txtDebug.setColumns(20);
+        txtDebug.setRows(5);
+        txtDebug.setName("txtDebug"); // NOI18N
+        jScrollPane1.setViewportView(txtDebug);
+
+        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
+        mainPanel.setLayout(mainPanelLayout);
+        mainPanelLayout.setHorizontalGroup(
+            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        mainPanelLayout.setVerticalGroup(
+            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        setComponent(loginPanel);
         setMenuBar(menuBar);
         setStatusBar(statusPanel);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-            System.out.println(tfUsername.getText()); 
-            System.out.println(tfPassword.getPassword());
             Statement statement = null;
             Connection connection;
             
-            
-       try{
-        Class.forName("com.mysql.jdbc.Driver");
-        connection=DriverManager.getConnection("jdbc:mysql://172.17.0.63/networks","networks", "eece450NetWorks");
-        }
-        catch(Exception e){
-            System.out.println("Failed to get connection");
-            e.printStackTrace();
-        }
-    
-
-            
-           // try {
-                //Class.forName("com.mysql.jdbc.Driver");
-                //connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/networks", "networks", "eece450NetWorks");
-               // statement= connection.createStatement();
-            //} catch (ClassNotFoundException ex) {
-            //Logger.getLogger(ChatAppServerView.class.getName()).log(Level.SEVERE, null, ex);
-        //} catch (SQLException ex) {
-          //      Logger.getLogger(ChatAppServerView.class.getName()).log(Level.SEVERE, null, ex);
-            //}
-            /*String addUserQuery = "INSERT into User (Email, FName, LName, TelephoneNum, BirthDate, City, Country) Values( '" + Email + "' , '" + FName + "' , '" + LName + "' , '" + Phone + "' , {d'" + Birthdate + "'}, '" + City + "' , '" + Country + "');";
-            System.out.println(addUserQuery);
-            try {
-                statement.execute(addUserQuery);
-            } catch (SQLException ex) {
-                Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
-            }*/
-
-    
-    
-            mainPanel.setVisible(false); 
-            super.setComponent(settingsPanel);
+            try{
+                Class.forName("com.mysql.jdbc.Driver");
+                connection=DriverManager.getConnection("jdbc:mysql://172.17.0.63/networks",tfUsername.getText(), String.valueOf(tfPassword.getPassword()));
+                loginPanel.setVisible(false); 
+                super.setComponent(settingsPanel);
+            }
+            catch(Exception e) {
+                javax.swing.JOptionPane.showMessageDialog(null, "Failed to connect to database. ");
+                e.printStackTrace();
+            }
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnExit1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExit1ActionPerformed
@@ -362,6 +368,8 @@ public class ChatAppServerView extends FrameView {
 
     private void btnStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartActionPerformed
             // listen for connections
+            settingsPanel.setVisible(false); 
+            super.setComponent(mainPanel); 
     }//GEN-LAST:event_btnStartActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -369,9 +377,11 @@ public class ChatAppServerView extends FrameView {
     private javax.swing.JButton btnExit2;
     private javax.swing.JButton btnLogin;
     private javax.swing.JButton btnStart;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblPassword;
     private javax.swing.JLabel lblPort;
     private javax.swing.JLabel lblUsername;
+    private javax.swing.JPanel loginPanel;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JProgressBar progressBar;
@@ -382,6 +392,7 @@ public class ChatAppServerView extends FrameView {
     private javax.swing.JPasswordField tfPassword;
     private javax.swing.JTextField tfPort;
     private javax.swing.JTextField tfUsername;
+    private javax.swing.JTextArea txtDebug;
     // End of variables declaration//GEN-END:variables
 
     private final Timer messageTimer;
