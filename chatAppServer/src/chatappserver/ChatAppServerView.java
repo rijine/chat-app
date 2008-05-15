@@ -16,7 +16,6 @@ import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import java.sql.*;
-import java.util.logging.Level;
 
 /**
  * The application's main frame.
@@ -426,7 +425,7 @@ public class ChatAppServerView extends FrameView {
                 super.setComponent(settingsPanel);
             }
             catch(Exception e) {
-                javax.swing.JOptionPane.showMessageDialog(null, "Failed to connect to database. ");
+                javax.swing.JOptionPane.showMessageDialog(super.getFrame(), "Failed to connect to database. ");
                 e.printStackTrace();
             }
     }//GEN-LAST:event_btnLoginActionPerformed
