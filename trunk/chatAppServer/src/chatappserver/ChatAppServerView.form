@@ -73,7 +73,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="statusMessageLabel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="150" max="32767" attributes="0"/>
+                  <EmptySpace pref="164" max="32767" attributes="0"/>
                   <Component id="progressBar" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="statusAnimationLabel" min="-2" max="-2" attributes="0"/>
@@ -144,12 +144,12 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="tfSQLip" pref="61" max="32767" attributes="1"/>
-                      <Component id="tfSQLport" pref="61" max="32767" attributes="1"/>
-                      <Component id="tfDB" pref="61" max="32767" attributes="0"/>
-                      <Component id="btnExit1" alignment="1" pref="61" max="32767" attributes="1"/>
-                      <Component id="tfPassword" alignment="1" pref="61" max="32767" attributes="1"/>
-                      <Component id="tfUsername" alignment="0" pref="61" max="32767" attributes="1"/>
+                      <Component id="tfSQLip" pref="59" max="32767" attributes="1"/>
+                      <Component id="tfSQLport" pref="59" max="32767" attributes="1"/>
+                      <Component id="tfDB" pref="59" max="32767" attributes="0"/>
+                      <Component id="btnExit1" alignment="1" pref="59" max="32767" attributes="1"/>
+                      <Component id="tfPassword" alignment="1" pref="59" max="32767" attributes="1"/>
+                      <Component id="tfUsername" alignment="0" pref="59" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace min="-2" pref="102" max="-2" attributes="0"/>
               </Group>
@@ -188,7 +188,7 @@
                       <Component id="btnExit1" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnLogin" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="69" max="32767" attributes="0"/>
+                  <EmptySpace pref="59" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
