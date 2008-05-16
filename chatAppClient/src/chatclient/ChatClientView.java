@@ -4,7 +4,11 @@
 
 package chatclient;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
@@ -12,8 +16,16 @@ import org.jdesktop.application.FrameView;
 import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.regex.Pattern;
 import javax.swing.Timer;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
@@ -96,8 +108,53 @@ public class ChatClientView extends FrameView {
         ChatClientApp.getApplication().show(aboutBox);
     }
     
+    public boolean sendMessageToServer(String code, String message) throws FileNotFoundException, IOException {
+        String query; 
+        String reply = null; 
+        String hostname;
+        int port;
+        
+        BufferedReader inputStream = new BufferedReader(new FileReader("settings.ini"));
+        hostname = inputStream.readLine();
+        port = Integer.parseInt(inputStream.readLine());
+        inputStream.close();
+        
+        Socket clientSocket = null;
+        try {
+            clientSocket = new Socket(hostname, port);
+            DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream()); 
+            BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())); 
+            query = code + ":" + message; 
+            outToServer.writeBytes(query + '\n');
+            reply = inFromServer.readLine(); 
+        } catch (UnknownHostException ex) {
+            javax.swing.JOptionPane.showMessageDialog(super.getFrame(), "Unknown hostname.");
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            javax.swing.JOptionPane.showMessageDialog(super.getFrame(), "Could not connect to host.");
+            ex.printStackTrace();
+        }
+        try {
+            clientSocket.close();  
+        } catch (IOException ex) {
+            javax.swing.JOptionPane.showMessageDialog(super.getFrame(), "Could not close socket.");
+            ex.printStackTrace();
+        }
+        /* for "code" == "CHEK"
+         * query = "CHECK:username:some_username"
+         * query = "CHECK:nickname:some_nickname"
+         */
+        if (code.equals("CHEK")) {
+            if (reply.equals("AlreadyExists"))
+                return false;
+            else if (reply.equals("Available"))
+                return true;
+        }
+        return false;
+    }
+    
     @Action
-    public void showSettingsBox() {
+    public void showSettingsBox() throws IOException {
         if (settingsBox == null) {
             JFrame mainFrame = ChatClientApp.getApplication().getMainFrame();
             settingsBox = new ChatClientSettingsBox(mainFrame);
@@ -125,7 +182,7 @@ public class ChatClientView extends FrameView {
         txtPass = new javax.swing.JPasswordField();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        settingsMenuItem = new javax.swing.JMenuItem();
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
         javax.swing.JMenuItem aboutMenuItem = new javax.swing.JMenuItem();
@@ -243,15 +300,15 @@ public class ChatClientView extends FrameView {
         fileMenu.setName("fileMenu"); // NOI18N
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(chatclient.ChatClientApp.class).getContext().getActionMap(ChatClientView.class, this);
-        jMenuItem1.setAction(actionMap.get("showSettingsBox")); // NOI18N
-        jMenuItem1.setText(resourceMap.getString("settingsMenuItem.text")); // NOI18N
-        jMenuItem1.setName("settingsMenuItem"); // NOI18N
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        settingsMenuItem.setAction(actionMap.get("showSettingsBox")); // NOI18N
+        settingsMenuItem.setText(resourceMap.getString("settingsMenuItem.text")); // NOI18N
+        settingsMenuItem.setName("settingsMenuItem"); // NOI18N
+        settingsMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                settingsMenuItemActionPerformed(evt);
             }
         });
-        fileMenu.add(jMenuItem1);
+        fileMenu.add(settingsMenuItem);
 
         exitMenuItem.setAction(actionMap.get("quit")); // NOI18N
         exitMenuItem.setName("exitMenuItem"); // NOI18N
@@ -306,18 +363,23 @@ public class ChatClientView extends FrameView {
         );
 
         PanNewUser.setName("PanNewUser"); // NOI18N
+        PanNewUser.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         lblUsername.setText(resourceMap.getString("lblUsername.text")); // NOI18N
         lblUsername.setName("lblUsername"); // NOI18N
+        PanNewUser.add(lblUsername, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, -1));
 
         lblPass.setText(resourceMap.getString("lblPass.text")); // NOI18N
         lblPass.setName("lblPass"); // NOI18N
+        PanNewUser.add(lblPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, -1, -1));
 
         lblRePass.setText(resourceMap.getString("lblRePass.text")); // NOI18N
         lblRePass.setName("lblRePass"); // NOI18N
+        PanNewUser.add(lblRePass, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, -1, -1));
 
         lblEmail.setText(resourceMap.getString("lblEmail.text")); // NOI18N
         lblEmail.setName("lblEmail"); // NOI18N
+        PanNewUser.add(lblEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, -1, -1));
 
         txtUserName.setText(resourceMap.getString("txtUserName.text")); // NOI18N
         txtUserName.setName("txtUserName"); // NOI18N
@@ -326,9 +388,16 @@ public class ChatClientView extends FrameView {
                 txtUserNameFocusLost(evt);
             }
         });
+        PanNewUser.add(txtUserName, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 20, 130, -1));
 
         txtEmail.setText(resourceMap.getString("txtEmail.text")); // NOI18N
         txtEmail.setName("txtEmail"); // NOI18N
+        txtEmail.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtEmailFocusLost(evt);
+            }
+        });
+        PanNewUser.add(txtEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 80, 130, 20));
 
         txtPassword2.setText(resourceMap.getString("txtPassword2.text")); // NOI18N
         txtPassword2.setName("txtPassword2"); // NOI18N
@@ -337,9 +406,11 @@ public class ChatClientView extends FrameView {
                 txtPassword2FocusLost(evt);
             }
         });
+        PanNewUser.add(txtPassword2, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 60, 130, 20));
 
         txtPassword.setText(resourceMap.getString("txtPassword.text")); // NOI18N
         txtPassword.setName("txtPassword"); // NOI18N
+        PanNewUser.add(txtPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 40, 130, -1));
 
         btnSubmit.setText(resourceMap.getString("btnSubmit.text")); // NOI18N
         btnSubmit.setName("btnSubmit"); // NOI18N
@@ -348,118 +419,53 @@ public class ChatClientView extends FrameView {
                 btnSubmitActionPerformed(evt);
             }
         });
+        PanNewUser.add(btnSubmit, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 220, -1, -1));
 
         lblNickName.setText(resourceMap.getString("lblNickName.text")); // NOI18N
         lblNickName.setName("lblNickName"); // NOI18N
+        PanNewUser.add(lblNickName, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, -1, -1));
 
         txtNickName.setText(resourceMap.getString("txtNickName.text")); // NOI18N
         txtNickName.setName("txtNickName"); // NOI18N
+        txtNickName.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtNickNameFocusLost(evt);
+            }
+        });
+        PanNewUser.add(txtNickName, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 100, 130, -1));
 
         lblFName.setText(resourceMap.getString("lblFName.text")); // NOI18N
         lblFName.setName("lblFName"); // NOI18N
+        PanNewUser.add(lblFName, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, -1, -1));
 
         lblLName.setText(resourceMap.getString("lblLName.text")); // NOI18N
         lblLName.setName("lblLName"); // NOI18N
+        PanNewUser.add(lblLName, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, -1, -1));
 
         txtFName.setText(resourceMap.getString("txtFName.text")); // NOI18N
         txtFName.setName("txtFName"); // NOI18N
+        PanNewUser.add(txtFName, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 120, 130, -1));
 
         txtLName.setText(resourceMap.getString("txtLName.text")); // NOI18N
         txtLName.setName("txtLName"); // NOI18N
+        PanNewUser.add(txtLName, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 140, 130, -1));
 
-        lblUnameCheck.setIcon(resourceMap.getIcon("uname.icon")); // NOI18N
+        lblUnameCheck.setIcon(resourceMap.getIcon("lblUnameCheck.icon")); // NOI18N
         lblUnameCheck.setText(resourceMap.getString("lblUnameCheck.text")); // NOI18N
         lblUnameCheck.setName("lblUnameCheck"); // NOI18N
+        PanNewUser.add(lblUnameCheck, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 20, -1, -1));
 
         lblPassCheck.setIcon(resourceMap.getIcon("lblPassCheck.icon")); // NOI18N
         lblPassCheck.setName("lblPassCheck"); // NOI18N
+        PanNewUser.add(lblPassCheck, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 60, -1, -1));
 
         lblEmailCheck.setIcon(resourceMap.getIcon("lblEmailCheck.icon")); // NOI18N
         lblEmailCheck.setName("lblEmailCheck"); // NOI18N
+        PanNewUser.add(lblEmailCheck, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 80, -1, -1));
 
         lblNickCheck.setIcon(resourceMap.getIcon("lblNickCheck.icon")); // NOI18N
         lblNickCheck.setName("lblNickCheck"); // NOI18N
-
-        javax.swing.GroupLayout PanNewUserLayout = new javax.swing.GroupLayout(PanNewUser);
-        PanNewUser.setLayout(PanNewUserLayout);
-        PanNewUserLayout.setHorizontalGroup(
-            PanNewUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PanNewUserLayout.createSequentialGroup()
-                .addGap(51, 51, 51)
-                .addGroup(PanNewUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblRePass)
-                    .addComponent(lblPass)
-                    .addComponent(lblUsername)
-                    .addComponent(lblEmail)
-                    .addComponent(lblNickName)
-                    .addComponent(lblFName)
-                    .addComponent(lblLName))
-                .addGap(6, 6, 6)
-                .addGroup(PanNewUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnSubmit)
-                    .addGroup(PanNewUserLayout.createSequentialGroup()
-                        .addGroup(PanNewUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtLName)
-                            .addComponent(txtFName)
-                            .addComponent(txtEmail)
-                            .addComponent(txtPassword)
-                            .addComponent(txtUserName)
-                            .addComponent(txtNickName)
-                            .addComponent(txtPassword2, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(PanNewUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblUnameCheck)
-                            .addComponent(lblEmailCheck)
-                            .addComponent(lblPassCheck)
-                            .addComponent(lblNickCheck))))
-                .addContainerGap(65, Short.MAX_VALUE))
-        );
-        PanNewUserLayout.setVerticalGroup(
-            PanNewUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PanNewUserLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addGroup(PanNewUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(PanNewUserLayout.createSequentialGroup()
-                        .addGroup(PanNewUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblUsername)
-                            .addComponent(txtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(PanNewUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblPass)
-                            .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(PanNewUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblRePass)
-                            .addComponent(txtPassword2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(PanNewUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblEmail)
-                            .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(PanNewUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblNickName)
-                            .addComponent(txtNickName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(PanNewUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblFName)
-                            .addComponent(txtFName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(PanNewUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblLName)
-                            .addComponent(txtLName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnSubmit))
-                    .addGroup(PanNewUserLayout.createSequentialGroup()
-                        .addGap(3, 3, 3)
-                        .addComponent(lblUnameCheck)
-                        .addGap(31, 31, 31)
-                        .addComponent(lblPassCheck)
-                        .addGap(16, 16, 16)
-                        .addComponent(lblEmailCheck)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblNickCheck)))
-                .addContainerGap(51, Short.MAX_VALUE))
-        );
+        PanNewUser.add(lblNickCheck, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 100, -1, -1));
 
         PanChat.setName("PanChat"); // NOI18N
 
@@ -539,14 +545,14 @@ public class ChatClientView extends FrameView {
 }//GEN-LAST:event_txtSendKeyTyped
 
     private boolean checkFields() {
-        if (!String.valueOf(txtPassword.getPassword()).equals(String.valueOf(txtPassword2.getPassword()))) {
+        if (!bEmail || !bPass || !bNick || !bUname) {
             return false;
         }
         return true;
     }
     private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
         if (checkFields()) {
-            // Send to kevin el bahle server
+            // Send all info to server
         }
         else {
             javax.swing.JOptionPane.showMessageDialog(null, "Fix the errors (red X)");
@@ -578,21 +584,113 @@ public class ChatClientView extends FrameView {
 
     private void txtPassword2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPassword2FocusLost
         if (!String.valueOf(txtPassword.getPassword()).equals(String.valueOf(txtPassword2.getPassword()))) {
-            // Change Icon
+            lblPassCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/redX.png")));
+            lblPassCheck.setToolTipText("Passwords do not match");
+            bPass = false;
+        }
+        else if (txtPassword.getPassword().length < 6) {
+            lblPassCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/redX.png")));
+            lblPassCheck.setToolTipText("Password must be at least 6 characters long.");
+            bPass = false;
         }
         else {
-            // Change Icon
+            lblPassCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/greenTick.png")));
+            lblPassCheck.setToolTipText(null);
+            bPass = true;
         }
         lblPassCheck.setVisible(true);
     }//GEN-LAST:event_txtPassword2FocusLost
 
     private void txtUserNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtUserNameFocusLost
-        
+        String allowableCharacters = "[A-Za-z0-9]*";
+        Pattern regex = Pattern.compile(allowableCharacters);
+        if (regex.matcher(txtUserName.getText()).matches()) {
+            try {
+                if (sendMessageToServer("CHEK", "username:" + txtUserName.getText())) {
+                    lblUnameCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/greenTick.png")));
+                    lblUnameCheck.setToolTipText(null);
+                    bUname = true;
+                }
+                else {
+                    lblUnameCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/redX.png")));
+                    lblUnameCheck.setToolTipText("Username already exists");
+                    bUname = false;
+                }
+                lblUnameCheck.setVisible(true);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        else {
+            lblUnameCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/redX.png")));
+            lblUnameCheck.setToolTipText("Illegal characters inputted");
+            bUname = false;
+            lblUnameCheck.setVisible(true);
+        }
     }//GEN-LAST:event_txtUserNameFocusLost
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void settingsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_settingsMenuItemActionPerformed
         // Open Settings window
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+}//GEN-LAST:event_settingsMenuItemActionPerformed
+
+    private void txtEmailFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtEmailFocusLost
+        BufferedReader r = null;
+        try {
+            r = new BufferedReader(new FileReader("regex.txt"));
+            Pattern regex = Pattern.compile(r.readLine());
+            if(regex.matcher(txtEmail.getText()).matches()) {
+                lblEmailCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/greenTick.png")));
+                lblEmailCheck.setToolTipText(null);
+                bEmail = true;
+            }
+            else {
+                lblEmailCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/redX.png")));
+                lblEmailCheck.setToolTipText("Invalid email address");
+                bEmail = false;
+            }
+            lblEmailCheck.setVisible(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                    r.close();
+            } catch(IOException e) {
+                    e.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_txtEmailFocusLost
+
+    private void txtNickNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNickNameFocusLost
+        String allowableCharacters = "[A-Za-z0-9]*";
+        Pattern regex = Pattern.compile(allowableCharacters);
+        if (regex.matcher(txtNickName.getText()).matches()) {
+            try {
+                if (sendMessageToServer("CHEK", "nickname:" + txtNickName.getText())) {
+                    lblNickCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/greenTick.png")));
+                    lblNickCheck.setToolTipText(null);
+                    bNick = true;
+                }
+                else {
+                    lblNickCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/redX.png")));
+                    lblNickCheck.setToolTipText("Nickname already in use");
+                    bNick = false;
+                }
+                lblNickCheck.setVisible(true);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        else {
+            lblNickCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/redX.png")));
+            lblNickCheck.setToolTipText("Illegal characters inputted");
+            bNick = false;
+            lblNickCheck.setVisible(true);
+        }
+    }//GEN-LAST:event_txtNickNameFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanChat;
@@ -602,7 +700,6 @@ public class ChatClientView extends FrameView {
     private javax.swing.JButton butLogin;
     private javax.swing.JButton butNewAcc;
     private javax.swing.JList jList1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField jTextField1;
@@ -625,6 +722,7 @@ public class ChatClientView extends FrameView {
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JProgressBar progressBar;
+    private javax.swing.JMenuItem settingsMenuItem;
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
@@ -647,4 +745,5 @@ public class ChatClientView extends FrameView {
 
     private JDialog aboutBox;
     private JDialog settingsBox;
+    private boolean bEmail = false, bUname = false, bPass = false, bNick = false;
 }
