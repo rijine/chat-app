@@ -22,8 +22,7 @@ import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import java.sql.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.SwingWorker;
 
 /**
  * The application's main frame.
@@ -447,11 +446,14 @@ public class ChatAppServerView extends FrameView {
         // listen for connections
         settingsPanel.setVisible(false);
         super.setComponent(mainPanel);
-        try {
-            startServer();
-        } catch (SQLException ex) {
-            Logger.getLogger(ChatAppServerView.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        startServerWorker = new SwingWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                startServer();
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        };
+        startServerWorker.execute();
     }//GEN-LAST:event_btnStartActionPerformed
     
     public void startServer() throws SQLException {
@@ -470,7 +472,6 @@ public class ChatAppServerView extends FrameView {
                 BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
                 DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
                 query = inFromClient.readLine();
-                System.out.println(query);
                 Statement sendSQLQuery = null;
                 sendSQLQuery = connectToMysql.createStatement();
                 if (query.startsWith("CHEK:")) {
@@ -479,7 +480,6 @@ public class ChatAppServerView extends FrameView {
                     parseQuery = parseQuery.substring("CHEK:".length());
                     if (parseQuery.startsWith("nickname:")) {
                         parseQuery = parseQuery.substring("nickname:".length());
-                        System.out.println(parseQuery.toLowerCase());
                         sendSQLQuery.executeQuery("SELECT nickname FROM user WHERE nickname = '" + parseQuery.toLowerCase() + "';");
                         ResultSet results = sendSQLQuery.getResultSet();
                         boolean found = results.next();
@@ -489,12 +489,10 @@ public class ChatAppServerView extends FrameView {
                             reply = "AlreadyExists\n";
                         else
                             reply = "Available\n";
-                        System.out.println(reply);
                         outToClient.writeBytes(reply);
                     }
                     else if (parseQuery.startsWith("username:")) {
                         parseQuery = parseQuery.substring("username:".length());
-                        System.out.println(parseQuery.toLowerCase());
                         sendSQLQuery.executeQuery("SELECT username FROM user WHERE username = '" + parseQuery.toLowerCase() + "';");
                         ResultSet results = sendSQLQuery.getResultSet();
                         boolean found = results.next();
@@ -504,7 +502,6 @@ public class ChatAppServerView extends FrameView {
                             reply = "AlreadyExists\n";
                         else
                             reply = "Available\n";
-                        System.out.println(reply);
                         outToClient.writeBytes(reply);
                     }
                     else {
@@ -564,4 +561,5 @@ public class ChatAppServerView extends FrameView {
     private int busyIconIndex = 0;
     private Connection connectToMysql; 
     private JDialog aboutBox;
+    private SwingWorker startServerWorker;
 }
