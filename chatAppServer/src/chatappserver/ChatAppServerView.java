@@ -11,11 +11,19 @@ import org.jdesktop.application.FrameView;
 import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
 import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The application's main frame.
@@ -175,7 +183,7 @@ public class ChatAppServerView extends FrameView {
             .addGroup(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(statusMessageLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 150, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 164, Short.MAX_VALUE)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusAnimationLabel)
@@ -268,12 +276,12 @@ public class ChatAppServerView extends FrameView {
                     .addComponent(btnLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tfSQLip, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
-                    .addComponent(tfSQLport, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
-                    .addComponent(tfDB, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
-                    .addComponent(btnExit1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
-                    .addComponent(tfPassword, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
-                    .addComponent(tfUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE))
+                    .addComponent(tfSQLip, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)
+                    .addComponent(tfSQLport, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)
+                    .addComponent(tfDB, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)
+                    .addComponent(btnExit1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)
+                    .addComponent(tfPassword, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)
+                    .addComponent(tfUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE))
                 .addGap(102, 102, 102))
         );
         loginPanelLayout.setVerticalGroup(
@@ -303,7 +311,7 @@ public class ChatAppServerView extends FrameView {
                 .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnExit1)
                     .addComponent(btnLogin))
-                .addContainerGap(69, Short.MAX_VALUE))
+                .addContainerGap(59, Short.MAX_VALUE))
         );
 
         settingsPanel.setEnabled(false);
@@ -415,12 +423,9 @@ public class ChatAppServerView extends FrameView {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-            Statement statement = null; 
-            Connection connection; 
-            
             try{
                 Class.forName("com.mysql.jdbc.Driver");
-                connection=DriverManager.getConnection("jdbc:mysql://"+tfSQLip.getText()+":"+tfSQLport.getText()+"/"+tfDB.getText(),tfUsername.getText(), String.valueOf(tfPassword.getPassword()));
+                connectToMysql = DriverManager.getConnection("jdbc:mysql://"+tfSQLip.getText()+":"+tfSQLport.getText()+"/"+tfDB.getText(),tfUsername.getText(), String.valueOf(tfPassword.getPassword()));
                 loginPanel.setVisible(false); 
                 super.setComponent(settingsPanel);
             }
@@ -439,11 +444,88 @@ public class ChatAppServerView extends FrameView {
     }//GEN-LAST:event_btnExit2ActionPerformed
 
     private void btnStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartActionPerformed
-            // listen for connections
-            settingsPanel.setVisible(false); 
-            super.setComponent(mainPanel); 
+        // listen for connections
+        settingsPanel.setVisible(false);
+        super.setComponent(mainPanel);
+        try {
+            startServer();
+        } catch (SQLException ex) {
+            Logger.getLogger(ChatAppServerView.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnStartActionPerformed
-
+    
+    public void startServer() throws SQLException {
+        String query;
+        String reply = null;
+        ServerSocket welcomeSocket=null;
+        try {
+            welcomeSocket = new ServerSocket(Integer.parseInt(tfPort.getText()));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        while(true) {
+            Socket connectionSocket;
+            try {
+                connectionSocket = welcomeSocket.accept();
+                BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+                DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
+                query = inFromClient.readLine();
+                System.out.println(query);
+                Statement sendSQLQuery = null;
+                sendSQLQuery = connectToMysql.createStatement();
+                if (query.startsWith("CHEK:")) {
+                    // checks database for stuff
+                    String parseQuery = query;
+                    parseQuery = parseQuery.substring("CHEK:".length());
+                    if (parseQuery.startsWith("nickname:")) {
+                        parseQuery = parseQuery.substring("nickname:".length());
+                        System.out.println(parseQuery.toLowerCase());
+                        sendSQLQuery.executeQuery("SELECT nickname FROM user WHERE nickname = '" + parseQuery.toLowerCase() + "';");
+                        ResultSet results = sendSQLQuery.getResultSet();
+                        boolean found = results.next();
+                        results.close();
+                        sendSQLQuery.close();
+                        if (found)
+                            reply = "AlreadyExists\n";
+                        else
+                            reply = "Available\n";
+                        System.out.println(reply);
+                        outToClient.writeBytes(reply);
+                    }
+                    else if (parseQuery.startsWith("username:")) {
+                        parseQuery = parseQuery.substring("username:".length());
+                        System.out.println(parseQuery.toLowerCase());
+                        sendSQLQuery.executeQuery("SELECT username FROM user WHERE username = '" + parseQuery.toLowerCase() + "';");
+                        ResultSet results = sendSQLQuery.getResultSet();
+                        boolean found = results.next();
+                        results.close();
+                        sendSQLQuery.close();
+                        if (found)
+                            reply = "AlreadyExists\n";
+                        else
+                            reply = "Available\n";
+                        System.out.println(reply);
+                        outToClient.writeBytes(reply);
+                    }
+                    else {
+                        // some error about not knowing what's after the check
+                    }
+                    
+                }
+                //reply = query.toUpperCase() + '\n';
+                if(query.equalsIgnoreCase("DISC")){
+                   connectionSocket.close();
+                   System.out.println("Connection Socket Quitting");
+                } 
+                else {
+                    //outToClient.writeBytes(reply);
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnExit1;
     private javax.swing.JButton btnExit2;
@@ -480,6 +562,6 @@ public class ChatAppServerView extends FrameView {
     private final Icon idleIcon;
     private final Icon[] busyIcons = new Icon[15];
     private int busyIconIndex = 0;
-
+    private Connection connectToMysql; 
     private JDialog aboutBox;
 }
