@@ -291,7 +291,7 @@ public class ChatClientView extends FrameView {
                     .addComponent(butGuest))
                 .addGap(9, 9, 9)
                 .addComponent(butLogin)
-                .addContainerGap(116, Short.MAX_VALUE))
+                .addContainerGap(118, Short.MAX_VALUE))
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -489,11 +489,6 @@ public class ChatClientView extends FrameView {
 
         txtSend.setText(resourceMap.getString("txtSend.text")); // NOI18N
         txtSend.setName("txtSend"); // NOI18N
-        txtSend.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtSendKeyTyped(evt);
-            }
-        });
 
         javax.swing.GroupLayout PanChatLayout = new javax.swing.GroupLayout(PanChat);
         PanChat.setLayout(PanChatLayout);
@@ -530,20 +525,9 @@ public class ChatClientView extends FrameView {
     }// </editor-fold>//GEN-END:initComponents
 
     private void butNewAccActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butNewAccActionPerformed
-        // TODO add your handling code here:
        mainPanel.setVisible(false);
        super.setComponent(PanNewUser);
     }//GEN-LAST:event_butNewAccActionPerformed
-
-    private void txtSendKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSendKeyTyped
-        /*if(txtSend.getText().length()>1024)
-        {
-            //send
-        }
-        // TODO add your handling code here:
-        }*/
-}//GEN-LAST:event_txtSendKeyTyped
-
     private boolean checkFields() {
         if (!bEmail || !bPass || !bNick || !bUname) {
             return false;
@@ -551,35 +535,23 @@ public class ChatClientView extends FrameView {
         return true;
     }
     private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
-        if (checkFields()) {
-            // Send all info to server
+        if (txtUserName.getText().isEmpty() || txtEmail.getText().isEmpty() || 
+               txtFName.getText().isEmpty() || txtLName.getText().isEmpty() ||
+               txtNickName.getText().isEmpty() || 
+               String.valueOf(txtPassword.getPassword()).isEmpty() || String.valueOf(txtPassword2.getPassword()).isEmpty()) 
+            javax.swing.JOptionPane.showMessageDialog(super.getFrame(), "All fields are required. ");
+        else if (checkFields()) {
+            try {
+                sendMessageToServer("NEWA", txtUserName.getText() + "," + txtEmail.getText() + "," + txtFName.getText() + "," + txtLName.getText() + "," + String.valueOf(txtPassword.getPassword()) + "," + txtNickName.getText());
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else {
             javax.swing.JOptionPane.showMessageDialog(null, "Fix the errors (red X)");
         }
-        /*else {
-            Statement statement = null;
-            Connection connection;     
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-                connection = DriverManager.getConnection("jdbc:mysql://172.17.0.63:3306/networks", "networks", "eece450NetWorks");
-                statement= connection.createStatement();
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SQLException ex) {
-                Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            System.out.println(txtPassword.getPassword());
-            String addUserQuery = "INSERT into user (username, email, fname, lname, password, nickname) Values('" + txtUserName.getText() +"', '" + txtEmail.getText() + "', '" + txtFName.getText() + "', '" + txtLName.getText() + "', '" + String.valueOf(txtPassword.getPassword()) + "', '" + txtNickName.getText() +"');";
-
-            System.out.println(addUserQuery);
-            try {
-
-                statement.execute(addUserQuery);
-            } catch (SQLException ex) {
-                Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }*/
 }//GEN-LAST:event_btnSubmitActionPerformed
 
     private void txtPassword2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPassword2FocusLost
