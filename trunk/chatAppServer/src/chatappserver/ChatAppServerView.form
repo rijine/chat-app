@@ -144,14 +144,14 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="tfSQLip" pref="59" max="32767" attributes="1"/>
-                      <Component id="tfSQLport" pref="59" max="32767" attributes="1"/>
-                      <Component id="tfDB" pref="59" max="32767" attributes="0"/>
-                      <Component id="btnExit1" alignment="1" pref="59" max="32767" attributes="1"/>
-                      <Component id="tfPassword" alignment="1" pref="59" max="32767" attributes="1"/>
-                      <Component id="tfUsername" alignment="0" pref="59" max="32767" attributes="1"/>
+                      <Component id="tfDB" pref="66" max="32767" attributes="0"/>
+                      <Component id="btnExit1" alignment="1" pref="66" max="32767" attributes="1"/>
+                      <Component id="tfPassword" alignment="1" pref="66" max="32767" attributes="1"/>
+                      <Component id="tfUsername" alignment="0" pref="66" max="32767" attributes="1"/>
+                      <Component id="tfSQLip" alignment="0" max="32767" attributes="1"/>
+                      <Component id="tfSQLport" alignment="0" pref="66" max="32767" attributes="1"/>
                   </Group>
-                  <EmptySpace min="-2" pref="102" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="95" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -188,7 +188,7 @@
                       <Component id="btnExit1" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnLogin" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="59" max="32767" attributes="0"/>
+                  <EmptySpace pref="61" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

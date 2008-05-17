@@ -4,6 +4,8 @@
 
 package chatappserver;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
@@ -11,12 +13,8 @@ import org.jdesktop.application.FrameView;
 import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.ServerSocket;
-import java.net.Socket;
 import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JDialog;
@@ -275,13 +273,13 @@ public class ChatAppServerView extends FrameView {
                     .addComponent(btnLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tfSQLip, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)
-                    .addComponent(tfSQLport, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)
-                    .addComponent(tfDB, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)
-                    .addComponent(btnExit1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)
-                    .addComponent(tfPassword, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)
-                    .addComponent(tfUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE))
-                .addGap(102, 102, 102))
+                    .addComponent(tfDB, javax.swing.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE)
+                    .addComponent(btnExit1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE)
+                    .addComponent(tfPassword, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE)
+                    .addComponent(tfUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE)
+                    .addComponent(tfSQLip)
+                    .addComponent(tfSQLport, javax.swing.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE))
+                .addGap(95, 95, 95))
         );
         loginPanelLayout.setVerticalGroup(
             loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -310,7 +308,7 @@ public class ChatAppServerView extends FrameView {
                 .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnExit1)
                     .addComponent(btnLogin))
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addContainerGap(61, Short.MAX_VALUE))
         );
 
         settingsPanel.setEnabled(false);
@@ -444,6 +442,7 @@ public class ChatAppServerView extends FrameView {
 
     private void btnStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartActionPerformed
         // listen for connections
+        // do we need this? we only create the server once... 
         settingsPanel.setVisible(false);
         super.setComponent(mainPanel);
         startServerWorker = new SwingWorker() {
@@ -457,71 +456,30 @@ public class ChatAppServerView extends FrameView {
     }//GEN-LAST:event_btnStartActionPerformed
     
     public void startServer() throws SQLException {
-        String query;
-        String reply = null;
+
         ServerSocket welcomeSocket=null;
         try {
             welcomeSocket = new ServerSocket(Integer.parseInt(tfPort.getText()));
         } catch (IOException ex) {
+            System.out.println("Could not listen on port: "+tfPort.getText());
             ex.printStackTrace();
         }
         while(true) {
-            Socket connectionSocket;
             try {
-                connectionSocket = welcomeSocket.accept();
-                BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
-                DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
-                query = inFromClient.readLine();
-                Statement sendSQLQuery = null;
-                sendSQLQuery = connectToMysql.createStatement();
-                if (query.startsWith("CHEK:")) {
-                    // checks database for stuff
-                    String parseQuery = query;
-                    parseQuery = parseQuery.substring("CHEK:".length());
-                    if (parseQuery.startsWith("nickname:")) {
-                        parseQuery = parseQuery.substring("nickname:".length());
-                        sendSQLQuery.executeQuery("SELECT nickname FROM user WHERE nickname = '" + parseQuery.toLowerCase() + "';");
-                        ResultSet results = sendSQLQuery.getResultSet();
-                        boolean found = results.next();
-                        results.close();
-                        sendSQLQuery.close();
-                        if (found)
-                            reply = "AlreadyExists\n";
-                        else
-                            reply = "Available\n";
-                        outToClient.writeBytes(reply);
-                    }
-                    else if (parseQuery.startsWith("username:")) {
-                        parseQuery = parseQuery.substring("username:".length());
-                        sendSQLQuery.executeQuery("SELECT username FROM user WHERE username = '" + parseQuery.toLowerCase() + "';");
-                        ResultSet results = sendSQLQuery.getResultSet();
-                        boolean found = results.next();
-                        results.close();
-                        sendSQLQuery.close();
-                        if (found)
-                            reply = "AlreadyExists\n";
-                        else
-                            reply = "Available\n";
-                        outToClient.writeBytes(reply);
-                    }
-                    else {
-                        // some error about not knowing what's after the check
-                    }
-                    
-                }
-                //reply = query.toUpperCase() + '\n';
-                if(query.equalsIgnoreCase("DISC")){
-                   connectionSocket.close();
-                   System.out.println("Connection Socket Quitting");
-                } 
-                else {
-                    //outToClient.writeBytes(reply);
-                }
+                new ServerThread(welcomeSocket.accept(), connectToMysql).start();
             } catch (IOException ex) {
-                ex.printStackTrace();
+                System.out.println("could not accept connection on port "+tfPort.getText());
+                Logger.getLogger(ChatAppServerView.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
         }
+        /* 
+         * Stop server button has to close the welcome socket. 
+        try {
+            welcomeSocket.close(); 
+        } catch (IOException ex) {
+            System.out.println("Could not close socket"); 
+            ex.printStackTrace();
+        }*/
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnExit1;
