@@ -1,0 +1,9 @@
+#labels todo
+== Misc ==
+
+
+== Server ==
+
+
+== Client ==
+  * first name and last name --> restrict commas etc. 
