@@ -141,8 +141,8 @@ public class ChatClientView extends FrameView {
             ex.printStackTrace();
         }
         /* for "code" == "CHEK"
-         * query = "CHECK:username:some_username"
-         * query = "CHECK:nickname:some_nickname"
+         * query = "CHEK:username:some_username"
+         * query = "CHEK:nickname:some_nickname"
          */
         if (code.equals("CHEK")) {
             if (reply.equals("AlreadyExists"))
