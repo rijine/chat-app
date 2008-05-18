@@ -100,11 +100,12 @@ public class ServerThread extends Thread {
 
                 outQuery += parseQuery+"');"; // get nickname
                 
+                /*
                 System.out.println(parseQuery); 
                 System.out.println(outQuery); 
                 if (parseQuery.isEmpty()) 
                     System.out.println("parse should be correct... (debug info) "); 
-                
+                */
                 sendSQLQuery.execute(outQuery); 
                 // check if query was executed succesfully and give feedback... 
                 // outToClient.writeBytes("feedback_here..."); 
