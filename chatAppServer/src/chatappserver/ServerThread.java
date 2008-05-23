@@ -159,7 +159,7 @@ public class ServerThread extends Thread {
                 boolean validCredentials = results.next(); 
                 if (!validCredentials) {
                     // either username doesn't exist, or the password is invalid..
-                    reply = "ERR\n"; 
+                    reply = "ERR2\n"; 
                 }
                 else {
                     login = true; 
@@ -206,7 +206,7 @@ public class ServerThread extends Thread {
                     check(query);
                 } else if (query.startsWith("NEWA:")) { // new account 
                     newaccnt(query);
-                } else if (query.equalsIgnoreCase("LOGN")) { // login
+                } else if (query.equalsIgnoreCase("LOGN:")) { // login
                     login(query); 
                 } else {
                     // error, invalid code. 
