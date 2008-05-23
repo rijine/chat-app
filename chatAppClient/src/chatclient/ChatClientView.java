@@ -22,6 +22,8 @@ import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.regex.Pattern;
 import javax.swing.Timer;
 import javax.swing.Icon;
@@ -108,7 +110,7 @@ public class ChatClientView extends FrameView {
         ChatClientApp.getApplication().show(aboutBox);
     }
     
-    public boolean sendMessageToServer(String code, String message) throws FileNotFoundException, IOException {
+    public String sendMessageToServer(String code, String message) throws FileNotFoundException, IOException {
         String query; 
         String reply = null; 
         String hostname;
@@ -144,13 +146,7 @@ public class ChatClientView extends FrameView {
          * query = "CHEK:username:some_username"
          * query = "CHEK:nickname:some_nickname"
          */
-        if (code.equals("CHEK")) {
-            if (reply.equals("AlreadyExists"))
-                return false;
-            else if (reply.equals("Available"))
-                return true;
-        }
-        return false;
+        return reply; 
     }
     
     @Action
@@ -162,7 +158,33 @@ public class ChatClientView extends FrameView {
         }
         ChatClientApp.getApplication().show(settingsBox);
     }
+    
+public String MD5Hash(String Input)
+    {
+         String pass = Input;
+         
+         StringBuffer hexString = new StringBuffer();
+        byte[] defaultBytes = pass.getBytes();
+        try{
+         MessageDigest algorithm = MessageDigest.getInstance("MD5");
+         algorithm.reset();
+         algorithm.update(defaultBytes);
+         byte messageDigest[] = algorithm.digest();
 
+         for (int i=0;i<messageDigest.length;i++) {
+            String hex = Integer.toHexString(0xFF & messageDigest[i]); 
+            if(hex.length()==1)
+            hexString.append('0');
+
+            hexString.append(hex);
+     }
+     pass = hexString+"";
+    }
+    catch(NoSuchAlgorithmException nsae){
+      }
+    return hexString.toString(); 
+}
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -174,12 +196,12 @@ public class ChatClientView extends FrameView {
         mainPanel = new javax.swing.JPanel();
         lblUser = new javax.swing.JLabel();
         lblPassword = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        tfUsername = new javax.swing.JTextField();
         lblExUser = new javax.swing.JLabel();
         butLogin = new javax.swing.JButton();
         butNewAcc = new javax.swing.JButton();
         butGuest = new javax.swing.JButton();
-        txtPass = new javax.swing.JPasswordField();
+        tfPass = new javax.swing.JPasswordField();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         settingsMenuItem = new javax.swing.JMenuItem();
@@ -230,14 +252,21 @@ public class ChatClientView extends FrameView {
         lblPassword.setText(resourceMap.getString("lblPassword.text")); // NOI18N
         lblPassword.setName("lblPassword"); // NOI18N
 
-        jTextField1.setText(resourceMap.getString("jTextField1.text")); // NOI18N
-        jTextField1.setName("jTextField1"); // NOI18N
+        tfUsername.setText(resourceMap.getString("tfUsername.text")); // NOI18N
+        tfUsername.setName("tfUsername"); // NOI18N
 
         lblExUser.setText(resourceMap.getString("lblExUser.text")); // NOI18N
         lblExUser.setName("lblExUser"); // NOI18N
 
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(chatclient.ChatClientApp.class).getContext().getActionMap(ChatClientView.class, this);
+        butLogin.setAction(actionMap.get("showChatBox")); // NOI18N
         butLogin.setText(resourceMap.getString("butLogin.text")); // NOI18N
         butLogin.setName("butLogin"); // NOI18N
+        butLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                butLoginActionPerformed(evt);
+            }
+        });
 
         butNewAcc.setText(resourceMap.getString("butNewAcc.text")); // NOI18N
         butNewAcc.setName("butNewAcc"); // NOI18N
@@ -250,8 +279,8 @@ public class ChatClientView extends FrameView {
         butGuest.setText(resourceMap.getString("butGuest.text")); // NOI18N
         butGuest.setName("butGuest"); // NOI18N
 
-        txtPass.setText(resourceMap.getString("txtPass.text")); // NOI18N
-        txtPass.setName("txtPass"); // NOI18N
+        tfPass.setText(resourceMap.getString("tfPass.text")); // NOI18N
+        tfPass.setName("tfPass"); // NOI18N
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
@@ -267,14 +296,14 @@ public class ChatClientView extends FrameView {
                     .addComponent(lblExUser)
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txtPass, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tfPass, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
+                            .addComponent(tfUsername, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(butLogin))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(butNewAcc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(butGuest))))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -284,16 +313,16 @@ public class ChatClientView extends FrameView {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblUser)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(butNewAcc))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPassword)
-                    .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(butGuest))
                 .addGap(9, 9, 9)
                 .addComponent(butLogin)
-                .addContainerGap(116, Short.MAX_VALUE))
+                .addContainerGap(115, Short.MAX_VALUE))
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -301,7 +330,6 @@ public class ChatClientView extends FrameView {
         fileMenu.setText(resourceMap.getString("fileMenu.text")); // NOI18N
         fileMenu.setName("fileMenu"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(chatclient.ChatClientApp.class).getContext().getActionMap(ChatClientView.class, this);
         settingsMenuItem.setAction(actionMap.get("showSettingsBox")); // NOI18N
         settingsMenuItem.setText(resourceMap.getString("settingsMenuItem.text")); // NOI18N
         settingsMenuItem.setName("settingsMenuItem"); // NOI18N
@@ -342,11 +370,11 @@ public class ChatClientView extends FrameView {
         statusPanel.setLayout(statusPanelLayout);
         statusPanelLayout.setHorizontalGroup(
             statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
+            .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
             .addGroup(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(statusMessageLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 167, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 157, Short.MAX_VALUE)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusAnimationLabel)
@@ -479,11 +507,9 @@ public class ChatClientView extends FrameView {
         lblNickCheck.setName("lblNickCheck"); // NOI18N
         PanNewUser.add(lblNickCheck, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 100, -1, -1));
 
-        lblFNameCheck.setIcon(null);
         lblFNameCheck.setName("lblFNameCheck"); // NOI18N
         PanNewUser.add(lblFNameCheck, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 120, -1, -1));
 
-        lblLNameCheck.setIcon(null);
         lblLNameCheck.setName("lblLNameCheck"); // NOI18N
         PanNewUser.add(lblLNameCheck, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 140, -1, -1));
 
@@ -534,7 +560,7 @@ public class ChatClientView extends FrameView {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanChatLayout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 116, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 118, Short.MAX_VALUE)
                         .addComponent(txtSend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(28, 28, 28))
         );
@@ -562,11 +588,10 @@ public class ChatClientView extends FrameView {
             javax.swing.JOptionPane.showMessageDialog(super.getFrame(), "All fields are required. ", "Error!", javax.swing.JOptionPane.ERROR_MESSAGE);
         else if (checkFields()) {
             try {
-                sendMessageToServer("NEWA", txtUserName.getText() + "," + txtEmail.getText() + "," + txtFName.getText() + "," + txtLName.getText() + "," + String.valueOf(txtPassword.getPassword()) + "," + txtNickName.getText());
+                sendMessageToServer("NEWA", txtUserName.getText() + "," + txtEmail.getText() + "," + txtFName.getText() + "," + txtLName.getText() + "," + MD5Hash(String.valueOf(txtPassword.getPassword())) + "," + txtNickName.getText());
                 int choice = javax.swing.JOptionPane.showConfirmDialog(super.getFrame(), "User " + txtUserName.getText() + " created.\nDo you want to login?", "Success!", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE);
-                System.out.println(choice);
                 if (choice == 0) {
-                    // send username/password to server with "LOGN"
+                    sendMessageToServer("LOGN", tfUsername.getText() + "," + MD5Hash(String.valueOf(tfPass.getPassword())));
                     PanNewUser.setVisible(false);
                     super.setComponent(PanChat);
                 }
@@ -610,15 +635,22 @@ public class ChatClientView extends FrameView {
         Pattern regex = Pattern.compile(allowableCharacters);
         if (regex.matcher(txtUserName.getText()).matches()) {
             try {
-                if (sendMessageToServer("CHEK", "username:" + txtUserName.getText())) {
-                    lblUnameCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/greenTick.png")));
-                    lblUnameCheck.setToolTipText(null);
-                    bUname = true;
+                if (txtUserName.getText().isEmpty()) {
+                    lblUnameCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/redX.png")));
+                    lblUnameCheck.setToolTipText("Username cannot be emtpy");
+                    bUname = false;
                 }
                 else {
-                    lblUnameCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/redX.png")));
-                    lblUnameCheck.setToolTipText("Username already exists");
-                    bUname = false;
+                    if (sendMessageToServer("CHEK", "username:" + txtUserName.getText()).equals("Available")) {
+                        lblUnameCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/greenTick.png")));
+                        lblUnameCheck.setToolTipText(null);
+                        bUname = true;
+                    }
+                    else {
+                        lblUnameCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/redX.png")));
+                        lblUnameCheck.setToolTipText("Username already exists");
+                        bUname = false;
+                    }
                 }
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
@@ -670,15 +702,22 @@ public class ChatClientView extends FrameView {
         Pattern regex = Pattern.compile(allowableCharacters);
         if (regex.matcher(txtNickName.getText()).matches()) {
             try {
-                if (sendMessageToServer("CHEK", "nickname:" + txtNickName.getText())) {
-                    lblNickCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/greenTick.png")));
-                    lblNickCheck.setToolTipText(null);
-                    bNick = true;
+                if (txtNickName.getText().isEmpty()) {
+                    lblNickCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/redX.png")));
+                    lblNickCheck.setToolTipText("Nickname cannot be empty");
+                    bNick = false;
                 }
                 else {
-                    lblNickCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/redX.png")));
-                    lblNickCheck.setToolTipText("Nickname already in use");
-                    bNick = false;
+                    if (sendMessageToServer("CHEK", "nickname:" + txtNickName.getText()).equals("Available")) {
+                        lblNickCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/greenTick.png")));
+                        lblNickCheck.setToolTipText(null);
+                        bNick = true;
+                    }
+                    else {
+                        lblNickCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/redX.png")));
+                        lblNickCheck.setToolTipText("Nickname already in use");
+                        bNick = false;
+                    }
                 }
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
@@ -697,9 +736,11 @@ public class ChatClientView extends FrameView {
     private void txtFNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtFNameFocusLost
         String allowableCharacters = "[A-Za-z0-9]*";
         Pattern regex = Pattern.compile(allowableCharacters);
-        if (!regex.matcher(txtFName.getText()).matches()) {
+        if (!regex.matcher(txtFName.getText()).matches() || txtFName.getText().isEmpty()) {
             lblFNameCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/redX.png")));
-            lblFNameCheck.setToolTipText("Illegal characters inputted");
+            if (txtFName.getText().isEmpty())
+                lblFNameCheck.setToolTipText("First name cannot be empty"); 
+            else lblFNameCheck.setToolTipText("Illegal characters inputted");
             bFName= false;
         }
         else {
@@ -713,9 +754,11 @@ public class ChatClientView extends FrameView {
     private void txtLNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtLNameFocusLost
         String allowableCharacters = "[A-Za-z0-9]*";
         Pattern regex = Pattern.compile(allowableCharacters);
-        if (!regex.matcher(txtLName.getText()).matches()) {
+        if (!regex.matcher(txtLName.getText()).matches() || txtLName.getText().isEmpty()) {
             lblLNameCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/redX.png")));
-            lblLNameCheck.setToolTipText("Illegal characters inputted");
+            if (txtLName.getText().isEmpty())
+                lblLNameCheck.setToolTipText("Last name cannot be empty"); 
+            else lblLNameCheck.setToolTipText("Illegal characters inputted");
             bLName = false;
         }
         else {
@@ -725,6 +768,27 @@ public class ChatClientView extends FrameView {
         }
         lblFNameCheck.setVisible(true);
     }//GEN-LAST:event_txtLNameFocusLost
+
+    private void butLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butLoginActionPerformed
+        try {
+            String reply = sendMessageToServer("LOGN", tfUsername.getText() + "," + MD5Hash(String.valueOf(tfPass.getPassword())));
+
+            if (reply.equals("ERR1")) {
+                javax.swing.JOptionPane.showMessageDialog(super.getFrame(), "User already logged in...");
+            } else if (reply.equals("ERR2")) {
+                javax.swing.JOptionPane.showMessageDialog(super.getFrame(), "Invalid username/password...");
+            } else if (reply.equals("SUCC")) {
+                mainPanel.setVisible(false);
+                super.setComponent(PanChat);
+            } else {
+                System.out.println("Invalid error code...");
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_butLoginActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanChat;
@@ -736,7 +800,6 @@ public class ChatClientView extends FrameView {
     private javax.swing.JList jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextPane jTextPane1;
     private javax.swing.JLabel lblEmail;
     private javax.swing.JLabel lblEmailCheck;
@@ -762,11 +825,12 @@ public class ChatClientView extends FrameView {
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
+    private javax.swing.JPasswordField tfPass;
+    private javax.swing.JTextField tfUsername;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtFName;
     private javax.swing.JTextField txtLName;
     private javax.swing.JTextField txtNickName;
-    private javax.swing.JPasswordField txtPass;
     private javax.swing.JPasswordField txtPassword;
     private javax.swing.JPasswordField txtPassword2;
     private javax.swing.JTextField txtSend;
@@ -781,5 +845,6 @@ public class ChatClientView extends FrameView {
 
     private JDialog aboutBox;
     private JDialog settingsBox;
+    private JDialog chatBox; 
     private boolean bEmail = false, bUname = false, bPass = false, bNick = false, bFName = false, bLName = false;
 }

@@ -33,7 +33,7 @@ public class ChatClientSettingsBox extends javax.swing.JDialog {
     @Action public void closeSettingsBox() {
         setVisible(false);
     }
-    
+
     @Action public void cancelSettingsBox() throws FileNotFoundException, IOException {
         BufferedReader inputStream = new BufferedReader(new FileReader("settings.ini"));
         txtServer.setText(inputStream.readLine());
