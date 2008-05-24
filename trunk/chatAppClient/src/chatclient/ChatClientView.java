@@ -192,16 +192,17 @@ public String MD5Hash(String Input)
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         mainPanel = new javax.swing.JPanel();
-        lblUser = new javax.swing.JLabel();
-        lblPassword = new javax.swing.JLabel();
-        tfUsername = new javax.swing.JTextField();
+        lblUserLogin = new javax.swing.JLabel();
+        lblPassLogin = new javax.swing.JLabel();
+        tfUsernameLogin = new javax.swing.JTextField();
         lblExUser = new javax.swing.JLabel();
-        butLogin = new javax.swing.JButton();
-        butNewAcc = new javax.swing.JButton();
-        butGuest = new javax.swing.JButton();
-        tfPass = new javax.swing.JPasswordField();
+        btntLogin = new javax.swing.JButton();
+        btntNewAcc = new javax.swing.JButton();
+        btntGuest = new javax.swing.JButton();
+        tfPassLogin = new javax.swing.JPasswordField();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         settingsMenuItem = new javax.swing.JMenuItem();
@@ -215,26 +216,27 @@ public String MD5Hash(String Input)
         progressBar = new javax.swing.JProgressBar();
         PanNewUser = new javax.swing.JPanel();
         lblUsername = new javax.swing.JLabel();
-        lblPass = new javax.swing.JLabel();
-        lblRePass = new javax.swing.JLabel();
-        lblEmail = new javax.swing.JLabel();
-        txtUserName = new javax.swing.JTextField();
-        txtEmail = new javax.swing.JTextField();
-        txtPassword2 = new javax.swing.JPasswordField();
-        txtPassword = new javax.swing.JPasswordField();
-        btnSubmit = new javax.swing.JButton();
-        lblNickName = new javax.swing.JLabel();
-        txtNickName = new javax.swing.JTextField();
-        lblFName = new javax.swing.JLabel();
-        lblLName = new javax.swing.JLabel();
-        txtFName = new javax.swing.JTextField();
-        txtLName = new javax.swing.JTextField();
+        tfUserName = new javax.swing.JTextField();
         lblUnameCheck = new javax.swing.JLabel();
+        lblPass = new javax.swing.JLabel();
+        tfPassword = new javax.swing.JPasswordField();
+        lblRePass = new javax.swing.JLabel();
+        tfPassword2 = new javax.swing.JPasswordField();
         lblPassCheck = new javax.swing.JLabel();
+        lblEmail = new javax.swing.JLabel();
+        tfEmail = new javax.swing.JTextField();
         lblEmailCheck = new javax.swing.JLabel();
+        lblNickName = new javax.swing.JLabel();
+        tfNickName = new javax.swing.JTextField();
         lblNickCheck = new javax.swing.JLabel();
+        lblFName = new javax.swing.JLabel();
+        tfFName = new javax.swing.JTextField();
         lblFNameCheck = new javax.swing.JLabel();
+        lblLName = new javax.swing.JLabel();
+        tfLName = new javax.swing.JTextField();
         lblLNameCheck = new javax.swing.JLabel();
+        btnBack = new javax.swing.JButton();
+        btnSubmit = new javax.swing.JButton();
         PanChat = new javax.swing.JPanel();
         lblWelcome = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -245,42 +247,49 @@ public String MD5Hash(String Input)
 
         mainPanel.setName("mainPanel"); // NOI18N
 
+        lblUserLogin.setDisplayedMnemonic('u');
+        lblUserLogin.setLabelFor(tfUsernameLogin);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(chatclient.ChatClientApp.class).getContext().getResourceMap(ChatClientView.class);
-        lblUser.setText(resourceMap.getString("lblUser.text")); // NOI18N
-        lblUser.setName("lblUser"); // NOI18N
+        lblUserLogin.setText(resourceMap.getString("lblUserLogin.text")); // NOI18N
+        lblUserLogin.setName("lblUserLogin"); // NOI18N
 
-        lblPassword.setText(resourceMap.getString("lblPassword.text")); // NOI18N
-        lblPassword.setName("lblPassword"); // NOI18N
+        lblPassLogin.setDisplayedMnemonic('p');
+        lblPassLogin.setLabelFor(tfPassLogin);
+        lblPassLogin.setText(resourceMap.getString("lblPassLogin.text")); // NOI18N
+        lblPassLogin.setName("lblPassLogin"); // NOI18N
 
-        tfUsername.setText(resourceMap.getString("tfUsername.text")); // NOI18N
-        tfUsername.setName("tfUsername"); // NOI18N
+        tfUsernameLogin.setText(resourceMap.getString("tfUsernameLogin.text")); // NOI18N
+        tfUsernameLogin.setName("tfUsernameLogin"); // NOI18N
 
         lblExUser.setText(resourceMap.getString("lblExUser.text")); // NOI18N
         lblExUser.setName("lblExUser"); // NOI18N
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(chatclient.ChatClientApp.class).getContext().getActionMap(ChatClientView.class, this);
-        butLogin.setAction(actionMap.get("showChatBox")); // NOI18N
-        butLogin.setText(resourceMap.getString("butLogin.text")); // NOI18N
-        butLogin.setName("butLogin"); // NOI18N
-        butLogin.addActionListener(new java.awt.event.ActionListener() {
+        btntLogin.setAction(actionMap.get("showChatBox")); // NOI18N
+        btntLogin.setMnemonic('g');
+        btntLogin.setText(resourceMap.getString("btntLogin.text")); // NOI18N
+        btntLogin.setName("btntLogin"); // NOI18N
+        btntLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                butLoginActionPerformed(evt);
+                btntLoginActionPerformed(evt);
             }
         });
 
-        butNewAcc.setText(resourceMap.getString("butNewAcc.text")); // NOI18N
-        butNewAcc.setName("butNewAcc"); // NOI18N
-        butNewAcc.addActionListener(new java.awt.event.ActionListener() {
+        btntNewAcc.setMnemonic('n');
+        btntNewAcc.setText(resourceMap.getString("btntNewAcc.text")); // NOI18N
+        btntNewAcc.setName("btntNewAcc"); // NOI18N
+        btntNewAcc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                butNewAccActionPerformed(evt);
+                btntNewAccActionPerformed(evt);
             }
         });
 
-        butGuest.setText(resourceMap.getString("butGuest.text")); // NOI18N
-        butGuest.setName("butGuest"); // NOI18N
+        btntGuest.setMnemonic('s');
+        btntGuest.setText(resourceMap.getString("btntGuest.text")); // NOI18N
+        btntGuest.setName("btntGuest"); // NOI18N
 
-        tfPass.setText(resourceMap.getString("tfPass.text")); // NOI18N
-        tfPass.setName("tfPass"); // NOI18N
+        tfPassLogin.setText(resourceMap.getString("tfPassLogin.text")); // NOI18N
+        tfPassLogin.setName("tfPassLogin"); // NOI18N
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
@@ -289,20 +298,20 @@ public String MD5Hash(String Input)
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblPassword)
-                    .addComponent(lblUser))
+                    .addComponent(lblPassLogin)
+                    .addComponent(lblUserLogin))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblExUser)
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(tfPass, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
-                            .addComponent(tfUsername, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(butLogin))
+                            .addComponent(tfPassLogin, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
+                            .addComponent(tfUsernameLogin, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btntLogin))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(butNewAcc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(butGuest))))
+                            .addComponent(btntNewAcc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btntGuest))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         mainPanelLayout.setVerticalGroup(
@@ -312,21 +321,22 @@ public String MD5Hash(String Input)
                 .addComponent(lblExUser)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblUser)
-                    .addComponent(tfUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(butNewAcc))
+                    .addComponent(lblUserLogin)
+                    .addComponent(tfUsernameLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btntNewAcc))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblPassword)
-                    .addComponent(tfPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(butGuest))
+                    .addComponent(lblPassLogin)
+                    .addComponent(tfPassLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btntGuest))
                 .addGap(9, 9, 9)
-                .addComponent(butLogin)
+                .addComponent(btntLogin)
                 .addContainerGap(115, Short.MAX_VALUE))
         );
 
         menuBar.setName("menuBar"); // NOI18N
 
+        fileMenu.setMnemonic('f');
         fileMenu.setText(resourceMap.getString("fileMenu.text")); // NOI18N
         fileMenu.setName("fileMenu"); // NOI18N
 
@@ -346,6 +356,7 @@ public String MD5Hash(String Input)
 
         menuBar.add(fileMenu);
 
+        helpMenu.setMnemonic('h');
         helpMenu.setText(resourceMap.getString("helpMenu.text")); // NOI18N
         helpMenu.setName("helpMenu"); // NOI18N
 
@@ -393,125 +404,246 @@ public String MD5Hash(String Input)
         );
 
         PanNewUser.setName("PanNewUser"); // NOI18N
-        PanNewUser.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        PanNewUser.setLayout(new java.awt.GridBagLayout());
 
+        lblUsername.setDisplayedMnemonic('u');
+        lblUsername.setLabelFor(tfUserName);
         lblUsername.setText(resourceMap.getString("lblUsername.text")); // NOI18N
         lblUsername.setName("lblUsername"); // NOI18N
-        PanNewUser.add(lblUsername, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        PanNewUser.add(lblUsername, gridBagConstraints);
 
+        tfUserName.setText(resourceMap.getString("tfUserName.text")); // NOI18N
+        tfUserName.setName("tfUserName"); // NOI18N
+        tfUserName.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tfUserNameFocusLost(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
+        PanNewUser.add(tfUserName, gridBagConstraints);
+
+        lblUnameCheck.setIcon(resourceMap.getIcon("lblUnameCheck.icon")); // NOI18N
+        lblUnameCheck.setText(resourceMap.getString("lblUnameCheck.text")); // NOI18N
+        lblUnameCheck.setName("lblUnameCheck"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.ipadx = 20;
+        gridBagConstraints.insets = new java.awt.Insets(0, 3, 0, 0);
+        PanNewUser.add(lblUnameCheck, gridBagConstraints);
+
+        lblPass.setDisplayedMnemonic('p');
+        lblPass.setLabelFor(tfPassword);
         lblPass.setText(resourceMap.getString("lblPass.text")); // NOI18N
         lblPass.setName("lblPass"); // NOI18N
-        PanNewUser.add(lblPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        PanNewUser.add(lblPass, gridBagConstraints);
 
+        tfPassword.setText(resourceMap.getString("tfPassword.text")); // NOI18N
+        tfPassword.setName("tfPassword"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
+        PanNewUser.add(tfPassword, gridBagConstraints);
+
+        lblRePass.setDisplayedMnemonic('a');
+        lblRePass.setLabelFor(tfPassword2);
         lblRePass.setText(resourceMap.getString("lblRePass.text")); // NOI18N
         lblRePass.setName("lblRePass"); // NOI18N
-        PanNewUser.add(lblRePass, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        PanNewUser.add(lblRePass, gridBagConstraints);
 
+        tfPassword2.setText(resourceMap.getString("tfPassword2.text")); // NOI18N
+        tfPassword2.setName("tfPassword2"); // NOI18N
+        tfPassword2.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tfPassword2FocusLost(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
+        PanNewUser.add(tfPassword2, gridBagConstraints);
+
+        lblPassCheck.setIcon(resourceMap.getIcon("lblPassCheck.icon")); // NOI18N
+        lblPassCheck.setName("lblPassCheck"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.ipadx = 20;
+        gridBagConstraints.insets = new java.awt.Insets(0, 3, 0, 0);
+        PanNewUser.add(lblPassCheck, gridBagConstraints);
+
+        lblEmail.setDisplayedMnemonic('e');
+        lblEmail.setLabelFor(tfEmail);
         lblEmail.setText(resourceMap.getString("lblEmail.text")); // NOI18N
         lblEmail.setName("lblEmail"); // NOI18N
-        PanNewUser.add(lblEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        PanNewUser.add(lblEmail, gridBagConstraints);
 
-        txtUserName.setText(resourceMap.getString("txtUserName.text")); // NOI18N
-        txtUserName.setName("txtUserName"); // NOI18N
-        txtUserName.addFocusListener(new java.awt.event.FocusAdapter() {
+        tfEmail.setText(resourceMap.getString("tfEmail.text")); // NOI18N
+        tfEmail.setName("tfEmail"); // NOI18N
+        tfEmail.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
-                txtUserNameFocusLost(evt);
+                tfEmailFocusLost(evt);
             }
         });
-        PanNewUser.add(txtUserName, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 20, 130, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
+        PanNewUser.add(tfEmail, gridBagConstraints);
 
-        txtEmail.setText(resourceMap.getString("txtEmail.text")); // NOI18N
-        txtEmail.setName("txtEmail"); // NOI18N
-        txtEmail.addFocusListener(new java.awt.event.FocusAdapter() {
+        lblEmailCheck.setIcon(resourceMap.getIcon("lblEmailCheck.icon")); // NOI18N
+        lblEmailCheck.setName("lblEmailCheck"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.ipadx = 20;
+        gridBagConstraints.insets = new java.awt.Insets(0, 3, 0, 0);
+        PanNewUser.add(lblEmailCheck, gridBagConstraints);
+
+        lblNickName.setDisplayedMnemonic('n');
+        lblNickName.setLabelFor(tfNickName);
+        lblNickName.setText(resourceMap.getString("lblNickName.text")); // NOI18N
+        lblNickName.setName("lblNickName"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        PanNewUser.add(lblNickName, gridBagConstraints);
+
+        tfNickName.setText(resourceMap.getString("tfNickName.text")); // NOI18N
+        tfNickName.setName("tfNickName"); // NOI18N
+        tfNickName.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
-                txtEmailFocusLost(evt);
+                tfNickNameFocusLost(evt);
             }
         });
-        PanNewUser.add(txtEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 80, 130, 20));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
+        PanNewUser.add(tfNickName, gridBagConstraints);
 
-        txtPassword2.setText(resourceMap.getString("txtPassword2.text")); // NOI18N
-        txtPassword2.setName("txtPassword2"); // NOI18N
-        txtPassword2.addFocusListener(new java.awt.event.FocusAdapter() {
+        lblNickCheck.setIcon(resourceMap.getIcon("lblNickCheck.icon")); // NOI18N
+        lblNickCheck.setName("lblNickCheck"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.ipadx = 20;
+        gridBagConstraints.insets = new java.awt.Insets(0, 3, 0, 0);
+        PanNewUser.add(lblNickCheck, gridBagConstraints);
+
+        lblFName.setDisplayedMnemonic('i');
+        lblFName.setLabelFor(tfFName);
+        lblFName.setText(resourceMap.getString("lblFName.text")); // NOI18N
+        lblFName.setName("lblFName"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        PanNewUser.add(lblFName, gridBagConstraints);
+
+        tfFName.setText(resourceMap.getString("tfFName.text")); // NOI18N
+        tfFName.setName("tfFName"); // NOI18N
+        tfFName.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
-                txtPassword2FocusLost(evt);
+                tfFNameFocusLost(evt);
             }
         });
-        PanNewUser.add(txtPassword2, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 60, 130, 20));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
+        PanNewUser.add(tfFName, gridBagConstraints);
 
-        txtPassword.setText(resourceMap.getString("txtPassword.text")); // NOI18N
-        txtPassword.setName("txtPassword"); // NOI18N
-        PanNewUser.add(txtPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 40, 130, -1));
+        lblFNameCheck.setIcon(resourceMap.getIcon("lblFNameCheck.icon")); // NOI18N
+        lblFNameCheck.setName("lblFNameCheck"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.ipadx = 20;
+        gridBagConstraints.insets = new java.awt.Insets(0, 3, 0, 0);
+        PanNewUser.add(lblFNameCheck, gridBagConstraints);
 
+        lblLName.setDisplayedMnemonic('l');
+        lblLName.setLabelFor(tfLName);
+        lblLName.setText(resourceMap.getString("lblLName.text")); // NOI18N
+        lblLName.setName("lblLName"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        PanNewUser.add(lblLName, gridBagConstraints);
+
+        tfLName.setText(resourceMap.getString("tfLName.text")); // NOI18N
+        tfLName.setName("tfLName"); // NOI18N
+        tfLName.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tfLNameFocusLost(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
+        PanNewUser.add(tfLName, gridBagConstraints);
+
+        lblLNameCheck.setIcon(resourceMap.getIcon("lblLNameCheck.icon")); // NOI18N
+        lblLNameCheck.setName("lblLNameCheck"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.ipadx = 20;
+        gridBagConstraints.insets = new java.awt.Insets(0, 3, 0, 0);
+        PanNewUser.add(lblLNameCheck, gridBagConstraints);
+
+        btnBack.setMnemonic('b');
+        btnBack.setText(resourceMap.getString("btnBack.text")); // NOI18N
+        btnBack.setMargin(new java.awt.Insets(1, 14, 2, 14));
+        btnBack.setName("btnBack"); // NOI18N
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 8);
+        PanNewUser.add(btnBack, gridBagConstraints);
+
+        btnSubmit.setMnemonic('r');
         btnSubmit.setText(resourceMap.getString("btnSubmit.text")); // NOI18N
+        btnSubmit.setMargin(new java.awt.Insets(1, 18, 2, 18));
         btnSubmit.setName("btnSubmit"); // NOI18N
         btnSubmit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSubmitActionPerformed(evt);
             }
         });
-        PanNewUser.add(btnSubmit, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 220, -1, -1));
-
-        lblNickName.setText(resourceMap.getString("lblNickName.text")); // NOI18N
-        lblNickName.setName("lblNickName"); // NOI18N
-        PanNewUser.add(lblNickName, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, -1, -1));
-
-        txtNickName.setText(resourceMap.getString("txtNickName.text")); // NOI18N
-        txtNickName.setName("txtNickName"); // NOI18N
-        txtNickName.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtNickNameFocusLost(evt);
-            }
-        });
-        PanNewUser.add(txtNickName, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 100, 130, -1));
-
-        lblFName.setText(resourceMap.getString("lblFName.text")); // NOI18N
-        lblFName.setName("lblFName"); // NOI18N
-        PanNewUser.add(lblFName, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, -1, -1));
-
-        lblLName.setText(resourceMap.getString("lblLName.text")); // NOI18N
-        lblLName.setName("lblLName"); // NOI18N
-        PanNewUser.add(lblLName, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, -1, -1));
-
-        txtFName.setText(resourceMap.getString("txtFName.text")); // NOI18N
-        txtFName.setName("txtFName"); // NOI18N
-        txtFName.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtFNameFocusLost(evt);
-            }
-        });
-        PanNewUser.add(txtFName, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 120, 130, -1));
-
-        txtLName.setText(resourceMap.getString("txtLName.text")); // NOI18N
-        txtLName.setName("txtLName"); // NOI18N
-        txtLName.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtLNameFocusLost(evt);
-            }
-        });
-        PanNewUser.add(txtLName, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 140, 130, -1));
-
-        lblUnameCheck.setIcon(resourceMap.getIcon("lblUnameCheck.icon")); // NOI18N
-        lblUnameCheck.setText(resourceMap.getString("lblUnameCheck.text")); // NOI18N
-        lblUnameCheck.setName("lblUnameCheck"); // NOI18N
-        PanNewUser.add(lblUnameCheck, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 20, -1, -1));
-
-        lblPassCheck.setIcon(resourceMap.getIcon("lblPassCheck.icon")); // NOI18N
-        lblPassCheck.setName("lblPassCheck"); // NOI18N
-        PanNewUser.add(lblPassCheck, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 60, -1, -1));
-
-        lblEmailCheck.setIcon(resourceMap.getIcon("lblEmailCheck.icon")); // NOI18N
-        lblEmailCheck.setName("lblEmailCheck"); // NOI18N
-        PanNewUser.add(lblEmailCheck, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 80, -1, -1));
-
-        lblNickCheck.setIcon(resourceMap.getIcon("lblNickCheck.icon")); // NOI18N
-        lblNickCheck.setName("lblNickCheck"); // NOI18N
-        PanNewUser.add(lblNickCheck, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 100, -1, -1));
-
-        lblFNameCheck.setName("lblFNameCheck"); // NOI18N
-        PanNewUser.add(lblFNameCheck, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 120, -1, -1));
-
-        lblLNameCheck.setName("lblLNameCheck"); // NOI18N
-        PanNewUser.add(lblLNameCheck, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 140, -1, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(5, 4, 0, 0);
+        PanNewUser.add(btnSubmit, gridBagConstraints);
 
         PanChat.setName("PanChat"); // NOI18N
 
@@ -570,10 +702,12 @@ public String MD5Hash(String Input)
         setStatusBar(statusPanel);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void butNewAccActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butNewAccActionPerformed
+    private void btntNewAccActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btntNewAccActionPerformed
        mainPanel.setVisible(false);
        super.setComponent(PanNewUser);
-    }//GEN-LAST:event_butNewAccActionPerformed
+       clearNewUserFields(); 
+       PanNewUser.setVisible(true);
+}//GEN-LAST:event_btntNewAccActionPerformed
     private boolean checkFields() {
         if (!bEmail || !bPass || !bNick || !bUname || !bFName || !bLName) {
             return false;
@@ -581,24 +715,25 @@ public String MD5Hash(String Input)
         return true;
     }
     private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
-        if (txtUserName.getText().isEmpty() || txtEmail.getText().isEmpty() || 
-               txtFName.getText().isEmpty() || txtLName.getText().isEmpty() ||
-               txtNickName.getText().isEmpty() || 
-               String.valueOf(txtPassword.getPassword()).isEmpty() || String.valueOf(txtPassword2.getPassword()).isEmpty()) 
+        if (tfUserName.getText().isEmpty() || tfEmail.getText().isEmpty() || 
+               tfFName.getText().isEmpty() || tfLName.getText().isEmpty() ||
+               tfNickName.getText().isEmpty() || 
+               String.valueOf(tfPassword.getPassword()).isEmpty() || String.valueOf(tfPassword2.getPassword()).isEmpty()) 
             javax.swing.JOptionPane.showMessageDialog(super.getFrame(), "All fields are required. ", "Error!", javax.swing.JOptionPane.ERROR_MESSAGE);
         else if (checkFields()) {
             try {
-                sendMessageToServer("NEWA", txtUserName.getText() + "," + txtEmail.getText() + "," + txtFName.getText() + "," + txtLName.getText() + "," + MD5Hash(String.valueOf(txtPassword.getPassword())) + "," + txtNickName.getText());
-                int choice = javax.swing.JOptionPane.showConfirmDialog(super.getFrame(), "User " + txtUserName.getText() + " created.\nDo you want to login?", "Success!", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE);
-                if (choice == 0) {
-                    sendMessageToServer("LOGN", tfUsername.getText() + "," + MD5Hash(String.valueOf(tfPass.getPassword())));
+                sendMessageToServer("NEWA", tfUserName.getText() + "," + tfEmail.getText() + "," + tfFName.getText() + "," + tfLName.getText() + "," + MD5Hash(String.valueOf(tfPassword.getPassword())) + "," + tfNickName.getText());
+                int choice = javax.swing.JOptionPane.showConfirmDialog(super.getFrame(), "User " + tfUserName.getText() + " created.\nDo you want to login?", "Success!", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE);
+                if (choice == 0) { // i want to login
+                    sendMessageToServer("LOGN", tfUsernameLogin.getText() + "," + MD5Hash(String.valueOf(tfPassLogin.getPassword())));
                     PanNewUser.setVisible(false);
                     super.setComponent(PanChat);
+                    PanChat.setVisible(true);
                 }
-                else {
+                else { // i want to go back to the main menu
                     PanNewUser.setVisible(false);
-                    mainPanel.setVisible(true);
                     super.setComponent(mainPanel);
+                    mainPanel.setVisible(true);
                 }
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
@@ -611,13 +746,13 @@ public String MD5Hash(String Input)
         }
 }//GEN-LAST:event_btnSubmitActionPerformed
 
-    private void txtPassword2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPassword2FocusLost
-        if (!String.valueOf(txtPassword.getPassword()).equals(String.valueOf(txtPassword2.getPassword()))) {
+    private void tfPassword2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfPassword2FocusLost
+        if (!String.valueOf(tfPassword.getPassword()).equals(String.valueOf(tfPassword2.getPassword()))) {
             lblPassCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/redX.png")));
             lblPassCheck.setToolTipText("Passwords do not match");
             bPass = false;
         }
-        else if (txtPassword.getPassword().length < 6) {
+        else if (tfPassword.getPassword().length < 6) {
             lblPassCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/redX.png")));
             lblPassCheck.setToolTipText("Password must be at least 6 characters long.");
             bPass = false;
@@ -628,20 +763,20 @@ public String MD5Hash(String Input)
             bPass = true;
         }
         lblPassCheck.setVisible(true);
-    }//GEN-LAST:event_txtPassword2FocusLost
+}//GEN-LAST:event_tfPassword2FocusLost
 
-    private void txtUserNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtUserNameFocusLost
+    private void tfUserNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfUserNameFocusLost
         String allowableCharacters = "[A-Za-z0-9]*";
         Pattern regex = Pattern.compile(allowableCharacters);
-        if (regex.matcher(txtUserName.getText()).matches()) {
+        if (regex.matcher(tfUserName.getText()).matches()) {
             try {
-                if (txtUserName.getText().isEmpty()) {
+                if (tfUserName.getText().isEmpty()) {
                     lblUnameCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/redX.png")));
                     lblUnameCheck.setToolTipText("Username cannot be emtpy");
                     bUname = false;
                 }
                 else {
-                    if (sendMessageToServer("CHEK", "username:" + txtUserName.getText()).equals("Available")) {
+                    if (sendMessageToServer("CHEK", "username:" + tfUserName.getText()).equals("Available")) {
                         lblUnameCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/greenTick.png")));
                         lblUnameCheck.setToolTipText(null);
                         bUname = true;
@@ -664,18 +799,18 @@ public String MD5Hash(String Input)
             bUname = false;
         }
         lblUnameCheck.setVisible(true);
-    }//GEN-LAST:event_txtUserNameFocusLost
+}//GEN-LAST:event_tfUserNameFocusLost
 
     private void settingsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_settingsMenuItemActionPerformed
         // Open Settings window
 }//GEN-LAST:event_settingsMenuItemActionPerformed
 
-    private void txtEmailFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtEmailFocusLost
+    private void tfEmailFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfEmailFocusLost
         BufferedReader r = null;
         try {
             r = new BufferedReader(new FileReader("regex.txt"));
             Pattern regex = Pattern.compile(r.readLine());
-            if(regex.matcher(txtEmail.getText()).matches()) {
+            if(regex.matcher(tfEmail.getText()).matches()) {
                 lblEmailCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/greenTick.png")));
                 lblEmailCheck.setToolTipText(null);
                 bEmail = true;
@@ -695,20 +830,20 @@ public String MD5Hash(String Input)
                     e.printStackTrace();
             }
         }
-    }//GEN-LAST:event_txtEmailFocusLost
+}//GEN-LAST:event_tfEmailFocusLost
 
-    private void txtNickNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNickNameFocusLost
+    private void tfNickNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfNickNameFocusLost
         String allowableCharacters = "[A-Za-z0-9]*";
         Pattern regex = Pattern.compile(allowableCharacters);
-        if (regex.matcher(txtNickName.getText()).matches()) {
+        if (regex.matcher(tfNickName.getText()).matches()) {
             try {
-                if (txtNickName.getText().isEmpty()) {
+                if (tfNickName.getText().isEmpty()) {
                     lblNickCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/redX.png")));
                     lblNickCheck.setToolTipText("Nickname cannot be empty");
                     bNick = false;
                 }
                 else {
-                    if (sendMessageToServer("CHEK", "nickname:" + txtNickName.getText()).equals("Available")) {
+                    if (sendMessageToServer("CHEK", "nickname:" + tfNickName.getText()).equals("Available")) {
                         lblNickCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/greenTick.png")));
                         lblNickCheck.setToolTipText(null);
                         bNick = true;
@@ -731,14 +866,14 @@ public String MD5Hash(String Input)
             bNick = false;
         }
         lblNickCheck.setVisible(true);
-    }//GEN-LAST:event_txtNickNameFocusLost
+}//GEN-LAST:event_tfNickNameFocusLost
 
-    private void txtFNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtFNameFocusLost
+    private void tfFNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfFNameFocusLost
         String allowableCharacters = "[A-Za-z0-9]*";
         Pattern regex = Pattern.compile(allowableCharacters);
-        if (!regex.matcher(txtFName.getText()).matches() || txtFName.getText().isEmpty()) {
+        if (!regex.matcher(tfFName.getText()).matches() || tfFName.getText().isEmpty()) {
             lblFNameCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/redX.png")));
-            if (txtFName.getText().isEmpty())
+            if (tfFName.getText().isEmpty())
                 lblFNameCheck.setToolTipText("First name cannot be empty"); 
             else lblFNameCheck.setToolTipText("Illegal characters inputted");
             bFName= false;
@@ -749,14 +884,14 @@ public String MD5Hash(String Input)
             bFName= true;
         }
         lblFNameCheck.setVisible(true);
-    }//GEN-LAST:event_txtFNameFocusLost
+}//GEN-LAST:event_tfFNameFocusLost
 
-    private void txtLNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtLNameFocusLost
+    private void tfLNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfLNameFocusLost
         String allowableCharacters = "[A-Za-z0-9]*";
         Pattern regex = Pattern.compile(allowableCharacters);
-        if (!regex.matcher(txtLName.getText()).matches() || txtLName.getText().isEmpty()) {
+        if (!regex.matcher(tfLName.getText()).matches() || tfLName.getText().isEmpty()) {
             lblLNameCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/redX.png")));
-            if (txtLName.getText().isEmpty())
+            if (tfLName.getText().isEmpty())
                 lblLNameCheck.setToolTipText("Last name cannot be empty"); 
             else lblLNameCheck.setToolTipText("Illegal characters inputted");
             bLName = false;
@@ -767,11 +902,11 @@ public String MD5Hash(String Input)
             bLName = true;
         }
         lblFNameCheck.setVisible(true);
-    }//GEN-LAST:event_txtLNameFocusLost
+}//GEN-LAST:event_tfLNameFocusLost
 
-    private void butLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butLoginActionPerformed
+    private void btntLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btntLoginActionPerformed
         try {
-            String reply = sendMessageToServer("LOGN", tfUsername.getText() + "," + MD5Hash(String.valueOf(tfPass.getPassword())));
+            String reply = sendMessageToServer("LOGN", tfUsernameLogin.getText() + "," + MD5Hash(String.valueOf(tfPassLogin.getPassword())));
 
             if (reply.equals("ERR1")) {
                 javax.swing.JOptionPane.showMessageDialog(super.getFrame(), "User already logged in...");
@@ -780,6 +915,7 @@ public String MD5Hash(String Input)
             } else if (reply.equals("SUCC")) {
                 mainPanel.setVisible(false);
                 super.setComponent(PanChat);
+                PanChat.setVisible(true);
             } else {
                 System.out.println("Invalid error code...");
             }
@@ -788,15 +924,26 @@ public String MD5Hash(String Input)
         } catch (IOException ex) {
             Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_butLoginActionPerformed
+}//GEN-LAST:event_btntLoginActionPerformed
+    private void clearNewUserFields() {
+        String empty = ""; 
+        tfUserName.setText(empty); tfPassword.setText(empty); tfPassword2.setText(empty); tfNickName.setText(empty); tfEmail.setText(empty); tfFName.setText(empty); tfLName.setText(empty); 
+        lblUnameCheck.setIcon(null); lblPassCheck.setIcon(null); lblEmailCheck.setIcon(null); lblNickCheck.setIcon(null); lblFNameCheck.setIcon(null); lblLNameCheck.setIcon(null);
+    }
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        PanNewUser.setVisible(false);
+        super.setComponent(mainPanel);
+        mainPanel.setVisible(true);
+    }//GEN-LAST:event_btnBackActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanChat;
     private javax.swing.JPanel PanNewUser;
+    private javax.swing.JButton btnBack;
     private javax.swing.JButton btnSubmit;
-    private javax.swing.JButton butGuest;
-    private javax.swing.JButton butLogin;
-    private javax.swing.JButton butNewAcc;
+    private javax.swing.JButton btntGuest;
+    private javax.swing.JButton btntLogin;
+    private javax.swing.JButton btntNewAcc;
     private javax.swing.JList jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -812,10 +959,10 @@ public String MD5Hash(String Input)
     private javax.swing.JLabel lblNickName;
     private javax.swing.JLabel lblPass;
     private javax.swing.JLabel lblPassCheck;
-    private javax.swing.JLabel lblPassword;
+    private javax.swing.JLabel lblPassLogin;
     private javax.swing.JLabel lblRePass;
     private javax.swing.JLabel lblUnameCheck;
-    private javax.swing.JLabel lblUser;
+    private javax.swing.JLabel lblUserLogin;
     private javax.swing.JLabel lblUsername;
     private javax.swing.JLabel lblWelcome;
     private javax.swing.JPanel mainPanel;
@@ -825,16 +972,16 @@ public String MD5Hash(String Input)
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
-    private javax.swing.JPasswordField tfPass;
-    private javax.swing.JTextField tfUsername;
-    private javax.swing.JTextField txtEmail;
-    private javax.swing.JTextField txtFName;
-    private javax.swing.JTextField txtLName;
-    private javax.swing.JTextField txtNickName;
-    private javax.swing.JPasswordField txtPassword;
-    private javax.swing.JPasswordField txtPassword2;
+    private javax.swing.JTextField tfEmail;
+    private javax.swing.JTextField tfFName;
+    private javax.swing.JTextField tfLName;
+    private javax.swing.JTextField tfNickName;
+    private javax.swing.JPasswordField tfPassLogin;
+    private javax.swing.JPasswordField tfPassword;
+    private javax.swing.JPasswordField tfPassword2;
+    private javax.swing.JTextField tfUserName;
+    private javax.swing.JTextField tfUsernameLogin;
     private javax.swing.JTextField txtSend;
-    private javax.swing.JTextField txtUserName;
     // End of variables declaration//GEN-END:variables
 
     private final Timer messageTimer;
