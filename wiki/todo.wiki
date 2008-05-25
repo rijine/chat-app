@@ -6,6 +6,4 @@
 
 
 == Client ==
-  * first name and last name --> restrict commas etc. 
-  * add back button to create new user
   * add hotkeys 
