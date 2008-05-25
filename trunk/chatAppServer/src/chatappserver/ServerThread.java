@@ -200,6 +200,16 @@ public class ServerThread extends Thread {
         sendSQLQuery = connectToMysql.createStatement();
         BufferedReader inFromClient = null;
         sendSQLQuery.execute("INSERT into threadlookup(username, threadid) Values('"+username+"', '"+this.getId()+"');"); // register this thread with this username. 
+        
+        ResultSet results = null;
+        String nickname = null;
+        sendSQLQuery.executeQuery("SELECT nickname FROM user WHERE username = '" + username.toLowerCase() + "';");
+        results = sendSQLQuery.getResultSet();
+        if (results.next()) {
+            nickname = results.getString("nickname");
+        }
+        results.close();
+                    
         try {
             inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
             DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
@@ -208,12 +218,11 @@ public class ServerThread extends Thread {
                 message = inFromClient.readLine();  // get new message
                 if (message.startsWith("-")) {
                     message = message.substring(1);
-                    // broadcast message to others. 
-                    outToClient.writeBytes(message);
+                    // broadcast message to others.
+                    outToClient.writeBytes(nickname + ": " + message + "\n");
                 }
                 else { // message is a special command, treat it accordingly. 
                     if (message.equalsIgnoreCase("/DISC")) {
-                        System.out.println("DELETE FROM threadlookup WHERE threadid = '"+ this.getId() +"';");
                         sendSQLQuery.execute("DELETE FROM threadlookup WHERE threadid = '"+ this.getId() +"';");
                         break; 
                     }
