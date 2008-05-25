@@ -30,6 +30,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.table.DefaultTableModel;
 
 /**
  * The application's main frame.
@@ -1102,7 +1103,6 @@ private String MD5Hash(String Input)
 
     private JDialog aboutBox;
     private JDialog settingsBox;
-    private JDialog chatBox; 
     private boolean bEmail = false, bUname = false, bPass = false, bNick = false, bFName = false, bLName = false;
 
     private void userlistUpdate() throws FileNotFoundException, IOException {
@@ -1113,13 +1113,14 @@ private String MD5Hash(String Input)
         users = sendMessageToServer("UPDA", channel); 
         System.out.println(users);
         users = users.substring("/UPDA:".length());
-        int i = users.indexOf(",");
         String nickname = "";
         while (!users.isEmpty()) {
             nickname = users.substring(0, users.indexOf(","));
             users = users.substring(users.indexOf(",") + 1);
             if (!nickname.isEmpty()) {
-                tblUsers.add(nickname, -1);
+                DefaultTableModel model = (DefaultTableModel) tblUsers.getModel();
+                model.insertRow(tblUsers.getRowCount(),new Object[]{null,nickname});
+                tblUsers.setModel(model);
             }
             else 
                 break;
