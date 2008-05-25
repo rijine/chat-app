@@ -8,7 +8,6 @@ package chatappserver;
 import java.sql.*;
 import java.net.*;
 import java.io.*;
-import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
