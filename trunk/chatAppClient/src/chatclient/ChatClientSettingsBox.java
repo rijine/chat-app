@@ -12,18 +12,18 @@ import org.jdesktop.application.Action;
 public class ChatClientSettingsBox extends javax.swing.JDialog {
     
     /** Creates new form ChatClientSettingsBox */
-    public ChatClientSettingsBox(java.awt.Frame parent) throws IOException {
+    public ChatClientSettingsBox(java.awt.Frame parent) throws IOException { // constructor
         super(parent);
         initComponents();
         File testFile = new File("settings.ini");
-        if (!testFile.exists()) {
+        if (!testFile.exists()) { // set default values if file doesn't exist. 
             PrintWriter outputStream = new PrintWriter(new FileWriter("settings.ini"));
             outputStream.println("localhost");
             outputStream.println("55555");
             outputStream.flush();
             outputStream.close();
         }
-        
+        // read the data from the file. 
         BufferedReader inputStream = new BufferedReader(new FileReader("settings.ini"));
         txtServer.setText(inputStream.readLine());
         ftfPort.setText(inputStream.readLine());
@@ -47,7 +47,7 @@ public class ChatClientSettingsBox extends javax.swing.JDialog {
         ftfPort.setText("55555");
     }
         
-    @Action public void saveSettings() throws IOException {
+    @Action public void saveSettings() throws IOException { // write to file. 
         PrintWriter outputStream = new PrintWriter(new FileWriter("settings.ini"));
         outputStream.println(txtServer.getText());
         outputStream.println(ftfPort.getText());
