@@ -12,21 +12,6 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/*
- * LOGN - login
-CHEK - check something (username available? nickname in use?)
-NEWA - new account
-CHAT - start chat
-
-You have to be in "CHAT" mode to use these, they should be sent with a '/' preceding them: /DISC etc.
-/DISC - Logout
-/PING - pings the user
-/WHOI - whois on user
-/TIME - returns the time on the user's end.
-
-ctrl+enter = disregard if a message starts with '/', just add another '/' so:
-/hi
- * */
 public class ServerThread extends Thread {
     private Socket connectionSocket = null; 
     private Connection connectToMysql; 
@@ -149,41 +134,27 @@ public class ServerThread extends Thread {
             ResultSet results = null;
             sendSQLQuery.executeQuery("SELECT username FROM threadlookup WHERE username = '" + parseQuery + "';");
             results = sendSQLQuery.getResultSet();
-            boolean login = false; 
             boolean found = results.next();
             if (found) {
                 reply = "ERR1\n"; // user is already logged in
             } else {
                 // check password
-                sendSQLQuery.executeQuery("SELECT username FROM user WHERE username = '" + parseQuery + "' AND password = '" + query.substring(query.indexOf(",")) + "';");
+                sendSQLQuery.executeQuery("SELECT username FROM user WHERE username = '" + parseQuery + "' AND password = '" + query.substring(query.indexOf(",")+1) + "';");
+                results = sendSQLQuery.getResultSet();
                 boolean validCredentials = results.next(); 
                 if (!validCredentials) {
                     // either username doesn't exist, or the password is invalid..
                     reply = "ERR2\n"; 
                 }
                 else {
-                    login = true; 
                     reply = "SUCC\n";
-                    sendSQLQuery.execute("INSERT into threadlookup(username, threadid) Values('"+query+"', '"+this.getId()+"');"); // register this thread with this username. 
-                    // we won't close the thread anymore until the user disconnects. 
+                    // this will be done in chat now: sendSQLQuery.execute("INSERT into threadlookup(username, threadid) Values('"+parseQuery+"', '"+this.getId()+"');"); // register this thread with this username. 
                 }
             }
             outToClient.writeBytes(reply);
             /*
              we're now in the chatting section... 
              */
-            
-            
-            if (login) {
-                while (!inFromClient.readLine().equals("/DISC")) {
-                    System.out.println("not disconnected! "); 
-
-                }
-                
-                outToClient.writeBytes("DISC");  // tell cleint we're discing
-                System.out.println("Disconnecting..."); // debug
-            }
-            
             inFromClient.close(); 
             outToClient.close(); 
             sendSQLQuery.close(); 
@@ -194,6 +165,84 @@ public class ServerThread extends Thread {
             Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    ///// THIS FUNCTION IS INCOMPLETE>... 
+    private void updateList(String query) {
+        BufferedReader inFromClient = null;
+        try {
+            Statement sendSQLQuery = null;
+            String reply = null;
+            String parseQuery = query;
+            sendSQLQuery = connectToMysql.createStatement();
+            inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+            DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
+
+            query = query.substring("UPDA:".length());
+            ResultSet results = null;
+            sendSQLQuery.executeQuery("SELECT username FROM channels WHERE channel = '" + parseQuery + "';");
+            //while (results = sendSQLQuery.getResultSet());
+            // ......
+            
+        } catch (IOException ex) {
+            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                inFromClient.close();
+            } catch (IOException ex) {
+                Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    private void chat(String username) throws SQLException {
+        Statement sendSQLQuery = null;
+        sendSQLQuery = connectToMysql.createStatement();
+        BufferedReader inFromClient = null;
+        sendSQLQuery.execute("INSERT into threadlookup(username, threadid) Values('"+username+"', '"+this.getId()+"');"); // register this thread with this username. 
+        try {
+            inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+            DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
+            String message;
+            while (true) { 
+                message = inFromClient.readLine();  // get new message
+                if (message.startsWith("-")) {
+                    message = message.substring(1);
+                    // broadcast message to others. 
+                    outToClient.writeBytes(message);
+                }
+                else { // message is a special command, treat it accordingly. 
+                    if (message.equalsIgnoreCase("/DISC")) {
+                        System.out.println("DELETE FROM threadlookup WHERE threadid = '"+ this.getId() +"';");
+                        sendSQLQuery.execute("DELETE FROM threadlookup WHERE threadid = '"+ this.getId() +"';");
+                        break; 
+                    }
+                    else if (message.equalsIgnoreCase("/PING")) {
+                    }
+                    else if (message.equalsIgnoreCase("/WHOIS")) {
+                    }
+                    else if (message.equalsIgnoreCase("/TIME")) {
+                    }
+                    else {
+                        // invalid command
+                        System.out.println("Invalid command. "); 
+                    }
+                }
+            }
+
+            System.out.println("Disconnecting..."); // debug
+            //outToClient.writeBytes("DISC"); // tell client we're discing
+        } catch (IOException ex) {
+            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                inFromClient.close();
+            } catch (IOException ex) {
+                Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
     
     @Override
     public void run() {
@@ -202,16 +251,23 @@ public class ServerThread extends Thread {
             try {
                 BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
                 query = inFromClient.readLine();
+                // reset timer back to 5. 
                 if (query.startsWith("CHEK:")) { // check for duplicates
                     check(query);
                 } else if (query.startsWith("NEWA:")) { // new account 
                     newaccnt(query);
-                } else if (query.equalsIgnoreCase("LOGN:")) { // login
+                } else if (query.startsWith("LOGN:")) { // login
                     login(query); 
+                } else if (query.startsWith("UPDA:")) { // update user list
+                    updateList(query); 
+                } else if (query.startsWith("CHAT:")) { // chat session initiated
+                    chat(query.substring("CHAT:".length()));
                 } else {
-                    // error, invalid code. 
+                    System.out.println("invalid code... ");
                 }
                 inFromClient.close(); 
+            } catch (SQLException ex) {
+                Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
