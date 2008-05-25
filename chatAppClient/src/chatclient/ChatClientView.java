@@ -681,31 +681,15 @@ private String MD5Hash(String Input)
 
         tblUsers.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null},
-                {null},
-                {null},
-                {null},
-                {null},
-                {null},
-                {null},
-                {null},
-                {null},
-                {null}
+
             },
             new String [] {
-                "UserList"
+                "Image", "UserList"
             }
         ) {
-            Class[] types = new Class [] {
-                java.lang.String.class
-            };
             boolean[] canEdit = new boolean [] {
-                false
+                false, false
             };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
@@ -715,6 +699,8 @@ private String MD5Hash(String Input)
         tblUsers.setShowHorizontalLines(false);
         tblUsers.setShowVerticalLines(false);
         scrollUsers.setViewportView(tblUsers);
+        tblUsers.getColumnModel().getColumn(0).setResizable(false);
+        tblUsers.getColumnModel().getColumn(0).setPreferredWidth(10);
 
         tbsChan.setName("tbsChan"); // NOI18N
 
@@ -735,10 +721,10 @@ private String MD5Hash(String Input)
                 .addGroup(PanChatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(PanChatLayout.createSequentialGroup()
                         .addGroup(PanChatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tbsChan, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE)
-                            .addComponent(tfSend, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE))
+                            .addComponent(tbsChan, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
+                            .addComponent(tfSend, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(scrollUsers, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(scrollUsers, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(lblWelcome))
                 .addContainerGap())
         );
@@ -1125,5 +1111,24 @@ private String MD5Hash(String Input)
     private void userlistUpdate(String channel) throws FileNotFoundException, IOException {
         String users = null; 
         users = sendMessageToServer("UPDA", channel); 
+        System.out.println(users);
+        users = users.substring("/UPDA:".length());
+        int i = users.indexOf(",");
+        String nickname = "";
+        while (!users.isEmpty()) {
+            nickname = users.substring(0, users.indexOf(","));
+            users = users.substring(users.indexOf(",") + 1);
+            if (!nickname.isEmpty()) {
+                tblUsers.add(nickname, -1);
+            }
+            else 
+                break;
+        }
+        /*while (i != -1 && !users.isEmpty()) {
+            nickname = users.substring(0, i);
+            users = users.substring(i + 1);
+            //ChatClientView.tblUsers.
+            System.out.println(users + "\n");
+        }*/
     }
 }
