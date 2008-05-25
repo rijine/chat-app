@@ -425,6 +425,21 @@ public class ChatAppServerView extends FrameView {
                 connectToMysql = DriverManager.getConnection("jdbc:mysql://"+tfSQLip.getText()+":"+tfSQLport.getText()+"/"+tfDB.getText(),tfUsername.getText(), String.valueOf(tfPassword.getPassword()));
                 loginPanel.setVisible(false); 
                 super.setComponent(settingsPanel);
+                
+                Statement sendSQLQuery = connectToMysql.createStatement();
+                // Create the table called 'channels' in the database.
+                sendSQLQuery.execute("CREATE TABLE IF NOT EXISTS `channels` (`name` varchar(256) NOT NULL,`topic` varchar(512) NOT NULL,PRIMARY KEY (`name`)) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+                // Create the first channel called 'main'
+                sendSQLQuery.execute("CREATE TABLE IF NOT EXISTS `chan_main` (`usernames` varchar(256) NOT NULL,PRIMARY KEY (`usernames`)) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+
+                ResultSet results = null;
+                sendSQLQuery.executeQuery("SELECT name FROM channels WHERE name = 'main';");
+                results = sendSQLQuery.getResultSet();
+                if (!results.next()) {
+                    sendSQLQuery.execute("INSERT into channels(name,topic) Values('main', 'This is the default channel')");
+                }
+                results.close();
+
             }
             catch(Exception e) {
                 javax.swing.JOptionPane.showMessageDialog(super.getFrame(), "Failed to connect to database. ");
@@ -456,7 +471,7 @@ public class ChatAppServerView extends FrameView {
     }//GEN-LAST:event_btnStartActionPerformed
     
     public void startServer() throws SQLException {
-
+        
         ServerSocket welcomeSocket=null;
         try {
             welcomeSocket = new ServerSocket(Integer.parseInt(tfPort.getText()));
