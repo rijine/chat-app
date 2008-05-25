@@ -165,33 +165,43 @@ public class ServerThread extends Thread {
         }
     }
 
-    ///// THIS FUNCTION IS INCOMPLETE>... 
     private void updateList(String query) {
-        BufferedReader inFromClient = null;
         try {
             Statement sendSQLQuery = null;
-            String reply = null;
-            String parseQuery = query;
+            String reply = "/UPDA:";
             sendSQLQuery = connectToMysql.createStatement();
-            inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
             DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
 
-            query = query.substring("UPDA:".length());
+            query = "chan_" + query.substring("UPDA:".length());
             ResultSet results = null;
-            sendSQLQuery.executeQuery("SELECT username FROM channels WHERE channel = '" + parseQuery + "';");
-            //while (results = sendSQLQuery.getResultSet());
-            // ......
-            
+            sendSQLQuery.executeQuery("SELECT * FROM " + query + ";");
+            results = sendSQLQuery.getResultSet();
+            String usernames = "";
+            String processUname = "";
+            // Get the list of all the usernames
+            while (results.next()) {
+                usernames += results.getString("usernames").toLowerCase() + ",";
+            }
+            // Convert usernames to nicknames
+            while (!usernames.isEmpty()) {
+                processUname = usernames.substring(0, usernames.indexOf(","));
+                usernames = usernames.substring(usernames.indexOf(",") + 1);
+                if (!processUname.isEmpty()) {
+                    sendSQLQuery.executeQuery("SELECT nickname FROM user WHERE username = '" + processUname + "';");
+                    results = sendSQLQuery.getResultSet();
+                    if (results.next())
+                        reply += results.getString("nickname") + ",";
+                }
+                else 
+                    break;
+            }
+            results.close();
+            outToClient.writeBytes(reply + "\n");
+            outToClient.close();
         } catch (IOException ex) {
             Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                inFromClient.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
     }
     
@@ -199,7 +209,11 @@ public class ServerThread extends Thread {
         Statement sendSQLQuery = null;
         sendSQLQuery = connectToMysql.createStatement();
         BufferedReader inFromClient = null;
-        sendSQLQuery.execute("INSERT into threadlookup(username, threadid) Values('"+username+"', '"+this.getId()+"');"); // register this thread with this username. 
+        
+         // register this thread with this username. 
+        sendSQLQuery.execute("INSERT into threadlookup(username, threadid) Values('"+username+"', '"+this.getId()+"');");
+        // Insert the user into the channel
+        sendSQLQuery.execute("INSERT into chan_main(usernames) Values('"+username+"');");
         
         ResultSet results = null;
         String nickname = null;
@@ -216,7 +230,7 @@ public class ServerThread extends Thread {
             String message;
             while (true) { 
                 message = inFromClient.readLine();  // get new message
-                if (message.startsWith("-")) {
+                if  (message.startsWith("-")) {
                     message = message.substring(1);
                     // broadcast message to others.
                     outToClient.writeBytes(nickname + ": " + message + "\n");
@@ -224,6 +238,7 @@ public class ServerThread extends Thread {
                 else { // message is a special command, treat it accordingly. 
                     if (message.equalsIgnoreCase("/DISC")) {
                         sendSQLQuery.execute("DELETE FROM threadlookup WHERE threadid = '"+ this.getId() +"';");
+                        sendSQLQuery.execute("DELETE FROM chan_main WHERE usernames = '"+ username +"';");
                         break; 
                     }
                     else if (message.equalsIgnoreCase("/PING")) {
@@ -238,7 +253,7 @@ public class ServerThread extends Thread {
                     }
                 }
             }
-
+            outToClient.close();
             System.out.println("Disconnecting..."); // debug
             //outToClient.writeBytes("DISC"); // tell client we're discing
         } catch (IOException ex) {
