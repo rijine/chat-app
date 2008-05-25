@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package chatappserver;
 
 import java.sql.*;
@@ -189,8 +184,8 @@ public class ServerThread extends Thread {
                 if (!processUname.isEmpty()) {
                     sendSQLQuery.executeQuery("SELECT nickname FROM user WHERE username = '" + processUname + "';");
                     results = sendSQLQuery.getResultSet();
-                    if (results.next())
-                        reply += results.getString("nickname") + ",";
+                    results.next();
+                    reply += results.getString("nickname") + ",";
                 }
                 else 
                     break;
@@ -210,6 +205,10 @@ public class ServerThread extends Thread {
         sendSQLQuery = connectToMysql.createStatement();
         BufferedReader inFromClient = null;
         
+        System.out.println(this.getId());
+        this.setName(username);
+        ChatAppServerView.llThreads.add(this, this.getId());
+
         // register this thread with this username. 
         sendSQLQuery.execute("INSERT into threadlookup(username, threadid) Values('"+username+"', '"+this.getId()+"');");
         // Insert the user into the channel
@@ -222,7 +221,7 @@ public class ServerThread extends Thread {
         if (results.next())
             nickname = results.getString("nickname");
         results.close();
-                    
+        
         try {
             inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
             DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
@@ -232,7 +231,26 @@ public class ServerThread extends Thread {
                 if  (message.startsWith("-")) {
                     message = message.substring(1);
                     // broadcast message to others.
-                    outToClient.writeBytes(nickname + ": " + message + "\n");
+                    sendSQLQuery.executeQuery("SELECT * FROM chan_main;");
+                    results = sendSQLQuery.getResultSet();
+                    String usernames = "";
+                    String processUname = "";
+                    // Get the list of all the usernames
+                    while (results.next()) {
+                        usernames += results.getString("usernames").toLowerCase() + ",";
+                    }
+                    // Convert usernames to nicknames
+                    while (!usernames.isEmpty()) {
+                        processUname = usernames.substring(0, usernames.indexOf(","));
+                        usernames = usernames.substring(usernames.indexOf(",") + 1);
+                        if (!processUname.isEmpty()) {
+                            sendSQLQuery.executeQuery("SELECT threadid FROM threadlookup WHERE username = '" + processUname + "';");
+                            results = sendSQLQuery.getResultSet();
+                            results.next();
+                            ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))).send(nickname + ": " + message + "\n");
+                        }
+                    }
+                    results.close();   
                 }
                 else { // message is a special command, treat it accordingly. 
                     if (message.equalsIgnoreCase("/DISC")) {
@@ -266,6 +284,12 @@ public class ServerThread extends Thread {
         }
     }
     
+    private void send(String message) throws IOException {
+        DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
+        outToClient.writeBytes(message);
+        outToClient.close();
+    }
+        
     @Override
     public void run() {
         try {
