@@ -40,11 +40,6 @@ public class ChatClientView extends FrameView {
 
         initComponents();
         
-        lblUnameCheck.setVisible(false);
-        lblEmailCheck.setVisible(false);
-        lblPassCheck.setVisible(false);
-        lblNickCheck.setVisible(false);
-        
         // status bar initialization - message timeout, idle icon and busy animation, etc
         ResourceMap resourceMap = getResourceMap();
         int messageTimeout = resourceMap.getInteger("StatusBar.messageTimeout");
@@ -110,25 +105,32 @@ public class ChatClientView extends FrameView {
         ChatClientApp.getApplication().show(aboutBox);
     }
     
+    /*
+     *   sendMessageToServer takes two Strings as parameters, The first one is a special code, the second is the request body. 
+     * This function is used to communicate to the server special requests, like create new account, etc. 
+     * A socket is opened, the message is sent, the reply is obtained from the server, then the socket is closed. 
+     * This function is not used for normal chat sessions, since they will use the ChatHandler instead for a persistant connection. 
+     * The function returns a String, which is the reply obtained from the server. 
+     */
     public String sendMessageToServer(String code, String message) throws FileNotFoundException, IOException {
         String query; 
         String reply = null; 
         String hostname;
         int port;
         
-        BufferedReader inputStream = new BufferedReader(new FileReader("settings.ini"));
+        BufferedReader inputStream = new BufferedReader(new FileReader("settings.ini"));    // takes the server IP and port from the settings.ini file at the client side. 
         hostname = inputStream.readLine();
         port = Integer.parseInt(inputStream.readLine());
         inputStream.close();
         
         Socket clientSocket = null;
         try {
-            clientSocket = new Socket(hostname, port);
+            clientSocket = new Socket(hostname, port);      // creates a new socket. 
             DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream()); 
             BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())); 
-            query = code + ":" + message; 
-            outToServer.writeBytes(query + '\n');
-            reply = inFromServer.readLine(); 
+            query = code + ":" + message;  
+            outToServer.writeBytes(query + '\n');   // send the data which is obtained through the parameters to the server, in the format specified in the previous line. 
+            reply = inFromServer.readLine();        // wait for server to reply. 
         } catch (UnknownHostException ex) {
             javax.swing.JOptionPane.showMessageDialog(super.getFrame(), "Unknown hostname.", "Error!", javax.swing.JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
@@ -137,7 +139,7 @@ public class ChatClientView extends FrameView {
             ex.printStackTrace();
         }
         try {
-            clientSocket.close();  
+            clientSocket.close();        // close socket 
         } catch (IOException ex) {
             javax.swing.JOptionPane.showMessageDialog(super.getFrame(), "Could not close socket.", "Error!", javax.swing.JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
@@ -146,7 +148,7 @@ public class ChatClientView extends FrameView {
          * query = "CHEK:username:some_username"
          * query = "CHEK:nickname:some_nickname"
          */
-        return reply; 
+        return reply;                       // return the reply obtained from the server. 
     }
     
     @Action
@@ -159,6 +161,11 @@ public class ChatClientView extends FrameView {
         ChatClientApp.getApplication().show(settingsBox);
     }
     
+/*
+ * This function takes a String, and returns a String which is the md5 hash of the input. 
+ * It is used to encrypt the passwords before sending it to the server. This provides security against evesdroppers, but also renders the server unable to know what the user password is. 
+ * Therefore, the server administrator cannot access user accounts, since the passwords  will also be stored in the database as md5 hashes. 
+ */
 private String MD5Hash(String Input)
     {
          String pass = Input;
@@ -756,26 +763,27 @@ private String MD5Hash(String Input)
     }// </editor-fold>//GEN-END:initComponents
 
     private void btntNewAccActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btntNewAccActionPerformed
-       mainPanel.setVisible(false);
-       super.setComponent(PanNewUser);
-       clearNewUserFields(); 
-       PanNewUser.setVisible(true);
+       mainPanel.setVisible(false);                 // close the mainpanel
+       super.setComponent(PanNewUser);      // open the newuser panel. 
+       clearNewUserFields();                          // we clear the fields if we want to create another account later. 
+       PanNewUser.setVisible(true);               // display the newuser panel. 
 }//GEN-LAST:event_btntNewAccActionPerformed
-    private boolean checkFields() {
+    private boolean checkFields() { 
         if (!bEmail || !bPass || !bNick || !bUname || !bFName || !bLName) {
             return false;
         }
-        return true;
+        return true; // if all fields have been filled legally, return true. (ie allow user to be created) 
     }
     private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
         if (tfUserName.getText().isEmpty() || tfEmail.getText().isEmpty() || 
                tfFName.getText().isEmpty() || tfLName.getText().isEmpty() ||
                tfNickName.getText().isEmpty() || 
                String.valueOf(tfPassword.getPassword()).isEmpty() || String.valueOf(tfPassword2.getPassword()).isEmpty()) 
-            javax.swing.JOptionPane.showMessageDialog(super.getFrame(), "All fields are required. ", "Error!", javax.swing.JOptionPane.ERROR_MESSAGE);
-        else if (checkFields()) {
+            javax.swing.JOptionPane.showMessageDialog(super.getFrame(), "All fields are required. ", "Error!", javax.swing.JOptionPane.ERROR_MESSAGE); // if a field is left empty, do not allow to send new user request. 
+        else if (checkFields()) { // if they're not empty, check if they're legal. if they are legal, proceed and request the new user account. 
             try {
                 sendMessageToServer("NEWA", tfUserName.getText() + "," + tfEmail.getText() + "," + tfFName.getText() + "," + tfLName.getText() + "," + MD5Hash(String.valueOf(tfPassword.getPassword())) + "," + tfNickName.getText());
+                // ask user if you want to login directly... 
                 int choice = javax.swing.JOptionPane.showConfirmDialog(super.getFrame(), "User " + tfUserName.getText() + " created.\nDo you want to login?", "Success!", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE);
                 if (choice == 0) { // i want to login
                     try {
@@ -785,20 +793,20 @@ private String MD5Hash(String Input)
                             javax.swing.JOptionPane.showMessageDialog(super.getFrame(), "User already logged in...");
                             PanNewUser.setVisible(false);
                             super.setComponent(mainPanel);
-                            mainPanel.setVisible(true);                     
+                            mainPanel.setVisible(true);                     // go back to main menu.  (login failed)
                         } else if (reply.equals("ERR2")) {
                             javax.swing.JOptionPane.showMessageDialog(super.getFrame(), "Invalid username/password...");
                             PanNewUser.setVisible(false);
                             super.setComponent(mainPanel);
-                            mainPanel.setVisible(true);     
+                            mainPanel.setVisible(true);                     // go back to main menu (login failed)
                         } else if (reply.equals("SUCC")) {
                             PanNewUser.setVisible(false);
                             super.setComponent(PanChat);
-                            PanChat.setVisible(true);
-                            ChatClientChatHandler.connect(tfUserName.getText()); 
-                            userlistUpdate(); 
+                            PanChat.setVisible(true);                        // proceed to chat session
+                            ChatClientChatHandler.connect(tfUserName.getText()); // initiate persistant connection for chatting. 
+                            userlistUpdate();                                    // update user list for default channel
                         } else {
-                            System.out.println("Invalid error code...");
+                            System.out.println("Invalid error code..."); // the server returned an invalid reply... (shoulnd't happen) 
                         }
                     } catch (FileNotFoundException ex) {
                         Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
@@ -806,10 +814,10 @@ private String MD5Hash(String Input)
                         Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                else { // i want to go back to the main menu
+                else { // i want to go back to the main menu (i don't want to login) 
                     PanNewUser.setVisible(false);
                     super.setComponent(mainPanel);
-                    mainPanel.setVisible(true);
+                    mainPanel.setVisible(true);         // go back to main menu
                 }
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
@@ -817,7 +825,7 @@ private String MD5Hash(String Input)
                 Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        else {
+        else { // checkFields() returned false, at least one of the users is illegal. (Either it used invalid characters, or the server reported that it already exists, and duplicates are not allowed)
             javax.swing.JOptionPane.showMessageDialog(null, "Fix the errors (red X)", "Error!", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
 }//GEN-LAST:event_btnSubmitActionPerformed
@@ -833,10 +841,10 @@ private String MD5Hash(String Input)
             lblPassCheck.setToolTipText("Password must be at least 6 characters long.");
             bPass = false;
         }
-        else {
+        else { // legal password
             lblPassCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/greenTick.png")));
             lblPassCheck.setToolTipText(null);
-            bPass = true;
+            bPass = true; // set as a valid password. 
         }
         lblPassCheck.setVisible(true);
 }//GEN-LAST:event_tfPassword2FocusLost
@@ -851,11 +859,11 @@ private String MD5Hash(String Input)
                     lblUnameCheck.setToolTipText("Username cannot be emtpy");
                     bUname = false;
                 }
-                else {
-                    if (sendMessageToServer("CHEK", "username:" + tfUserName.getText()).equals("Available")) {
+                else { // check if the username already exists on the server side. This is done on focusLost for the username field. 
+                    if (sendMessageToServer("CHEK", "username:" + tfUserName.getText()).equals("Available")) { // if the reply is "available", ie it's an available username. 
                         lblUnameCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/greenTick.png")));
                         lblUnameCheck.setToolTipText(null);
-                        bUname = true;
+                        bUname = true; // set as a valid username. 
                     }
                     else {
                         lblUnameCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/redX.png")));
@@ -869,7 +877,7 @@ private String MD5Hash(String Input)
                 Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        else {
+        else { // illegal characters. Allowed characters are alphanumeric characters. 
             lblUnameCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/redX.png")));
             lblUnameCheck.setToolTipText("Illegal characters inputted");
             bUname = false;
@@ -882,30 +890,18 @@ private String MD5Hash(String Input)
 }//GEN-LAST:event_settingsMenuItemActionPerformed
 
     private void tfEmailFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfEmailFocusLost
-        BufferedReader r = null;
-        try {
-            r = new BufferedReader(new FileReader("regex.txt"));
-            Pattern regex = Pattern.compile(r.readLine());
-            if(regex.matcher(tfEmail.getText()).matches()) {
-                lblEmailCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/greenTick.png")));
-                lblEmailCheck.setToolTipText(null);
-                bEmail = true;
-            }
-            else {
-                lblEmailCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/redX.png")));
-                lblEmailCheck.setToolTipText("Invalid email address");
-                bEmail = false;
-            }
-            lblEmailCheck.setVisible(true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                    r.close();
-            } catch(IOException e) {
-                    e.printStackTrace();
-            }
+        Pattern regex = Pattern.compile("^(([A-Za-z0-9]+_+)|([A-Za-z0-9]+\\-+)|([A-Za-z0-9]+\\.+)|([A-Za-z0-9]+\\++))*[A-Za-z0-9]+@((\\w+\\-+)|(\\w+\\.))*\\w{1,63}\\.[a-zA-Z]{2,6}$");
+        if(regex.matcher(tfEmail.getText()).matches()) {
+            lblEmailCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/greenTick.png")));
+            lblEmailCheck.setToolTipText(null);
+            bEmail = true;
         }
+        else {
+            lblEmailCheck.setIcon(new ImageIcon(getClass().getClassLoader().getResource("chatclient/resources/icons/redX.png")));
+            lblEmailCheck.setToolTipText("Invalid email address");
+            bEmail = false;
+        }
+        lblEmailCheck.setVisible(true); 
 }//GEN-LAST:event_tfEmailFocusLost
 
     private void tfNickNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfNickNameFocusLost
@@ -991,9 +987,9 @@ private String MD5Hash(String Input)
             } else if (reply.equals("SUCC")) {
                 mainPanel.setVisible(false);
                 super.setComponent(PanChat);
-                PanChat.setVisible(true);
-                ChatClientChatHandler.connect(tfUsernameLogin.getText()); 
-                userlistUpdate(); 
+                PanChat.setVisible(true);                                                   // view chat panel
+                ChatClientChatHandler.connect(tfUsernameLogin.getText()); // on login, we establish a persistant connection for chatting purposes. 
+                userlistUpdate();                                                               // get userlist in default main channel. 
             } else {
                 System.out.println("Invalid error code...");
             }
@@ -1003,6 +999,10 @@ private String MD5Hash(String Input)
             Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
         }
 }//GEN-LAST:event_btntLoginActionPerformed
+/*
+  * This function simply clears the fields in the new user account. This is required in case we want to create another user, or go back and then go forward again, etc. 
+ *  It also clears the icons. 
+ */
     private void clearNewUserFields() {
         String empty = ""; 
         tfUserName.setText(empty); tfPassword.setText(empty); tfPassword2.setText(empty); tfNickName.setText(empty); tfEmail.setText(empty); tfFName.setText(empty); tfLName.setText(empty); 
@@ -1011,9 +1011,14 @@ private String MD5Hash(String Input)
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         PanNewUser.setVisible(false);
         super.setComponent(mainPanel);
-        mainPanel.setVisible(true);
+        mainPanel.setVisible(true); // simply go back to main menu
     }//GEN-LAST:event_btnBackActionPerformed
 // </editor-fold>    
+    /*
+     * This function is called on Enter pressed in the chatting text field. 
+     * It sends the text in the chatting text field to the server. 
+     * It also modifies it accordingly if it's normal text or a special command. 
+     */
     private void tfSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfSendActionPerformed
         try {
             String toSend = tfSend.getText(); 
@@ -1032,15 +1037,17 @@ private String MD5Hash(String Input)
                     ChatClientChatHandler.disconnect();
                 }
                 else {
-                    txtMessages.setText(txtMessages.getText() + "Invalid Command\n");
+                    txtMessages.setText(txtMessages.getText() + "Invalid Command\n"); // display "invalid command" in the main text area. 
                 }
             }
-            tfSend.setText("");
+            tfSend.setText(""); // clear text field
         } catch (IOException ex) {
             Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
         }
 }//GEN-LAST:event_tfSendActionPerformed
 
+    // this functino simply sends the text if it's larger than 1024 characters. this is used to help avoid spamming by writing huge amounts of text.
+    // however it will need more tweaking to really avoid spamming. 
     private void tfSendKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfSendKeyTyped
         if (tfSend.getText().length() >= 1024) {
             tfSendActionPerformed(null);
