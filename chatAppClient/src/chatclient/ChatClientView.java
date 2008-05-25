@@ -159,7 +159,7 @@ public class ChatClientView extends FrameView {
         ChatClientApp.getApplication().show(settingsBox);
     }
     
-public String MD5Hash(String Input)
+private String MD5Hash(String Input)
     {
          String pass = Input;
          
@@ -184,7 +184,8 @@ public String MD5Hash(String Input)
       }
     return hexString.toString(); 
 }
-    
+
+ // <editor-fold defaultstate="collapsed" desc="etc">
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -239,11 +240,12 @@ public String MD5Hash(String Input)
         btnSubmit = new javax.swing.JButton();
         PanChat = new javax.swing.JPanel();
         lblWelcome = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
-        txtSend = new javax.swing.JTextField();
+        tfSend = new javax.swing.JTextField();
+        scrollUsers = new javax.swing.JScrollPane();
+        tblUsers = new javax.swing.JTable();
+        tbsChan = new javax.swing.JTabbedPane();
+        scrollChans = new javax.swing.JScrollPane();
+        txtMessages = new javax.swing.JTextPane();
 
         mainPanel.setName("mainPanel"); // NOI18N
 
@@ -352,6 +354,11 @@ public String MD5Hash(String Input)
 
         exitMenuItem.setAction(actionMap.get("quit")); // NOI18N
         exitMenuItem.setName("exitMenuItem"); // NOI18N
+        exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exitMenuItemActionPerformed(evt);
+            }
+        });
         fileMenu.add(exitMenuItem);
 
         menuBar.add(fileMenu);
@@ -650,23 +657,67 @@ public String MD5Hash(String Input)
         lblWelcome.setText(resourceMap.getString("lblWelcome.text")); // NOI18N
         lblWelcome.setName("lblWelcome"); // NOI18N
 
-        jScrollPane1.setName("jScrollPane1"); // NOI18N
-
-        jList1.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
+        tfSend.setText(resourceMap.getString("tfSend.text")); // NOI18N
+        tfSend.setName("tfSend"); // NOI18N
+        tfSend.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfSendActionPerformed(evt);
+            }
         });
-        jList1.setName("jList1"); // NOI18N
-        jScrollPane1.setViewportView(jList1);
+        tfSend.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tfSendKeyTyped(evt);
+            }
+        });
 
-        jScrollPane2.setName("jScrollPane2"); // NOI18N
+        scrollUsers.setName("scrollUsers"); // NOI18N
 
-        jTextPane1.setName("jTextPane1"); // NOI18N
-        jScrollPane2.setViewportView(jTextPane1);
+        tblUsers.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null}
+            },
+            new String [] {
+                "UserList"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false
+            };
 
-        txtSend.setText(resourceMap.getString("txtSend.text")); // NOI18N
-        txtSend.setName("txtSend"); // NOI18N
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblUsers.setName("tblUsers"); // NOI18N
+        tblUsers.setShowHorizontalLines(false);
+        tblUsers.setShowVerticalLines(false);
+        scrollUsers.setViewportView(tblUsers);
+
+        tbsChan.setName("tbsChan"); // NOI18N
+
+        scrollChans.setName("scrollChans"); // NOI18N
+
+        txtMessages.setFocusable(false);
+        txtMessages.setName("txtMessages"); // NOI18N
+        scrollChans.setViewportView(txtMessages);
+
+        tbsChan.addTab(resourceMap.getString("scrollChans.TabConstraints.tabTitle"), scrollChans); // NOI18N
 
         javax.swing.GroupLayout PanChatLayout = new javax.swing.GroupLayout(PanChat);
         PanChat.setLayout(PanChatLayout);
@@ -675,26 +726,28 @@ public String MD5Hash(String Input)
             .addGroup(PanChatLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(PanChatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblWelcome)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE)
-                    .addComponent(txtSend, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(PanChatLayout.createSequentialGroup()
+                        .addGroup(PanChatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tbsChan, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE)
+                            .addComponent(tfSend, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(scrollUsers, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblWelcome))
                 .addContainerGap())
         );
         PanChatLayout.setVerticalGroup(
             PanChatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanChatLayout.createSequentialGroup()
+            .addGroup(PanChatLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lblWelcome)
                 .addGap(18, 18, 18)
-                .addGroup(PanChatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanChatLayout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 118, Short.MAX_VALUE)
-                        .addComponent(txtSend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(28, 28, 28))
+                .addGroup(PanChatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(scrollUsers, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE)
+                    .addGroup(PanChatLayout.createSequentialGroup()
+                        .addComponent(tbsChan, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(tfSend, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
 
         setComponent(mainPanel);
@@ -725,10 +778,33 @@ public String MD5Hash(String Input)
                 sendMessageToServer("NEWA", tfUserName.getText() + "," + tfEmail.getText() + "," + tfFName.getText() + "," + tfLName.getText() + "," + MD5Hash(String.valueOf(tfPassword.getPassword())) + "," + tfNickName.getText());
                 int choice = javax.swing.JOptionPane.showConfirmDialog(super.getFrame(), "User " + tfUserName.getText() + " created.\nDo you want to login?", "Success!", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE);
                 if (choice == 0) { // i want to login
-                    sendMessageToServer("LOGN", tfUsernameLogin.getText() + "," + MD5Hash(String.valueOf(tfPassLogin.getPassword())));
-                    PanNewUser.setVisible(false);
-                    super.setComponent(PanChat);
-                    PanChat.setVisible(true);
+                    try {
+                        String reply = sendMessageToServer("LOGN", tfUserName.getText() + "," + MD5Hash(String.valueOf(tfPassword.getPassword())));
+
+                        if (reply.equals("ERR1")) {
+                            javax.swing.JOptionPane.showMessageDialog(super.getFrame(), "User already logged in...");
+                            PanNewUser.setVisible(false);
+                            super.setComponent(mainPanel);
+                            mainPanel.setVisible(true);                     
+                        } else if (reply.equals("ERR2")) {
+                            javax.swing.JOptionPane.showMessageDialog(super.getFrame(), "Invalid username/password...");
+                            PanNewUser.setVisible(false);
+                            super.setComponent(mainPanel);
+                            mainPanel.setVisible(true);     
+                        } else if (reply.equals("SUCC")) {
+                            PanNewUser.setVisible(false);
+                            super.setComponent(PanChat);
+                            PanChat.setVisible(true);
+                            ChatClientChatHandler.connect(tfUserName.getText()); 
+                            userlistUpdate(); 
+                        } else {
+                            System.out.println("Invalid error code...");
+                        }
+                    } catch (FileNotFoundException ex) {
+                        Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                        Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
                 else { // i want to go back to the main menu
                     PanNewUser.setVisible(false);
@@ -907,7 +983,7 @@ public String MD5Hash(String Input)
     private void btntLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btntLoginActionPerformed
         try {
             String reply = sendMessageToServer("LOGN", tfUsernameLogin.getText() + "," + MD5Hash(String.valueOf(tfPassLogin.getPassword())));
-
+            
             if (reply.equals("ERR1")) {
                 javax.swing.JOptionPane.showMessageDialog(super.getFrame(), "User already logged in...");
             } else if (reply.equals("ERR2")) {
@@ -916,6 +992,8 @@ public String MD5Hash(String Input)
                 mainPanel.setVisible(false);
                 super.setComponent(PanChat);
                 PanChat.setVisible(true);
+                ChatClientChatHandler.connect(tfUsernameLogin.getText()); 
+                userlistUpdate(); 
             } else {
                 System.out.println("Invalid error code...");
             }
@@ -935,6 +1013,40 @@ public String MD5Hash(String Input)
         super.setComponent(mainPanel);
         mainPanel.setVisible(true);
     }//GEN-LAST:event_btnBackActionPerformed
+// </editor-fold>    
+    private void tfSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfSendActionPerformed
+        try {
+            String toSend = tfSend.getText(); 
+            if (toSend.startsWith("//")) {
+                toSend = '-'+toSend.substring(1);
+                ChatClientChatHandler.send(toSend + '\n');
+            }
+            else if (!toSend.startsWith("/")) { /// if it's a command, send it without the prefix "-". 
+                toSend = '-'+toSend; 
+                ChatClientChatHandler.send(toSend + '\n');
+            }
+            else { // it's a command
+                if (toSend.equalsIgnoreCase("/DISC"))
+                    tfSend.setEnabled(false); 
+                    ChatClientChatHandler.disconnect();
+            }
+            
+            tfSend.setText("");
+        } catch (IOException ex) {
+            Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+}//GEN-LAST:event_tfSendActionPerformed
+
+    private void tfSendKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfSendKeyTyped
+        if (tfSend.getText().length() >= 1024) {
+            tfSendActionPerformed(null);
+        }
+}//GEN-LAST:event_tfSendKeyTyped
+
+    private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
+        ChatClientChatHandler.disconnect();
+        System.exit(0); 
+    }//GEN-LAST:event_exitMenuItemActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanChat;
@@ -944,10 +1056,6 @@ public String MD5Hash(String Input)
     private javax.swing.JButton btntGuest;
     private javax.swing.JButton btntLogin;
     private javax.swing.JButton btntNewAcc;
-    private javax.swing.JList jList1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextPane jTextPane1;
     private javax.swing.JLabel lblEmail;
     private javax.swing.JLabel lblEmailCheck;
     private javax.swing.JLabel lblExUser;
@@ -968,10 +1076,14 @@ public String MD5Hash(String Input)
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JProgressBar progressBar;
+    private javax.swing.JScrollPane scrollChans;
+    private javax.swing.JScrollPane scrollUsers;
     private javax.swing.JMenuItem settingsMenuItem;
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
+    private javax.swing.JTable tblUsers;
+    private javax.swing.JTabbedPane tbsChan;
     private javax.swing.JTextField tfEmail;
     private javax.swing.JTextField tfFName;
     private javax.swing.JTextField tfLName;
@@ -979,9 +1091,10 @@ public String MD5Hash(String Input)
     private javax.swing.JPasswordField tfPassLogin;
     private javax.swing.JPasswordField tfPassword;
     private javax.swing.JPasswordField tfPassword2;
+    private javax.swing.JTextField tfSend;
     private javax.swing.JTextField tfUserName;
     private javax.swing.JTextField tfUsernameLogin;
-    private javax.swing.JTextField txtSend;
+    private javax.swing.JTextPane txtMessages;
     // End of variables declaration//GEN-END:variables
 
     private final Timer messageTimer;
@@ -994,4 +1107,12 @@ public String MD5Hash(String Input)
     private JDialog settingsBox;
     private JDialog chatBox; 
     private boolean bEmail = false, bUname = false, bPass = false, bNick = false, bFName = false, bLName = false;
+
+    private void userlistUpdate() throws FileNotFoundException, IOException {
+        userlistUpdate("main"); // initial call 
+    }
+    private void userlistUpdate(String channel) throws FileNotFoundException, IOException {
+        String users; 
+        users = sendMessageToServer("UPDA", channel); 
+    }
 }
