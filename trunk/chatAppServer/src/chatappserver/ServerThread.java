@@ -210,7 +210,7 @@ public class ServerThread extends Thread {
         sendSQLQuery = connectToMysql.createStatement();
         BufferedReader inFromClient = null;
         
-         // register this thread with this username. 
+        // register this thread with this username. 
         sendSQLQuery.execute("INSERT into threadlookup(username, threadid) Values('"+username+"', '"+this.getId()+"');");
         // Insert the user into the channel
         sendSQLQuery.execute("INSERT into chan_main(usernames) Values('"+username+"');");
@@ -219,9 +219,8 @@ public class ServerThread extends Thread {
         String nickname = null;
         sendSQLQuery.executeQuery("SELECT nickname FROM user WHERE username = '" + username.toLowerCase() + "';");
         results = sendSQLQuery.getResultSet();
-        if (results.next()) {
+        if (results.next())
             nickname = results.getString("nickname");
-        }
         results.close();
                     
         try {
