@@ -435,11 +435,9 @@ public class ChatAppServerView extends FrameView {
                 ResultSet results = null;
                 sendSQLQuery.executeQuery("SELECT name FROM channels WHERE name = 'main';");
                 results = sendSQLQuery.getResultSet();
-                if (!results.next()) {
+                if (!results.next())
                     sendSQLQuery.execute("INSERT into channels(name,topic) Values('main', 'This is the default channel')");
-                }
                 results.close();
-
             }
             catch(Exception e) {
                 javax.swing.JOptionPane.showMessageDialog(super.getFrame(), "Failed to connect to database. ");
@@ -473,6 +471,7 @@ public class ChatAppServerView extends FrameView {
     public void startServer() throws SQLException {
         
         ServerSocket welcomeSocket=null;
+        llThreads = new LinkedList();
         try {
             welcomeSocket = new ServerSocket(Integer.parseInt(tfPort.getText()));
         } catch (IOException ex) {
@@ -535,4 +534,5 @@ public class ChatAppServerView extends FrameView {
     private Connection connectToMysql; 
     private JDialog aboutBox;
     private SwingWorker startServerWorker;
+    public static LinkedList llThreads;
 }
