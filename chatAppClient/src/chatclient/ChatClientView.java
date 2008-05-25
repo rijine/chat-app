@@ -314,7 +314,7 @@ private String MD5Hash(String Input)
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btntNewAcc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btntGuest))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -333,7 +333,7 @@ private String MD5Hash(String Input)
                     .addComponent(btntGuest))
                 .addGap(9, 9, 9)
                 .addComponent(btntLogin)
-                .addContainerGap(115, Short.MAX_VALUE))
+                .addContainerGap(116, Short.MAX_VALUE))
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -392,7 +392,7 @@ private String MD5Hash(String Input)
             .addGroup(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(statusMessageLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 157, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 171, Short.MAX_VALUE)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusAnimationLabel)
@@ -1026,11 +1026,15 @@ private String MD5Hash(String Input)
                 ChatClientChatHandler.send(toSend + '\n');
             }
             else { // it's a command
-                if (toSend.equalsIgnoreCase("/DISC"))
+                // If we have time, change this so that it sends and waits for a reply from server in a seperate thread
+                if (toSend.equalsIgnoreCase("/DISC")) {
                     tfSend.setEnabled(false); 
                     ChatClientChatHandler.disconnect();
+                }
+                else {
+                    txtMessages.setText(txtMessages.getText() + "Invalid Command\n");
+                }
             }
-            
             tfSend.setText("");
         } catch (IOException ex) {
             Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
@@ -1094,7 +1098,7 @@ private String MD5Hash(String Input)
     private javax.swing.JTextField tfSend;
     private javax.swing.JTextField tfUserName;
     private javax.swing.JTextField tfUsernameLogin;
-    private javax.swing.JTextPane txtMessages;
+    public static javax.swing.JTextPane txtMessages;
     // End of variables declaration//GEN-END:variables
 
     private final Timer messageTimer;
@@ -1112,7 +1116,7 @@ private String MD5Hash(String Input)
         userlistUpdate("main"); // initial call 
     }
     private void userlistUpdate(String channel) throws FileNotFoundException, IOException {
-        String users; 
+        String users = null; 
         users = sendMessageToServer("UPDA", channel); 
     }
 }

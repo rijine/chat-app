@@ -1,8 +1,6 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * ChatClientChatHandler.java
  */
-
 package chatclient;
 
 import java.io.BufferedReader;
@@ -39,19 +37,18 @@ public class ChatClientChatHandler {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
         };
-        startServerWorker.execute();
-        
         clientSocket = new Socket(hostname, port);
         outToServer = new DataOutputStream(clientSocket.getOutputStream()); 
         outToServer.writeBytes("CHAT:"+username+"\n");
         connected = true; 
+        startServerWorker.execute();
     }
     
     static void listen() throws IOException {
-        System.out.println("hi1"); 
-        inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())); 
-        System.out.println("hi2"); 
-        System.out.println("received this: "+inFromServer.readLine()); 
+        while (connected) {
+            inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())); 
+            ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + inFromServer.readLine() + "\n");
+        }
     }
     
     static void send(String message) throws IOException {
