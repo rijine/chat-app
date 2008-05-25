@@ -56,9 +56,14 @@ public class ChatClientChatHandler {
      */
     static void listen() throws IOException {
         while (connected) { // some condition that makes us stop listening -- It doesn't really happens, since only way for this to happen is the socket closes. essentially, while true. 
-            inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())); // when socket closes, this will throw and exception? 
+            inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())); // when socket closes, this will throw an exception? 
             //// we have to add something to check if data is simple chat data, or special commands.. (similar to what we did in server side -- we might have to also append '-' to msgs on the server side when sending) 
-            ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + inFromServer.readLine() + "\n");
+            String message = inFromServer.readLine();
+            if (message.startsWith("/")) {
+                // if server sends /UPDA:, update the user list
+            }
+            else
+                ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + message + "\n");
         }
         inFromServer.close(); 
     }
@@ -78,8 +83,8 @@ public class ChatClientChatHandler {
     static void disconnect() {
         try {
             if (clientSocket != null && clientSocket.isConnected()) {
-                connected = false; 
                 send("/DISC");
+                connected = false; 
                 outToServer.close(); 
                 clientSocket.close();
             }
