@@ -1125,11 +1125,5 @@ private String MD5Hash(String Input)
             else 
                 break;
         }
-        /*while (i != -1 && !users.isEmpty()) {
-            nickname = users.substring(0, i);
-            users = users.substring(i + 1);
-            //ChatClientView.tblUsers.
-            System.out.println(users + "\n");
-        }*/
     }
 }
