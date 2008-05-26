@@ -162,7 +162,7 @@ public class ChatClientChatHandler {
                 else if (message.startsWith("/MSG: ")) {
                     System.out.println(message); 
                     String msg = message.substring("/MSG: ".length());
-                    ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "pm from "+msg.substring(msg.indexOf(" "))+"\n");
+                    ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "pm from "+msg.substring(msg.indexOf(" ")+1)+"\n");
                 }
                 else {
                     System.out.println("Invalid code sent by server..."); // this should never happen since the server should always send valid codes. 
@@ -204,7 +204,6 @@ public class ChatClientChatHandler {
                 toSend += ChatClientView.tblUsers.getValueAt(i, 1)+" ";
             }
             toSend += ", "+msg; 
-            System.out.println(toSend); 
             outToServer.writeBytes(toSend+'\n'); 
         }
         else { // other text

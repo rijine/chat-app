@@ -662,6 +662,8 @@ private String MD5Hash(String Input)
 
         PanChat.setName("PanChat"); // NOI18N
 
+        lblWelcome.setDisplayedMnemonic('s');
+        lblWelcome.setLabelFor(tfSend);
         lblWelcome.setText(resourceMap.getString("lblWelcome.text")); // NOI18N
         lblWelcome.setName("lblWelcome"); // NOI18N
 
@@ -724,8 +726,8 @@ private String MD5Hash(String Input)
                 .addGroup(PanChatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(PanChatLayout.createSequentialGroup()
                         .addGroup(PanChatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tbsChan, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
-                            .addComponent(tfSend, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE))
+                            .addComponent(tfSend, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
+                            .addComponent(tbsChan, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(scrollUsers, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(lblWelcome))
@@ -741,8 +743,8 @@ private String MD5Hash(String Input)
                     .addComponent(scrollUsers, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE)
                     .addGroup(PanChatLayout.createSequentialGroup()
                         .addComponent(tbsChan, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addComponent(tfSend, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tfSend, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
