@@ -431,7 +431,13 @@ public class ChatAppServerView extends FrameView {
                 sendSQLQuery.execute("CREATE TABLE IF NOT EXISTS `channels` (`name` varchar(256) NOT NULL,`topic` varchar(512) NOT NULL,PRIMARY KEY (`name`)) ENGINE=InnoDB DEFAULT CHARSET=latin1");
                 // Create the first channel called 'main'
                 sendSQLQuery.execute("CREATE TABLE IF NOT EXISTS `chan_main` (`usernames` varchar(256) NOT NULL,PRIMARY KEY (`usernames`)) ENGINE=InnoDB DEFAULT CHARSET=latin1");
-
+                // create threadlookupid
+                sendSQLQuery.execute("CREATE TABLE IF NOT EXISTS `threadlookup` (`username` varchar(255) NOT NULL,`threadid` bigint(20) NOT NULL,PRIMARY KEY  (`threadid`),UNIQUE KEY `username` (`username`)) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+                // create table user
+                sendSQLQuery.execute("CREATE TABLE IF NOT EXISTS `user` (`username` varchar(256) NOT NULL,`loggedin` tinyint(1) NOT NULL default '0',`imageurl` varchar(256) default NULL,`fname` varchar(256) NOT NULL,`lname` varchar(256) NOT NULL,`password` varchar(256) NOT NULL,`nickname` varchar(256) NOT NULL,`email` varchar(256) NOT NULL,PRIMARY KEY  (`username`)) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+                // insert default users
+                sendSQLQuery.execute("INSERT INTO `user` (`username`, `loggedin`, `imageurl`, `fname`, `lname`, `password`, `nickname`, `email`) VALUES('kev1', 0, NULL, 'keva1', 'keva2', 'e10adc3949ba59abbe56e057f20f883e', 'kev1', 'kea@kea.com'),('kev2', 0, NULL, 'keab1', 'keab2', 'e10adc3949ba59abbe56e057f20f883e', 'kev2', 'kea2@kea2.com'),('test1', 0, NULL, 'first', 'last', 'e10adc3949ba59abbe56e057f20f883e', 'nick', 'test@asd.com');");
+                
                 ResultSet results = null;
                 sendSQLQuery.executeQuery("SELECT name FROM channels WHERE name = 'main';");
                 results = sendSQLQuery.getResultSet();
