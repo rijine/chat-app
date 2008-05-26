@@ -14,6 +14,7 @@ import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.Inet4Address;
 import java.net.ServerSocket;
 import javax.swing.Timer;
 import javax.swing.Icon;
@@ -436,8 +437,7 @@ public class ChatAppServerView extends FrameView {
                 // create table user
                 sendSQLQuery.execute("CREATE TABLE IF NOT EXISTS `user` (`username` varchar(256) NOT NULL,`loggedin` tinyint(1) NOT NULL default '0',`imageurl` varchar(256) default NULL,`fname` varchar(256) NOT NULL,`lname` varchar(256) NOT NULL,`password` varchar(256) NOT NULL,`nickname` varchar(256) NOT NULL,`email` varchar(256) NOT NULL,PRIMARY KEY  (`username`)) ENGINE=InnoDB DEFAULT CHARSET=latin1");
                 // insert default users
-                sendSQLQuery.execute("INSERT INTO `user` (`username`, `loggedin`, `imageurl`, `fname`, `lname`, `password`, `nickname`, `email`) VALUES('test2', 0, NULL, 'bla', 'bla', 'e10adc3949ba59abbe56e057f20f883e', 'test2', '123@456.com'),('test3', 0, NULL, 'asdasd', 'asdasd', 'e10adc3949ba59abbe56e057f20f883e', 'test3', '123@456.com'),('test1', 0, NULL, 'first', 'last', 'e10adc3949ba59abbe56e057f20f883e', 'nick', 'test@asd.com');");
-                
+                //sendSQLQuery.execute("INSERT IF NOT EXISTS INTO `user` (`username`, `loggedin`, `imageurl`, `fname`, `lname`, `password`, `nickname`, `email`) VALUES('test2', 0, NULL, 'bla', 'bla', 'e10adc3949ba59abbe56e057f20f883e', 'test2', '123@456.com'),('test3', 0, NULL, 'asdasd', 'asdasd', 'e10adc3949ba59abbe56e057f20f883e', 'test3', '123@456.com'),('test1', 0, NULL, 'first', 'last', 'e10adc3949ba59abbe56e057f20f883e', 'nick', 'test@asd.com');");
                 ResultSet results = null;
                 sendSQLQuery.executeQuery("SELECT name FROM channels WHERE name = 'main';");
                 results = sendSQLQuery.getResultSet();
