@@ -336,6 +336,51 @@ public class ServerThread extends Thread {
                     }
                     else if (message.equalsIgnoreCase("/TIME")) {
                     }
+                    else if (message.substring(0, "/NICK ".length()).equalsIgnoreCase("/NICK ")) {
+                        String reply = null;
+                        sendSQLQuery.executeQuery("SELECT nickname FROM user WHERE nickname = '" + message.substring("/NICK ".length()) + "';");
+                        results = sendSQLQuery.getResultSet();
+                        boolean found = results.next();
+                        results.close();
+                        if (found) {
+                            reply = "/NICK:/EXISTS\n";
+                        } else {
+                            reply = "/NICK:/SUCC:" + message.substring("/NICK ".length()) + "\n";
+                            ChatAppServerView.txtDebug.setText(ChatAppServerView.txtDebug.getText() + nickname + " is now known as " + message.substring("/NICK ".length()) + ".\n");
+                            sendSQLQuery.execute("UPDATE user SET nickname = '" + message.substring("/NICK ".length()) + "' WHERE nickname = '" + nickname + "';");
+                            sendSQLQuery.executeQuery("SELECT * FROM chan_main;");
+                            results = sendSQLQuery.getResultSet();
+                            // Get the list of all the usernames
+                            while (results.next()) {
+                                usernames += results.getString("usernames").toLowerCase() + ",";
+                            }
+
+                            // Conver username to nickname
+                            /*sendSQLQuery.executeQuery("SELECT nickname FROM user WHERE username = '" + username.toLowerCase() + "';");
+                            results = sendSQLQuery.getResultSet();
+                            if (results.next())
+                                nickname = results.getString("nickname");*/
+                            results.close();
+
+                            // Get threadid of each user, update the userlist and broadcast that a user quit the channel
+                            while (!usernames.isEmpty()) {
+                                processUname = usernames.substring(0, usernames.indexOf(","));
+                                usernames = usernames.substring(usernames.indexOf(",") + 1);
+                                if (!processUname.isEmpty()) {
+                                    sendSQLQuery.executeQuery("SELECT threadid FROM threadlookup WHERE username = '" + processUname + "';");
+                                    results = sendSQLQuery.getResultSet();
+                                    results.next();
+                                    if (ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))) != null) {
+                                        ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))).updateList("UPDA:main");
+                                        ServerThread.sleep(100);
+                                        ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))).send(nickname + " is now known as " + message.substring("/NICK ".length()) + ".\n");
+                                    }
+                                }
+                            }
+                            results.close();
+                        }
+                        outToClient.writeBytes(reply);
+                    }
                     else {
                         // invalid command
                         System.out.println("Invalid command. "); 
@@ -346,6 +391,8 @@ public class ServerThread extends Thread {
             ChatAppServerView.txtDebug.setText(ChatAppServerView.txtDebug.getText() + username + " has disconnected.\n");
             System.out.println("Disconnecting..."); // debug
             //outToClient.writeBytes("DISC"); // tell client we're discing
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
