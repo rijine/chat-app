@@ -176,7 +176,7 @@ public class ChatClientChatHandler {
             return; 
         }
         if (message.toUpperCase().startsWith("/SEND ")) { // special case, we need to save the filename, so that when the server replies with the target address, we would still remember what to send. 
-            if (message.indexOf(" ", "/SEND ".length()) == -1) {
+            if (message.indexOf(" ", "/SEND ".length()) == -1) { // user put: "/send nick", without specifying a filename
                 ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "You didn't specify which file to send. \n"); 
                 bSendingFile = false;
                 return; 
@@ -186,7 +186,7 @@ public class ChatClientChatHandler {
                 return;
             }
             bSendingFile = true;
-            fileLocation = message.substring("/SEND ".length(), message.length()-1); // store the file location of the file we want to send.
+            fileLocation = message.substring(message.indexOf(" ","/SEND ".length()+1)+1, message.length()-1); // store the file location of the file we want to send.
             String username = message.substring("/SEND ".length(), message.indexOf(" ", "/SEND ".length()));
             outToServer.writeBytes("/SEND "+username+'\n'); // send to server /SEND username
         }
