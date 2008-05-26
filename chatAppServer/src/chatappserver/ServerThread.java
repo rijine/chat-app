@@ -419,32 +419,45 @@ public class ServerThread extends Thread {
                         outToClient.writeBytes(reply);
                     }
                     else if (message.toUpperCase().startsWith("/MSG ")) {
+                        //System.out.println(message);
                         String pm = message.substring(message.indexOf(","));
+                        //System.out.println("pm: " + pm);
                         String strNumPM = message.substring(message.indexOf(" ")+1); 
                         strNumPM = strNumPM.substring(0, strNumPM.indexOf(" "));
                         int numPM = Integer.valueOf(strNumPM);
-                        System.out.println(numPM); 
+                        //System.out.println(numPM); 
                         String nicks = message.substring(message.indexOf(" ", "/MSG ".length())+1, message.indexOf(",")); 
-                        System.out.println("nicks are: "+nicks); 
+                        //System.out.println("nicks are: "+nicks); 
                         
+                        // Get sender nickname
                         sendSQLQuery.executeQuery("SELECT nickname FROM user WHERE username = '" + username + "';"); 
                         results = sendSQLQuery.getResultSet(); 
                         results.next(); 
-                        String nick_sender = results.getString("nickname"); 
+                        String nick_sender = results.getString("nickname");
+                        //System.out.println("sender nickname: " + nick_sender);
                         
                         for (int i = 0; i < numPM; i++) {
-                            String nick_target = nicks.substring(0, nicks.indexOf(" "));
-                            nicks = nicks.substring(nicks.indexOf(" ")+1); 
+                            String nick_target = null;
+                            if ((i+1) != numPM) {
+                                nick_target = nicks.substring(0, nicks.indexOf(" "));
+                                nicks = nicks.substring(nicks.indexOf(" ") + 1); 
+                            }
+                            else {
+                                nick_target = nicks;
+                                nicks = null; // last nickname.
+                            }
+                            
                             // send message to nick_target
                             sendSQLQuery.executeQuery("SELECT threadid FROM threadlookup WHERE username = (SELECT username FROM user WHERE nickname = '" + nick_target + "');");
                             results = sendSQLQuery.getResultSet();
                             if (results.next()) {
-                                //ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))).send("/MSG: "+nick_sender+" "+pm); 
+                                if (ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))) != null)
+                                    ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))).send("/MSG: " + nick_sender + pm + "\n"); 
                             } else {
                                 // tell person who sent that the target just went offline... 
                                 // outToClient.writeBytes("/MSG ERR <nick>") -- and implement it on the client side. 
                             }
-                            System.out.println("nick #: " + i + ": " + nick_target); 
+                            //System.out.println("nick #: " + i + ": " + nick_target); 
                         }
                         results.close();
                     }
