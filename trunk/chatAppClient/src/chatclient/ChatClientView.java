@@ -30,7 +30,6 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.table.DefaultTableModel;
 
 /**
  * The application's main frame.
@@ -1025,7 +1024,8 @@ private String MD5Hash(String Input)
                     tfSend.setEnabled(false); 
                     ChatClientChatHandler.disconnect();
                 }
-                else if (toSend.toUpperCase().startsWith("/SEND ")) {
+                else if (toSend.toUpperCase().startsWith("/SEND ") || 
+                         toSend.substring(0, "/NICK ".length()).equalsIgnoreCase("/NICK ")) {
                     ChatClientChatHandler.send(toSend + '\n');
                 }
                 else {
@@ -1038,7 +1038,7 @@ private String MD5Hash(String Input)
         }
 }//GEN-LAST:event_tfSendActionPerformed
 
-    // this functino simply sends the text if it's larger than 1024 characters. this is used to help avoid spamming by writing huge amounts of text.
+    // this function simply sends the text if it's larger than 1024 characters. this is used to help avoid spamming by writing huge amounts of text.
     // however it will need more tweaking to really avoid spamming. 
     private void tfSendKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfSendKeyTyped
         if (tfSend.getText().length() >= 1024) {
