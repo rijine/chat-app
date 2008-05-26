@@ -36,12 +36,13 @@ public class ChatClientFileSender {
             receiverPort = Integer.parseInt(inputStream.readLine())+1;
             inputStream.close();
             
-            System.out.println(filename);
+            
             File f = new File(filename);
+            System.out.println(f.length());
             System.out.println(f.getPath());
             byte[] fileArray = new byte[(int)f.length()];
             
-            if (fileArray.length == 0) {
+            if (!f.exists()) {
                 ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "\nFile not found\n\n");
                 return; 
             }

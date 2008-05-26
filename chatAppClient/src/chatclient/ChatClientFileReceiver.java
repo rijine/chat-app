@@ -23,11 +23,12 @@ public class ChatClientFileReceiver extends Thread{
     private DataInputStream inFromPeer;
     private DataOutputStream outToPeer; 
     private BufferedReader inFromPeerMetaData;
+    String targetpath; 
     
-    ChatClientFileReceiver(Socket accept) {
+    ChatClientFileReceiver(Socket accept, String path) {
         super("ChatClientFileReceiver"); 
-        System.out.println("constructor (receiver)");
         connectionSocket = accept; 
+        targetpath = path; 
     }
     
     @Override
@@ -37,7 +38,6 @@ public class ChatClientFileReceiver extends Thread{
             outToPeer = new DataOutputStream(connectionSocket.getOutputStream());
             inFromPeerMetaData = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
             String metadata = inFromPeerMetaData.readLine();
-            inFromPeerMetaData.close(); 
             
             inFromPeer = new DataInputStream(new BufferedInputStream(connectionSocket.getInputStream()));
             String filename = metadata.substring(0,metadata.indexOf("/"));
@@ -48,11 +48,18 @@ public class ChatClientFileReceiver extends Thread{
             outToPeer.writeBytes("ACK\n"); // send ACK toindicate we're ready to receive data. (probably should ask the user first). send any other string to indicate refuse. 
             inFromPeer.readFully(file); // store file in "file".
             // now we have to store it on our harddrive.. 
-            BufferedOutputStream bus=new BufferedOutputStream(new FileOutputStream(new File("FILES_RECEIVED/"+filename)));
+            
+            // check if targetpath exists
+            File path = new File(targetpath);
+            if (!path.exists())
+                path.mkdir(); 
+            
+            BufferedOutputStream bus=new BufferedOutputStream(new FileOutputStream(new File(targetpath+"/"+filename)));
             bus.write(file,0,file.length);
             bus.close();
             ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "\nFile " + filename + " successfully received. \n\n"); 
             
+            inFromPeerMetaData.close();
             outToPeer.close(); 
             inFromPeer.close(); 
             connectionSocket.close();
