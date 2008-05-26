@@ -152,6 +152,7 @@ public class ChatAppServerView extends FrameView {
 
         menuBar.setName("menuBar"); // NOI18N
 
+        fileMenu.setMnemonic('f');
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(chatappserver.ChatAppServerApp.class).getContext().getResourceMap(ChatAppServerView.class);
         fileMenu.setText(resourceMap.getString("fileMenu.text")); // NOI18N
         fileMenu.setName("fileMenu"); // NOI18N
@@ -163,6 +164,7 @@ public class ChatAppServerView extends FrameView {
 
         menuBar.add(fileMenu);
 
+        helpMenu.setMnemonic('h');
         helpMenu.setText(resourceMap.getString("helpMenu.text")); // NOI18N
         helpMenu.setName("helpMenu"); // NOI18N
 
@@ -191,7 +193,7 @@ public class ChatAppServerView extends FrameView {
             .addGroup(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(statusMessageLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 164, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 150, Short.MAX_VALUE)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusAnimationLabel)
@@ -251,7 +253,7 @@ public class ChatAppServerView extends FrameView {
         tfPassword.setText(resourceMap.getString("tfPassword.text")); // NOI18N
         tfPassword.setName("tfPassword"); // NOI18N
 
-        btnLogin.setMnemonic('l');
+        btnLogin.setMnemonic('g');
         btnLogin.setText(resourceMap.getString("btnLogin.text")); // NOI18N
         btnLogin.setName("btnLogin"); // NOI18N
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
@@ -284,12 +286,12 @@ public class ChatAppServerView extends FrameView {
                     .addComponent(btnLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tfDB, javax.swing.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE)
-                    .addComponent(btnExit1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE)
-                    .addComponent(tfPassword, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE)
-                    .addComponent(tfUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE)
-                    .addComponent(tfSQLip, javax.swing.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE)
-                    .addComponent(tfSQLport, javax.swing.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE))
+                    .addComponent(tfDB, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
+                    .addComponent(btnExit1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
+                    .addComponent(tfPassword, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
+                    .addComponent(tfUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
+                    .addComponent(tfSQLip, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
+                    .addComponent(tfSQLport, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE))
                 .addGap(95, 95, 95))
         );
         loginPanelLayout.setVerticalGroup(
@@ -319,7 +321,7 @@ public class ChatAppServerView extends FrameView {
                 .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnExit1)
                     .addComponent(btnLogin))
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addContainerGap(69, Short.MAX_VALUE))
         );
 
         settingsPanel.setEnabled(false);
@@ -432,7 +434,7 @@ public class ChatAppServerView extends FrameView {
                 .addContainerGap()
                 .addComponent(debugScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(17, 17, 17)
-                .addComponent(showUserList, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE))
+                .addComponent(showUserList, javax.swing.GroupLayout.PREFERRED_SIZE, 23, Short.MAX_VALUE))
         );
 
         setComponent(loginPanel);
@@ -457,7 +459,7 @@ public class ChatAppServerView extends FrameView {
                 // create table user
                 sendSQLQuery.execute("CREATE TABLE IF NOT EXISTS `user` (`username` varchar(256) NOT NULL,`loggedin` tinyint(1) NOT NULL default '0',`imageurl` varchar(256) default NULL,`fname` varchar(256) NOT NULL,`lname` varchar(256) NOT NULL,`password` varchar(256) NOT NULL,`nickname` varchar(256) NOT NULL,`email` varchar(256) NOT NULL,PRIMARY KEY  (`username`)) ENGINE=InnoDB DEFAULT CHARSET=latin1");
                 // insert default users
-                //sendSQLQuery.execute("INSERT IF NOT EXISTS INTO `user` (`username`, `loggedin`, `imageurl`, `fname`, `lname`, `password`, `nickname`, `email`) VALUES('test2', 0, NULL, 'bla', 'bla', 'e10adc3949ba59abbe56e057f20f883e', 'test2', '123@456.com'),('test3', 0, NULL, 'asdasd', 'asdasd', 'e10adc3949ba59abbe56e057f20f883e', 'test3', '123@456.com'),('test1', 0, NULL, 'first', 'last', 'e10adc3949ba59abbe56e057f20f883e', 'nick', 'test@asd.com');");
+                //sendSQLQuery.execute("INSERT INTO `user` (`username`, `loggedin`, `imageurl`, `fname`, `lname`, `password`, `nickname`, `email`) VALUES('test2', 0, NULL, 'bla', 'bla', 'e10adc3949ba59abbe56e057f20f883e', 'test2', '123@456.com'),('test3', 0, NULL, 'asdasd', 'asdasd', 'e10adc3949ba59abbe56e057f20f883e', 'test3', '123@456.com'),('test1', 0, NULL, 'first', 'last', 'e10adc3949ba59abbe56e057f20f883e', 'nick', 'test@asd.com');");
                 ResultSet results = null;
                 sendSQLQuery.executeQuery("SELECT name FROM channels WHERE name = 'main';");
                 results = sendSQLQuery.getResultSet();
