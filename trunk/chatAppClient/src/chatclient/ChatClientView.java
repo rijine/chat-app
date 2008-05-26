@@ -18,8 +18,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
@@ -322,7 +325,7 @@ private String MD5Hash(String Input)
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btntNewAcc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btntGuest))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -341,7 +344,7 @@ private String MD5Hash(String Input)
                     .addComponent(btntGuest))
                 .addGap(9, 9, 9)
                 .addComponent(btntLogin)
-                .addContainerGap(115, Short.MAX_VALUE))
+                .addContainerGap(116, Short.MAX_VALUE))
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -400,7 +403,7 @@ private String MD5Hash(String Input)
             .addGroup(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(statusMessageLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 157, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 171, Short.MAX_VALUE)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusAnimationLabel)
@@ -690,9 +693,16 @@ private String MD5Hash(String Input)
                 "Image", "UserList"
             }
         ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.String.class
+            };
             boolean[] canEdit = new boolean [] {
                 false, false
             };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
@@ -1030,11 +1040,46 @@ private String MD5Hash(String Input)
                     tfSend.setEnabled(false); 
                     ChatClientChatHandler.disconnect();
                 }
-                else if ((toSend.length() > "/SEND ".length() && toSend.toUpperCase().startsWith("/SEND ")) || 
-                         (toSend.length() > "/NICK ".length() && toSend.toUpperCase().startsWith("/NICK ")) ||
-                         (toSend.length() > "/WHOIS ".length() && toSend.toUpperCase().startsWith("/WHOIS ")) ||
-                         (toSend.length() > "/MSG ".length() && toSend.toUpperCase().startsWith("/MSG "))) {
+                else if (toSend.toUpperCase().startsWith("/SEND ") || 
+                         toSend.toUpperCase().startsWith("/NICK ") ||
+                         toSend.toUpperCase().startsWith("/WHOIS ") ||
+                         toSend.toUpperCase().startsWith("/MSG ")) {    
                     ChatClientChatHandler.send(toSend + '\n');
+                }
+                else if (toSend.equalsIgnoreCase("/IGNORE")) {
+                    int rows[] = ChatClientView.tblUsers.getSelectedRows(); 
+                    if (rows.length == 0) {
+                        txtMessages.setText(txtMessages.getText() + "You have not selected anyone\n");
+                        return;
+                    }
+                    PrintWriter outputStream = new PrintWriter(new FileWriter("ignore.ini"));
+                    for (int i = 0; i < rows.length; i++) {
+                       outputStream.println(tblUsers.getValueAt(rows[i], 1));
+                    }
+                    outputStream.flush();
+                    outputStream.close();
+                }
+                else if (toSend.equalsIgnoreCase("/UNIGNORE")) {
+                    int rows[] = ChatClientView.tblUsers.getSelectedRows(); 
+                    if (rows.length == 0) {
+                        txtMessages.setText(txtMessages.getText() + "You have not selected anyone\n");
+                        return;
+                    }
+                    PrintWriter outputStream = new PrintWriter(new FileWriter("ignoreTemp.ini"));
+                    for (int i = 0; i < rows.length; i++) {
+                        BufferedReader inputStream = new BufferedReader(new FileReader("ignore.ini"));
+                        String entry = null;
+                        while ((entry = inputStream.readLine()) != null)
+                            if (!entry.equals(tblUsers.getValueAt(rows[i], 1)))
+                                outputStream.println(entry);
+                        inputStream.close();
+                        outputStream.flush();
+                        outputStream.close();
+                        File deleteAndRename = new File("ignore.ini");
+                        deleteAndRename.delete();
+                        deleteAndRename = new File("ignoreTemp.ini");
+                        deleteAndRename.renameTo(new File ("ignore.ini"));
+                    }
                 }
                 else {
                     txtMessages.setText(txtMessages.getText() + "Invalid Command\n"); // display "invalid command" in the main text area. 
