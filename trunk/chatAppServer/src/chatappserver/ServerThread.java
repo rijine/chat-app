@@ -358,7 +358,7 @@ public class ServerThread extends Thread {
                             String nick_requester = tmp.substring(tmp.indexOf(" ")+1); 
                             String user_receiver = nick_requester.substring(0, nick_requester.indexOf(" ")); 
                             nick_requester = tmp.substring(0, tmp.indexOf(" ")); 
-                            String date = tmp.substring(nick_requester.length()+user_receiver.length()+1); 
+                            String date = tmp.substring(nick_requester.length()+user_receiver.length()+2); 
                             
                             sendSQLQuery.executeQuery("SELECT nickname FROM user WHERE username = '" + user_receiver + "';");
                             (results = sendSQLQuery.getResultSet()).next();
@@ -368,7 +368,7 @@ public class ServerThread extends Thread {
                             sendSQLQuery.executeQuery("SELECT threadid FROM threadlookup WHERE username = (SELECT username FROM user WHERE nickname = '" + nick_requester + "');");
                             (results = sendSQLQuery.getResultSet()).next();
                             if (ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))) != null)
-                                ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))).send("TIM2 " + nick_receiver + " " + date + '\n'); 
+                                ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))).send("/TIM2 " + nick_receiver + " " + date + '\n'); 
                             results.close(); 
                         } else { // user requested the time from another user... (server has to be the middle man) 
                             sendSQLQuery.executeQuery("SELECT nickname FROM user WHERE username = '" + username + "';");
