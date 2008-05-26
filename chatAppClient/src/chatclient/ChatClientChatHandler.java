@@ -203,7 +203,8 @@ public class ChatClientChatHandler {
             for (int i = 0; i < rows.length; i++) {
                 toSend += ChatClientView.tblUsers.getValueAt(i, 1)+" ";
             }
-            
+            toSend += ", "+msg; 
+            System.out.println(toSend); 
             outToServer.writeBytes(toSend+'\n'); 
         }
         else { // other text
