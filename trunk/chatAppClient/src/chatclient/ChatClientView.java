@@ -722,7 +722,7 @@ private String MD5Hash(String Input)
         scrollChans.setAutoscrolls(true);
         scrollChans.setName("scrollChans"); // NOI18N
 
-        txtMessages.setFocusable(false);
+        txtMessages.setEditable(false);
         txtMessages.setName("txtMessages"); // NOI18N
         scrollChans.setViewportView(txtMessages);
 
