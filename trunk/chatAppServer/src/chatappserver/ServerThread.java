@@ -419,22 +419,17 @@ public class ServerThread extends Thread {
                         outToClient.writeBytes(reply);
                     }
                     else if (message.toUpperCase().startsWith("/MSG ")) {
-                        //System.out.println(message);
                         String pm = message.substring(message.indexOf(","));
-                        //System.out.println("pm: " + pm);
                         String strNumPM = message.substring(message.indexOf(" ")+1); 
                         strNumPM = strNumPM.substring(0, strNumPM.indexOf(" "));
                         int numPM = Integer.valueOf(strNumPM);
-                        //System.out.println(numPM); 
                         String nicks = message.substring(message.indexOf(" ", "/MSG ".length())+1, message.indexOf(",")); 
-                        //System.out.println("nicks are: "+nicks); 
                         
                         // Get sender nickname
                         sendSQLQuery.executeQuery("SELECT nickname FROM user WHERE username = '" + username + "';"); 
                         results = sendSQLQuery.getResultSet(); 
                         results.next(); 
                         String nick_sender = results.getString("nickname");
-                        //System.out.println("sender nickname: " + nick_sender);
                         
                         for (int i = 0; i < numPM; i++) {
                             String nick_target = null;
@@ -457,7 +452,6 @@ public class ServerThread extends Thread {
                                 // tell person who sent that the target just went offline... 
                                 // outToClient.writeBytes("/MSG ERR <nick>") -- and implement it on the client side. 
                             }
-                            //System.out.println("nick #: " + i + ": " + nick_target); 
                         }
                         results.close();
                     }
