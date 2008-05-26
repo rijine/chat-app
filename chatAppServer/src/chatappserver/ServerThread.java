@@ -218,6 +218,7 @@ public class ServerThread extends Thread {
         ResultSet results = null;
         String nickname = null;
         
+        sendSQLQuery.execute("UPDATE user SET loggedin = '1' WHERE username = '" + username + "';");
         
         // On login update everyone's user list
         sendSQLQuery.executeQuery("SELECT * FROM chan_main;");
@@ -292,7 +293,7 @@ public class ServerThread extends Thread {
                     if (message.equalsIgnoreCase("/DISC")) {
                         sendSQLQuery.execute("DELETE FROM threadlookup WHERE threadid = '"+ this.getId() +"';");
                         sendSQLQuery.execute("DELETE FROM chan_main WHERE usernames = '"+ username +"';");
-                        
+                        sendSQLQuery.execute("UPDATE user SET loggedin = '0' WHERE username = '" + username + "';");
                         sendSQLQuery.executeQuery("SELECT * FROM chan_main;");
                         results = sendSQLQuery.getResultSet();
                         // Get the list of all the usernames
@@ -332,7 +333,26 @@ public class ServerThread extends Thread {
                     }
                     else if (message.equalsIgnoreCase("/PING")) {
                     }
-                    else if (message.equalsIgnoreCase("/WHOIS")) {
+                    else if (message.substring(0, "/WHOIS ".length()).equalsIgnoreCase("/WHOIS ")) {
+                        String reply = null;
+                        sendSQLQuery.executeQuery("SELECT * FROM user WHERE nickname = '" + message.substring("/WHOIS ".length()) + "';");
+                        results = sendSQLQuery.getResultSet();
+                        boolean found = results.next();
+                        if (found) {
+                            reply = "/WHOIS:Nickname: " + results.getString("nickname") +
+                                        "\nFirst Name: " + results.getString("fname") +
+                                        "\nLast Name: " + results.getString("lname") +
+                                        "\nE-mail: " + results.getString("email");
+                            if (results.getString("loggedin").equals("0"))
+                                reply +="\nOnline: No\n"; 
+                            else 
+                                reply +="\nOnline: Yes\n"; 
+                                        
+                        } else {
+                            reply = "/WHOIS:NOTFOUND\n";
+                        }
+                        outToClient.writeBytes(reply);     
+                        results.close();
                     }
                     else if (message.equalsIgnoreCase("/TIME")) {
                     }
@@ -346,7 +366,8 @@ public class ServerThread extends Thread {
                             reply = "/NICK:/EXISTS\n";
                         } else {
                             reply = "/NICK:/SUCC:" + message.substring("/NICK ".length()) + "\n";
-                            ChatAppServerView.txtDebug.setText(ChatAppServerView.txtDebug.getText() + nickname + " is now known as " + message.substring("/NICK ".length()) + ".\n");
+                            String old_nick = nickname;
+                            ChatAppServerView.txtDebug.setText(ChatAppServerView.txtDebug.getText() + old_nick + " is now known as " + message.substring("/NICK ".length()) + ".\n");
                             sendSQLQuery.execute("UPDATE user SET nickname = '" + message.substring("/NICK ".length()) + "' WHERE nickname = '" + nickname + "';");
                             sendSQLQuery.executeQuery("SELECT * FROM chan_main;");
                             results = sendSQLQuery.getResultSet();
@@ -356,10 +377,10 @@ public class ServerThread extends Thread {
                             }
 
                             // Conver username to nickname
-                            /*sendSQLQuery.executeQuery("SELECT nickname FROM user WHERE username = '" + username.toLowerCase() + "';");
+                            sendSQLQuery.executeQuery("SELECT nickname FROM user WHERE username = '" + username.toLowerCase() + "';");
                             results = sendSQLQuery.getResultSet();
                             if (results.next())
-                                nickname = results.getString("nickname");*/
+                                nickname = results.getString("nickname");
                             results.close();
 
                             // Get threadid of each user, update the userlist and broadcast that a user quit the channel
@@ -373,7 +394,7 @@ public class ServerThread extends Thread {
                                     if (ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))) != null) {
                                         ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))).updateList("UPDA:main");
                                         ServerThread.sleep(100);
-                                        ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))).send(nickname + " is now known as " + message.substring("/NICK ".length()) + ".\n");
+                                        ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))).send(old_nick + " is now known as " + message.substring("/NICK ".length()) + ".\n");
                                     }
                                 }
                             }
