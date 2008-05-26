@@ -111,7 +111,7 @@ public class ChatClientChatHandler {
             
             //// we have to add something to check if data is simple chat data, or special commands.. (similar to what we did in server side -- we might have to also append '-' to msgs on the server side when sending) 
             if (message.startsWith("/")) { // if server sent a special command 
-                if (message.startsWith("/SEND")) { 
+                if (message.startsWith("/SEND")) {
                     if (bSendingFile) {
                         if (message.substring("/SEND ".length()).startsWith("ERR")) {
                             ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "User " + message.substring(message.indexOf("ERR")+3) + "is not logged in. \n");
@@ -190,7 +190,20 @@ public class ChatClientChatHandler {
             String username = message.substring("/SEND ".length(), message.indexOf(" ", "/SEND ".length()));
             outToServer.writeBytes("/SEND "+username+'\n'); // send to server /SEND username
         }
-        else { // normal text
+        else if (message.toUpperCase().startsWith("/MSG ")) {
+            String msg = message.substring("/MSG ".length());
+            int rows[] = ChatClientView.tblUsers.getSelectedRows(); 
+            String toSend = "/MSG "+String.valueOf(rows.length)+" "; // attach number of people we're sending the message to. 
+            
+            for (int i = 0; i < rows.length; i++) {
+                toSend += ChatClientView.tblUsers.getValueAt(i, 1)+" ";
+            }
+            
+            toSend += ", "+msg; 
+            System.out.println(toSend);
+            outToServer.writeBytes(toSend+'\n'); 
+        }
+        else { // other text
             try {
                 outToServer.writeBytes(message);
             } catch (IOException ex) {
