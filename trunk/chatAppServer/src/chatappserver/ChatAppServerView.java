@@ -277,7 +277,7 @@ public class ChatAppServerView extends FrameView {
                     .addComponent(btnExit1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE)
                     .addComponent(tfPassword, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE)
                     .addComponent(tfUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE)
-                    .addComponent(tfSQLip)
+                    .addComponent(tfSQLip, javax.swing.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE)
                     .addComponent(tfSQLport, javax.swing.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE))
                 .addGap(95, 95, 95))
         );
@@ -308,7 +308,7 @@ public class ChatAppServerView extends FrameView {
                 .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnExit1)
                     .addComponent(btnLogin))
-                .addContainerGap(61, Short.MAX_VALUE))
+                .addContainerGap(59, Short.MAX_VALUE))
         );
 
         settingsPanel.setEnabled(false);
@@ -523,7 +523,7 @@ public class ChatAppServerView extends FrameView {
     private javax.swing.JTextField tfSQLport;
     private javax.swing.JTextField tfUsername;
     private javax.swing.JTextField tfUsersLimit;
-    private javax.swing.JTextArea txtDebug;
+    public static javax.swing.JTextArea txtDebug;
     // End of variables declaration//GEN-END:variables
 
     private final Timer messageTimer;

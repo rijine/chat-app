@@ -148,7 +148,7 @@
                       <Component id="btnExit1" alignment="1" pref="66" max="32767" attributes="1"/>
                       <Component id="tfPassword" alignment="1" pref="66" max="32767" attributes="1"/>
                       <Component id="tfUsername" alignment="0" pref="66" max="32767" attributes="1"/>
-                      <Component id="tfSQLip" alignment="0" max="32767" attributes="1"/>
+                      <Component id="tfSQLip" alignment="0" pref="66" max="32767" attributes="1"/>
                       <Component id="tfSQLport" alignment="0" pref="66" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace min="-2" pref="95" max="-2" attributes="0"/>
@@ -450,6 +450,9 @@
                 <Property name="rows" type="int" value="5"/>
                 <Property name="name" type="java.lang.String" value="txtDebug" noResource="true"/>
               </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
+              </AuxValues>
             </Component>
           </SubComponents>
         </Container>

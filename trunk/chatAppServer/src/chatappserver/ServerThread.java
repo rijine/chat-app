@@ -25,7 +25,7 @@ public class ServerThread extends Thread {
             String reply = null;
             Statement sendSQLQuery = null;
             sendSQLQuery = connectToMysql.createStatement();
-            
+
             parseQuery = parseQuery.substring("CHEK:".length());
             if (parseQuery.startsWith("nickname:")) {
                 // checks for duplicate nicknames
@@ -88,6 +88,8 @@ public class ServerThread extends Thread {
             parseQuery = parseQuery.substring("NEWA:".length());
             int i = parseQuery.indexOf(",");
             String outQuery = "INSERT into user(username, email, fname, lname, password, nickname) Values('";
+            
+            String username = parseQuery.substring(0, i);
 
             outQuery += parseQuery.substring(0, i) + "', '"; // get username
             parseQuery = parseQuery.substring(i + 1); // remove username
@@ -107,8 +109,7 @@ public class ServerThread extends Thread {
             outQuery += parseQuery + "');"; // get nickname
             sendSQLQuery.execute(outQuery);
 
-            // outToClient.writeBytes("feedback_here...");
-            // we decided this is not necessary.
+            ChatAppServerView.txtDebug.setText(ChatAppServerView.txtDebug.getText() + username + " has just been created.\n");
             sendSQLQuery.close();
             return;
         } catch (SQLException ex) {
@@ -142,7 +143,7 @@ public class ServerThread extends Thread {
                 }
                 else {
                     reply = "SUCC\n";
-                    // this will be done in chat now: sendSQLQuery.execute("INSERT into threadlookup(username, threadid) Values('"+parseQuery+"', '"+this.getId()+"');"); // register this thread with this username. 
+                    ChatAppServerView.txtDebug.setText(ChatAppServerView.txtDebug.getText() + parseQuery + " has logged in.\n");
                 }
             }
             outToClient.writeBytes(reply);
@@ -212,6 +213,7 @@ public class ServerThread extends Thread {
         sendSQLQuery.execute("INSERT into threadlookup(username, threadid) Values('"+username+"', '"+this.getId()+"');");
         // Insert the user into the channel
         sendSQLQuery.execute("INSERT into chan_main(usernames) Values('"+username+"');");
+        ChatAppServerView.txtDebug.setText(ChatAppServerView.txtDebug.getText() + username + " is in chat.\n");
         
         ResultSet results = null;
         String nickname = null;
@@ -341,6 +343,7 @@ public class ServerThread extends Thread {
                 }
             }
             outToClient.close();
+            ChatAppServerView.txtDebug.setText(ChatAppServerView.txtDebug.getText() + username + " has disconnected.\n");
             System.out.println("Disconnecting..."); // debug
             //outToClient.writeBytes("DISC"); // tell client we're discing
         } catch (IOException ex) {
