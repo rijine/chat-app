@@ -337,13 +337,13 @@ public class ServerThread extends Thread {
                         break; 
                     }
                     else if (message.toUpperCase().startsWith("/SEND ")){
-                        String user_target = message.substring("/SEND ".length());
-                        sendSQLQuery.executeQuery("SELECT ip FROM threadlookup WHERE username = '" + user_target + "';");
+                        String nick_target = message.substring("/SEND ".length());
+                        sendSQLQuery.executeQuery("SELECT ip FROM threadlookup WHERE username = (SELECT username FROM user WHERE nickname = '" + nick_target + "');");
+                        results = sendSQLQuery.getResultSet();
                         if (results.next()) {
-                        
+                            outToClient.writeBytes("/SEND "+results.getString("ip")+'\n');
                         } else {
-                            System.out.println("user not found"); 
-                            outToClient.writeBytes("/SEND ERR"+user_target+'\n');
+                            outToClient.writeBytes("/SEND ERR "+nick_target+'\n');
                         }
                     }
                     else if (message.equalsIgnoreCase("/PING")) {
