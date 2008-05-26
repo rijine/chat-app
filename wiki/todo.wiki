@@ -1,9 +1,10 @@
-#labels todo
+#labels todo,list
 == Misc ==
 
 
 == Server ==
   * make users timeout if disconnected for x minutes + add option for how long is x. 
+  * file lock to only allow one server instance to run at a time. 
 
 == Client ==
   * add list of commands (/cmd?)
@@ -11,3 +12,4 @@
   * F1 for help
   * timestamps (+ add option in settings.ini (checkbox) 
   * add grayed out radio buttons for broadcast mode or client/server mode. (focus on client server for now) 
+  * file lock to only allow one client instance at a time
