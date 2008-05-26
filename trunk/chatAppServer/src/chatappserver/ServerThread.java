@@ -215,6 +215,9 @@ public class ServerThread extends Thread {
         sendSQLQuery.execute("INSERT into chan_main(usernames) Values('"+username+"');");
         ChatAppServerView.txtDebug.setText(ChatAppServerView.txtDebug.getText() + username + " is in chat.\n");
         
+        // Update UserList from server button
+        ChatAppServerUserList.updateUserList();
+        
         ResultSet results = null;
         String nickname = null;
         
@@ -295,6 +298,8 @@ public class ServerThread extends Thread {
                         sendSQLQuery.execute("DELETE FROM chan_main WHERE usernames = '"+ username +"';");
                         sendSQLQuery.execute("UPDATE user SET loggedin = '0' WHERE username = '" + username + "';");
                         sendSQLQuery.executeQuery("SELECT * FROM chan_main;");
+                        // Update UserList from server button
+                        ChatAppServerUserList.updateUserList();
                         results = sendSQLQuery.getResultSet();
                         // Get the list of all the usernames
                         while (results.next()) {

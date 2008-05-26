@@ -404,6 +404,7 @@ public class ChatAppServerView extends FrameView {
         debugScrollPanel.setName("debugScrollPanel"); // NOI18N
 
         txtDebug.setColumns(20);
+        txtDebug.setEditable(false);
         txtDebug.setRows(5);
         txtDebug.setName("txtDebug"); // NOI18N
         debugScrollPanel.setViewportView(txtDebug);

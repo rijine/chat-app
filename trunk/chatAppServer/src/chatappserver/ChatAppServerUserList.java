@@ -73,14 +73,12 @@ public class ChatAppServerUserList extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
-    /**
-     * @param args the command line arguments
-     */
-    
+    public static void updateUserList() {
+        System.out.println("I'm here");
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeButton;
-    public static javax.swing.JTextPane listUsers;
+    private javax.swing.JTextPane listUsers;
     private javax.swing.JScrollPane usersScrollPane;
     // End of variables declaration//GEN-END:variables
     
