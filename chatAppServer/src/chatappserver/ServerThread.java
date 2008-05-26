@@ -358,14 +358,17 @@ public class ServerThread extends Thread {
                             String nick_requester = tmp.substring(tmp.indexOf(" ")); 
                             nick_requester = nick_requester.substring(0, nick_requester.indexOf(" ")); 
                             String user_receiver = message.substring("/TIM2 ".length() + nick_requester.length() +1); 
-                            String date = tmp.substring(nick_requester.length()+user_receiver.length()+2); 
+                            System.out.println(tmp); 
+                            System.out.println(nick_requester);
+                            System.out.println(user_receiver);
+                            String date = tmp.substring(nick_requester.length()+user_receiver.length()+1); 
                             
-                            sendSQLQuery.executeQuery("SELECT nick FROM users WHERE username = '" + user_receiver + "';");
+                            sendSQLQuery.executeQuery("SELECT nickname FROM users WHERE username = '" + user_receiver + "';");
                             (results = sendSQLQuery.getResultSet()).next();
                             String nick_receiver = results.getString("nickname");
                             results.close();
                             
-                            sendSQLQuery.executeQuery("SELECT ip FROM threadlookup WHERE username = (SELECT username FROM user WHERE nickname = '" + nick_requester + "');");
+                            sendSQLQuery.executeQuery("SELECT threadid FROM threadlookup WHERE username = (SELECT username FROM user WHERE nickname = '" + nick_requester + "');");
                             (results = sendSQLQuery.getResultSet()).next();
                             if (ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))) != null)
                                 ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))).send("TIM2 " + nick_receiver + " " + date + '\n'); 
@@ -377,9 +380,8 @@ public class ServerThread extends Thread {
                             results.close();
                             
                             String nick_target = message.substring("/TIME ".length());
-                            sendSQLQuery.executeQuery("SELECT ip FROM threadlookup WHERE username = (SELECT username FROM user WHERE nickname = '" + nick_target + "');");
+                            sendSQLQuery.executeQuery("SELECT threadid FROM threadlookup WHERE username = (SELECT username FROM user WHERE nickname = '" + nick_target + "');");
                             (results = sendSQLQuery.getResultSet()).next();
-                            //System.out.println(results.getString("threadid")); 
                             if (ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))) != null)
                                 ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))).send("/TIM0 " + nick_sender + "\n"); 
                             results.close(); 
