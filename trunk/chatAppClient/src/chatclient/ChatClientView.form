@@ -693,6 +693,7 @@
         </Container>
         <Container class="javax.swing.JTabbedPane" name="tbsChan">
           <Properties>
+            <Property name="autoscrolls" type="boolean" value="true"/>
             <Property name="name" type="java.lang.String" value="tbsChan" noResource="true"/>
           </Properties>
 
@@ -700,6 +701,7 @@
           <SubComponents>
             <Container class="javax.swing.JScrollPane" name="scrollChans">
               <Properties>
+                <Property name="autoscrolls" type="boolean" value="true"/>
                 <Property name="name" type="java.lang.String" value="scrollChans" noResource="true"/>
               </Properties>
               <AuxValues>

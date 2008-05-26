@@ -322,7 +322,7 @@ private String MD5Hash(String Input)
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btntNewAcc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btntGuest))))
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -341,7 +341,7 @@ private String MD5Hash(String Input)
                     .addComponent(btntGuest))
                 .addGap(9, 9, 9)
                 .addComponent(btntLogin)
-                .addContainerGap(116, Short.MAX_VALUE))
+                .addContainerGap(115, Short.MAX_VALUE))
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -400,7 +400,7 @@ private String MD5Hash(String Input)
             .addGroup(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(statusMessageLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 171, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 157, Short.MAX_VALUE)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusAnimationLabel)
@@ -703,8 +703,10 @@ private String MD5Hash(String Input)
         tblUsers.getColumnModel().getColumn(0).setResizable(false);
         tblUsers.getColumnModel().getColumn(0).setPreferredWidth(10);
 
+        tbsChan.setAutoscrolls(true);
         tbsChan.setName("tbsChan"); // NOI18N
 
+        scrollChans.setAutoscrolls(true);
         scrollChans.setName("scrollChans"); // NOI18N
 
         txtMessages.setFocusable(false);
