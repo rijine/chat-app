@@ -791,7 +791,6 @@ private String MD5Hash(String Input)
                             super.setComponent(PanChat);
                             PanChat.setVisible(true);                        // proceed to chat session
                             ChatClientChatHandler.connect(tfUserName.getText()); // initiate persistant connection for chatting. 
-                            userlistUpdate();                                    // update user list for default channel
                         } else {
                             System.out.println("Invalid error code..."); // the server returned an invalid reply... (shoulnd't happen) 
                         }
@@ -976,7 +975,6 @@ private String MD5Hash(String Input)
                 super.setComponent(PanChat);
                 PanChat.setVisible(true);                                                   // view chat panel
                 ChatClientChatHandler.connect(tfUsernameLogin.getText()); // on login, we establish a persistant connection for chatting purposes. 
-                userlistUpdate();                                                               // get userlist in default main channel. 
             } else {
                 System.out.println("Invalid error code...");
             }
@@ -1009,6 +1007,11 @@ private String MD5Hash(String Input)
     private void tfSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfSendActionPerformed
         try {
             String toSend = tfSend.getText(); 
+            
+            // MODIFIED //
+            if (toSend.isEmpty())
+                return; 
+            // END //
             if (toSend.startsWith("//")) {
                 toSend = '-'+toSend.substring(1);
                 ChatClientChatHandler.send(toSend + '\n');
@@ -1023,6 +1026,11 @@ private String MD5Hash(String Input)
                     tfSend.setEnabled(false); 
                     ChatClientChatHandler.disconnect();
                 }
+                // MODIFIED //
+                else if (toSend.toUpperCase().startsWith("/SEND ")) {
+                    ChatClientChatHandler.send(toSend + '\n');
+                }
+                // END //
                 else {
                     txtMessages.setText(txtMessages.getText() + "Invalid Command\n"); // display "invalid command" in the main text area. 
                 }
@@ -1080,7 +1088,7 @@ private String MD5Hash(String Input)
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
-    private javax.swing.JTable tblUsers;
+    public static javax.swing.JTable tblUsers;
     private javax.swing.JTabbedPane tbsChan;
     private javax.swing.JTextField tfEmail;
     private javax.swing.JTextField tfFName;
@@ -1104,26 +1112,4 @@ private String MD5Hash(String Input)
     private JDialog aboutBox;
     private JDialog settingsBox;
     private boolean bEmail = false, bUname = false, bPass = false, bNick = false, bFName = false, bLName = false;
-
-    private void userlistUpdate() throws FileNotFoundException, IOException {
-        userlistUpdate("main"); // initial call 
-    }
-    private void userlistUpdate(String channel) throws FileNotFoundException, IOException {
-        String users = null; 
-        users = sendMessageToServer("UPDA", channel); 
-        System.out.println(users);
-        users = users.substring("/UPDA:".length());
-        String nickname = "";
-        while (!users.isEmpty()) {
-            nickname = users.substring(0, users.indexOf(","));
-            users = users.substring(users.indexOf(",") + 1);
-            if (!nickname.isEmpty()) {
-                DefaultTableModel model = (DefaultTableModel) tblUsers.getModel();
-                model.insertRow(tblUsers.getRowCount(),new Object[]{null,nickname});
-                tblUsers.setModel(model);
-            }
-            else 
-                break;
-        }
-    }
 }
