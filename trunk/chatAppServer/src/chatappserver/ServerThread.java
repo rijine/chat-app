@@ -349,6 +349,42 @@ public class ServerThread extends Thread {
                     }
                     else if (message.equalsIgnoreCase("/PING")) {
                     }
+                    else if (message.toUpperCase().startsWith("/TIME") || message.startsWith("/TIM2 ")) {
+                        if (message.equalsIgnoreCase("/TIME")) { // user requested the time from the server 
+                            java.util.Date now = new java.util.Date(); 
+                            outToClient.writeBytes("/TIM1 " + String.valueOf(now)+'\n');
+                        } else if (message.startsWith("/TIM2 ")) { // user replied to a request from the server
+                            String tmp = message.substring("/TIM2 ".length());  // holds nickname that initiated the call, the receiver username, and the date. 
+                            String nick_requester = tmp.substring(tmp.indexOf(" ")); 
+                            nick_requester = nick_requester.substring(0, nick_requester.indexOf(" ")); 
+                            String user_receiver = message.substring("/TIM2 ".length() + nick_requester.length() +1); 
+                            String date = tmp.substring(nick_requester.length()+user_receiver.length()+2); 
+                            
+                            sendSQLQuery.executeQuery("SELECT nick FROM users WHERE username = '" + user_receiver + "';");
+                            (results = sendSQLQuery.getResultSet()).next();
+                            String nick_receiver = results.getString("nickname");
+                            results.close();
+                            
+                            sendSQLQuery.executeQuery("SELECT ip FROM threadlookup WHERE username = (SELECT username FROM user WHERE nickname = '" + nick_requester + "');");
+                            (results = sendSQLQuery.getResultSet()).next();
+                            if (ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))) != null)
+                                ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))).send("TIM2 " + nick_receiver + " " + date + '\n'); 
+                            results.close(); 
+                        } else { // user requested the time from another user... (server has to be the middle man) 
+                            sendSQLQuery.executeQuery("SELECT nickname FROM user WHERE username = '" + username + "';");
+                            (results = sendSQLQuery.getResultSet()).next();
+                            String nick_sender = results.getString("nickname");
+                            results.close();
+                            
+                            String nick_target = message.substring("/TIME ".length());
+                            sendSQLQuery.executeQuery("SELECT ip FROM threadlookup WHERE username = (SELECT username FROM user WHERE nickname = '" + nick_target + "');");
+                            (results = sendSQLQuery.getResultSet()).next();
+                            //System.out.println(results.getString("threadid")); 
+                            if (ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))) != null)
+                                ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))).send("/TIM0 " + nick_sender + "\n"); 
+                            results.close(); 
+                        }
+                    }
                     else if (message.length() >= "/WHOIS ".length() && message.substring(0, "/WHOIS ".length()).equalsIgnoreCase("/WHOIS ")) {
                         String reply = null;
                         sendSQLQuery.executeQuery("SELECT * FROM user WHERE nickname = '" + message.substring("/WHOIS ".length()) + "';");
@@ -365,7 +401,7 @@ public class ServerThread extends Thread {
                                 reply +="\nOnline: Yes\n"; 
                                         
                         } else {
-                            reply = "/WHOIS:NOTFOUND\n";
+                            reply = "/WHOIS:Nickname does not exist in database.\n";
                         }
                         outToClient.writeBytes(reply);     
                         results.close();

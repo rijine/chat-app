@@ -360,6 +360,7 @@ public class ChatAppServerView extends FrameView {
         lblUsersLimit.setName("lblUsersLimit"); // NOI18N
 
         tfUsersLimit.setText(resourceMap.getString("tfUsersLimit.text")); // NOI18N
+        tfUsersLimit.setEnabled(false);
         tfUsersLimit.setName("tfUsersLimit"); // NOI18N
 
         javax.swing.GroupLayout settingsPanelLayout = new javax.swing.GroupLayout(settingsPanel);
