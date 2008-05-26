@@ -189,6 +189,7 @@ private String MD5Hash(String Input)
      pass = hexString+"";
     }
     catch(NoSuchAlgorithmException nsae){
+        System.out.println("Coulnd't encrypt password... "); 
       }
     return hexString.toString(); 
 }
@@ -1008,10 +1009,8 @@ private String MD5Hash(String Input)
         try {
             String toSend = tfSend.getText(); 
             
-            // MODIFIED //
             if (toSend.isEmpty())
                 return; 
-            // END //
             if (toSend.startsWith("//")) {
                 toSend = '-'+toSend.substring(1);
                 ChatClientChatHandler.send(toSend + '\n');
@@ -1026,11 +1025,9 @@ private String MD5Hash(String Input)
                     tfSend.setEnabled(false); 
                     ChatClientChatHandler.disconnect();
                 }
-                // MODIFIED //
                 else if (toSend.toUpperCase().startsWith("/SEND ")) {
                     ChatClientChatHandler.send(toSend + '\n');
                 }
-                // END //
                 else {
                     txtMessages.setText(txtMessages.getText() + "Invalid Command\n"); // display "invalid command" in the main text area. 
                 }

@@ -167,7 +167,7 @@ public class ChatClientChatHandler {
             bSendingFile = true;
             fileLocation = message.substring("/SEND ".length(), message.length()-1); // store the file location of the file we want to send.
             // still need to send to server
-        } 
+        }
         else { // normal text
             try {
                 outToServer.writeBytes(message);
@@ -185,7 +185,7 @@ public class ChatClientChatHandler {
             if (clientSocket != null && clientSocket.isConnected()) {
                 send("/DISC");
                 connected = false; 
-                inFromServer.close(); 
+                // inFromServer.close(); 
                 outToServer.close(); 
                 clientSocket.close();
             }
