@@ -71,10 +71,12 @@ public class ChatClientChatHandler {
      */
     static void fileListener() {
         int port = 0; 
+        String targetpath; 
         try {
             BufferedReader inputStream = new BufferedReader(new FileReader("settings.ini"));
             inputStream.readLine(); 
             port = Integer.parseInt(inputStream.readLine())+1; // let the listening port be the same port that the server port is. 
+            targetpath = "RECEIVED_FILES";                                    // hardcoded for now 
             inputStream.close();
         } catch (IOException ex) {
             Logger.getLogger(ChatClientChatHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -91,7 +93,7 @@ public class ChatClientChatHandler {
         }
         while(connected) {
             try {
-                new ChatClientFileReceiver(welcomeSocket.accept()).start();
+                new ChatClientFileReceiver(welcomeSocket.accept(), targetpath).start();
             } catch (IOException ex) {
                 System.out.println("Could not accept connection on port "+String.valueOf(port)); 
                 Logger.getLogger(ChatClientChatHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -163,7 +165,7 @@ public class ChatClientChatHandler {
                 return;
             }
             bSendingFile = true;
-            fileLocation = message.substring("/SEND ".length()); // store the file location of the file we want to send.
+            fileLocation = message.substring("/SEND ".length(), message.length()-1); // store the file location of the file we want to send.
             // still need to send to server
         } 
         else { // normal text
