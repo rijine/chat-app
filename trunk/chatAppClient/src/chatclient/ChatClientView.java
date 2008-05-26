@@ -1026,8 +1026,9 @@ private String MD5Hash(String Input)
                     tfSend.setEnabled(false); 
                     ChatClientChatHandler.disconnect();
                 }
-                else if (toSend.toUpperCase().startsWith("/SEND ") || 
-                         toSend.substring(0, "/NICK ".length()).equalsIgnoreCase("/NICK ")) {
+                else if ((toSend.length() > "/SEND ".length() && toSend.toUpperCase().startsWith("/SEND ")) || 
+                         (toSend.length() > "/NICK ".length() && toSend.toUpperCase().startsWith("/NICK ")) ||
+                         (toSend.length() > "/WHOIS ".length() && toSend.toUpperCase().startsWith("/WHOIS "))) {
                     ChatClientChatHandler.send(toSend + '\n');
                 }
                 else {
