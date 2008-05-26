@@ -363,7 +363,7 @@ public class ServerThread extends Thread {
                             System.out.println(user_receiver);
                             String date = tmp.substring(nick_requester.length()+user_receiver.length()+1); 
                             
-                            sendSQLQuery.executeQuery("SELECT nickname FROM users WHERE username = '" + user_receiver + "';");
+                            sendSQLQuery.executeQuery("SELECT nickname FROM user WHERE username = '" + user_receiver + "';");
                             (results = sendSQLQuery.getResultSet()).next();
                             String nick_receiver = results.getString("nickname");
                             results.close();
