@@ -192,7 +192,7 @@ public class ServerThread extends Thread {
             }
             results.close();
             outToClient.writeBytes(reply + "\n");
-            outToClient.close();
+            //outToClient.close();
         } catch (IOException ex) {
             Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
@@ -200,12 +200,11 @@ public class ServerThread extends Thread {
         }
     }
     
-    private void chat(String username) throws SQLException {
+    private void chat(String username) throws SQLException, IOException {
         Statement sendSQLQuery = null;
         sendSQLQuery = connectToMysql.createStatement();
         BufferedReader inFromClient = null;
         
-        System.out.println(this.getId());
         this.setName(username);
         ChatAppServerView.llThreads.add(this, this.getId());
 
@@ -216,12 +215,46 @@ public class ServerThread extends Thread {
         
         ResultSet results = null;
         String nickname = null;
+        
+        
+        // On login update everyone's user list
+        sendSQLQuery.executeQuery("SELECT * FROM chan_main;");
+        results = sendSQLQuery.getResultSet();
+        String usernames = "";
+        String processUname = "";
+        // Get the list of all the usernames
+        while (results.next()) {
+            usernames += results.getString("usernames").toLowerCase() + ",";
+        }
+        
+        // Conver username to nickname
         sendSQLQuery.executeQuery("SELECT nickname FROM user WHERE username = '" + username.toLowerCase() + "';");
         results = sendSQLQuery.getResultSet();
         if (results.next())
             nickname = results.getString("nickname");
         results.close();
         
+        // Get threadid of each user, update the userlist and broadcast that a user joined the channel
+        while (!usernames.isEmpty()) {
+            processUname = usernames.substring(0, usernames.indexOf(","));
+            usernames = usernames.substring(usernames.indexOf(",") + 1);
+            if (!processUname.isEmpty()) {
+                sendSQLQuery.executeQuery("SELECT threadid FROM threadlookup WHERE username = '" + processUname + "';");
+                results = sendSQLQuery.getResultSet();
+                results.next();
+                if (ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))) != null) {
+                    try {
+                        ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))).updateList("UPDA:main");
+                        ServerThread.sleep(100);
+                        ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))).send(nickname + " has joined the channel.\n");
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        results.close();
+
         try {
             inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
             DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
@@ -233,13 +266,13 @@ public class ServerThread extends Thread {
                     // broadcast message to others.
                     sendSQLQuery.executeQuery("SELECT * FROM chan_main;");
                     results = sendSQLQuery.getResultSet();
-                    String usernames = "";
-                    String processUname = "";
+                    usernames = "";
+                    processUname = "";
                     // Get the list of all the usernames
                     while (results.next()) {
                         usernames += results.getString("usernames").toLowerCase() + ",";
                     }
-                    // Convert usernames to nicknames
+                    // Get threadid of each user
                     while (!usernames.isEmpty()) {
                         processUname = usernames.substring(0, usernames.indexOf(","));
                         usernames = usernames.substring(usernames.indexOf(",") + 1);
@@ -247,7 +280,8 @@ public class ServerThread extends Thread {
                             sendSQLQuery.executeQuery("SELECT threadid FROM threadlookup WHERE username = '" + processUname + "';");
                             results = sendSQLQuery.getResultSet();
                             results.next();
-                            ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))).send(nickname + ": " + message + "\n");
+                            if (ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))) != null)
+                                ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))).send(nickname + ": " + message + "\n");
                         }
                     }
                     results.close();   
@@ -256,6 +290,42 @@ public class ServerThread extends Thread {
                     if (message.equalsIgnoreCase("/DISC")) {
                         sendSQLQuery.execute("DELETE FROM threadlookup WHERE threadid = '"+ this.getId() +"';");
                         sendSQLQuery.execute("DELETE FROM chan_main WHERE usernames = '"+ username +"';");
+                        
+                        sendSQLQuery.executeQuery("SELECT * FROM chan_main;");
+                        results = sendSQLQuery.getResultSet();
+                        // Get the list of all the usernames
+                        while (results.next()) {
+                            usernames += results.getString("usernames").toLowerCase() + ",";
+                        }
+
+                        // Conver username to nickname
+                        sendSQLQuery.executeQuery("SELECT nickname FROM user WHERE username = '" + username.toLowerCase() + "';");
+                        results = sendSQLQuery.getResultSet();
+                        if (results.next())
+                            nickname = results.getString("nickname");
+                        results.close();
+
+                        // Get threadid of each user, update the userlist and broadcast that a user quit the channel
+                        while (!usernames.isEmpty()) {
+                            processUname = usernames.substring(0, usernames.indexOf(","));
+                            usernames = usernames.substring(usernames.indexOf(",") + 1);
+                            if (!processUname.isEmpty()) {
+                                sendSQLQuery.executeQuery("SELECT threadid FROM threadlookup WHERE username = '" + processUname + "';");
+                                results = sendSQLQuery.getResultSet();
+                                results.next();
+                                if (ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))) != null) {
+                                    try {
+                                        ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))).updateList("UPDA:main");
+                                        ServerThread.sleep(100);
+                                        ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))).send(nickname + " has quit the channel.\n");
+                                    } catch (InterruptedException ex) {
+                                        Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                }
+                            }
+                        }
+                        results.close();
+        
                         break; 
                     }
                     else if (message.equalsIgnoreCase("/PING")) {
@@ -287,7 +357,6 @@ public class ServerThread extends Thread {
     private void send(String message) throws IOException {
         DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
         outToClient.writeBytes(message);
-        outToClient.close();
     }
         
     @Override
