@@ -77,15 +77,15 @@ public class ChatAppServerUserList extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     public static void updateUserList(java.sql.Connection connectToMysql) throws SQLException {
-            Statement sendSQLQuery = null;
+           /* Statement sendSQLQuery = null;
             ResultSet results = null;
             sendSQLQuery = connectToMysql.createStatement();
             sendSQLQuery.executeQuery("SELECT username FROM threadlookup");
             results = sendSQLQuery.getResultSet();
-            listUsers.setText(null);
+            //listUsers.setText();
             while(results.next()) {
                 listUsers.setText(listUsers.getText() + results.getString("username") + "\n");
-            }
+            }*/
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeButton;

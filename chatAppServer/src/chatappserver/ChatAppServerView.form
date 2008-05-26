@@ -13,6 +13,7 @@
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="fileMenu">
           <Properties>
+            <Property name="mnemonic" type="int" value="102"/>
             <Property name="text" type="java.lang.String" resourceKey="fileMenu.text"/>
             <Property name="name" type="java.lang.String" value="fileMenu" noResource="true"/>
           </Properties>
@@ -37,6 +38,7 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="helpMenu">
           <Properties>
+            <Property name="mnemonic" type="int" value="104"/>
             <Property name="text" type="java.lang.String" resourceKey="helpMenu.text"/>
             <Property name="name" type="java.lang.String" value="helpMenu" noResource="true"/>
           </Properties>
@@ -73,7 +75,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="statusMessageLabel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="164" max="32767" attributes="0"/>
+                  <EmptySpace pref="150" max="32767" attributes="0"/>
                   <Component id="progressBar" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="statusAnimationLabel" min="-2" max="-2" attributes="0"/>
@@ -144,12 +146,12 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="tfDB" pref="66" max="32767" attributes="0"/>
-                      <Component id="btnExit1" alignment="1" pref="66" max="32767" attributes="1"/>
-                      <Component id="tfPassword" alignment="1" pref="66" max="32767" attributes="1"/>
-                      <Component id="tfUsername" alignment="0" pref="66" max="32767" attributes="1"/>
-                      <Component id="tfSQLip" alignment="0" pref="66" max="32767" attributes="1"/>
-                      <Component id="tfSQLport" alignment="0" pref="66" max="32767" attributes="1"/>
+                      <Component id="tfDB" pref="56" max="32767" attributes="0"/>
+                      <Component id="btnExit1" alignment="1" pref="56" max="32767" attributes="1"/>
+                      <Component id="tfPassword" alignment="1" pref="56" max="32767" attributes="1"/>
+                      <Component id="tfUsername" alignment="0" pref="56" max="32767" attributes="1"/>
+                      <Component id="tfSQLip" alignment="0" pref="56" max="32767" attributes="1"/>
+                      <Component id="tfSQLport" alignment="0" pref="56" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace min="-2" pref="95" max="-2" attributes="0"/>
               </Group>
@@ -188,7 +190,7 @@
                       <Component id="btnExit1" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnLogin" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="59" max="32767" attributes="0"/>
+                  <EmptySpace pref="69" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -276,7 +278,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnLogin">
           <Properties>
-            <Property name="mnemonic" type="int" value="108"/>
+            <Property name="mnemonic" type="int" value="103"/>
             <Property name="text" type="java.lang.String" resourceKey="btnLogin.text"/>
             <Property name="name" type="java.lang.String" value="btnLogin" noResource="true"/>
           </Properties>
