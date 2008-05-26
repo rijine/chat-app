@@ -7,6 +7,7 @@ package chatclient;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -156,19 +157,47 @@ public class ChatClientChatHandler {
                 }
                 else if (message.startsWith("/WHOIS:")) {
                     message = message.substring("/WHOIS:".length());
-                    //System.out.println(message);
                     ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + message + "\n");
                 }
                 else if (message.startsWith("/MSG: ")) {
                     String msg = message.substring("/MSG: ".length());
-                    ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "Received a PM from " + msg + "\n");
+                    System.out.println(msg);
+                    boolean isIgnored = false;
+                    File checkFile = new File ("ignore.ini");
+                    if (checkFile.exists()) {
+                        BufferedReader inputStream = new BufferedReader(new FileReader("ignore.ini"));
+                        String entry = null;
+                        while ((entry = inputStream.readLine()) != null && !isIgnored) {
+                            if (msg.indexOf(",") != -1) {
+                                if (entry.equals(msg.substring(0, msg.indexOf(","))))
+                                    isIgnored = true;
+                            }
+                        }
+                        inputStream.close();
+                    }
+                    if (!isIgnored)
+                        ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "Received a PM from " + msg + "\n");
                 }
-                else {
+                else 
                     System.out.println("Invalid code sent by server..."); // this should never happen since the server should always send valid codes. 
-                }
             }
-            else // server sent the client a text message by a user in a channel this user is in. 
-                ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + message + "\n");
+            else {// server sent the client a text message by a user in a channel this user is in. 
+                boolean isIgnored = false;
+                File checkFile = new File ("ignore.ini");
+                if (checkFile.exists()) {
+                    BufferedReader inputStream = new BufferedReader(new FileReader("ignore.ini"));
+                    String entry = null;
+                    while ((entry = inputStream.readLine()) != null && !isIgnored) {
+                        if (message.indexOf(":") != -1) {
+                            if (entry.equals(message.substring(0, message.indexOf(":"))))
+                                isIgnored = true;
+                        }
+                    }
+                    inputStream.close();
+                }
+                if (!isIgnored)
+                    ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + message + "\n");
+            }
         }
     }
     
