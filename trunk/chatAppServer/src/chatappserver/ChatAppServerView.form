@@ -73,7 +73,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="statusMessageLabel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="150" max="32767" attributes="0"/>
+                  <EmptySpace pref="164" max="32767" attributes="0"/>
                   <Component id="progressBar" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="statusAnimationLabel" min="-2" max="-2" attributes="0"/>
@@ -144,12 +144,12 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="tfDB" pref="56" max="32767" attributes="0"/>
-                      <Component id="btnExit1" alignment="1" pref="56" max="32767" attributes="1"/>
-                      <Component id="tfPassword" alignment="1" pref="56" max="32767" attributes="1"/>
-                      <Component id="tfUsername" alignment="0" pref="56" max="32767" attributes="1"/>
-                      <Component id="tfSQLip" alignment="0" pref="56" max="32767" attributes="1"/>
-                      <Component id="tfSQLport" alignment="0" pref="56" max="32767" attributes="1"/>
+                      <Component id="tfDB" pref="66" max="32767" attributes="0"/>
+                      <Component id="btnExit1" alignment="1" pref="66" max="32767" attributes="1"/>
+                      <Component id="tfPassword" alignment="1" pref="66" max="32767" attributes="1"/>
+                      <Component id="tfUsername" alignment="0" pref="66" max="32767" attributes="1"/>
+                      <Component id="tfSQLip" alignment="0" pref="66" max="32767" attributes="1"/>
+                      <Component id="tfSQLport" alignment="0" pref="66" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace min="-2" pref="95" max="-2" attributes="0"/>
               </Group>
@@ -188,7 +188,7 @@
                       <Component id="btnExit1" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnLogin" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="69" max="32767" attributes="0"/>
+                  <EmptySpace pref="59" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -416,9 +416,17 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" pref="273" max="32767" attributes="0"/>
+              <Group type="102" attributes="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="debugScrollPanel" pref="403" max="32767" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="160" max="-2" attributes="0"/>
+                          <Component id="showUserList" min="-2" pref="101" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -427,16 +435,17 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" pref="216" max="32767" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="debugScrollPanel" min="-2" pref="273" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
+                  <Component id="showUserList" pref="23" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+        <Container class="javax.swing.JScrollPane" name="debugScrollPanel">
           <Properties>
-            <Property name="name" type="java.lang.String" value="jScrollPane1" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="debugScrollPanel" noResource="true"/>
           </Properties>
           <AuxValues>
             <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
@@ -456,6 +465,14 @@
             </Component>
           </SubComponents>
         </Container>
+        <Component class="javax.swing.JButton" name="showUserList">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="chatappserver.ChatAppServerView" id="showUserList" methodName="showUserList"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="showUserList" noResource="true"/>
+          </Properties>
+        </Component>
       </SubComponents>
     </Container>
   </NonVisualComponents>

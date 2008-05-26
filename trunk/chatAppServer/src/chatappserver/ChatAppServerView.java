@@ -96,6 +96,16 @@ public class ChatAppServerView extends FrameView {
         }
         ChatAppServerApp.getApplication().show(aboutBox);
     }
+    
+    @Action
+    public void showUserList() {
+        if (userListBox == null) {
+            JFrame mainFrame = ChatAppServerApp.getApplication().getMainFrame();
+            userListBox = new ChatAppServerUserList(mainFrame);
+            userListBox.setLocationRelativeTo(mainFrame);
+        }
+        ChatAppServerApp.getApplication().show(userListBox);
+    }
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -136,8 +146,9 @@ public class ChatAppServerView extends FrameView {
         lblUsersLimit = new javax.swing.JLabel();
         tfUsersLimit = new javax.swing.JTextField();
         mainPanel = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        debugScrollPanel = new javax.swing.JScrollPane();
         txtDebug = new javax.swing.JTextArea();
+        showUserList = new javax.swing.JButton();
 
         menuBar.setName("menuBar"); // NOI18N
 
@@ -390,28 +401,37 @@ public class ChatAppServerView extends FrameView {
 
         mainPanel.setName("mainPanel"); // NOI18N
 
-        jScrollPane1.setName("jScrollPane1"); // NOI18N
+        debugScrollPanel.setName("debugScrollPanel"); // NOI18N
 
         txtDebug.setColumns(20);
         txtDebug.setRows(5);
         txtDebug.setName("txtDebug"); // NOI18N
-        jScrollPane1.setViewportView(txtDebug);
+        debugScrollPanel.setViewportView(txtDebug);
+
+        showUserList.setAction(actionMap.get("showUserList")); // NOI18N
+        showUserList.setName("showUserList"); // NOI18N
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(debugScrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE))
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addGap(160, 160, 160)
+                        .addComponent(showUserList, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(debugScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(17, 17, 17)
+                .addComponent(showUserList, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE))
         );
 
         setComponent(loginPanel);
@@ -505,7 +525,7 @@ public class ChatAppServerView extends FrameView {
     private javax.swing.JButton btnExit2;
     private javax.swing.JButton btnLogin;
     private javax.swing.JButton btnStart;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane debugScrollPanel;
     private javax.swing.JLabel lblDB;
     private javax.swing.JLabel lblPassword;
     private javax.swing.JLabel lblPort;
@@ -518,6 +538,7 @@ public class ChatAppServerView extends FrameView {
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JPanel settingsPanel;
+    private javax.swing.JButton showUserList;
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
@@ -538,6 +559,7 @@ public class ChatAppServerView extends FrameView {
     private int busyIconIndex = 0;
     private Connection connectToMysql; 
     private JDialog aboutBox;
+    private JDialog userListBox;
     private SwingWorker startServerWorker;
     public static LinkedList llThreads;
 }
