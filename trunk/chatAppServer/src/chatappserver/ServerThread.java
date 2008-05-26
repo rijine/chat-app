@@ -210,7 +210,7 @@ public class ServerThread extends Thread {
         ChatAppServerView.llThreads.add(this, this.getId());
 
         // register this thread with this username. 
-        sendSQLQuery.execute("INSERT into threadlookup(username, threadid) Values('"+username+"', '"+this.getId()+"');");
+        sendSQLQuery.execute("INSERT into threadlookup(username, threadid, ip) Values('"+username+"', '"+this.getId()+ "', '"+ connectionSocket.getInetAddress() +"');");
         // Insert the user into the channel
         sendSQLQuery.execute("INSERT into chan_main(usernames) Values('"+username+"');");
         ChatAppServerView.txtDebug.setText(ChatAppServerView.txtDebug.getText() + username + " is in chat.\n");
@@ -330,6 +330,16 @@ public class ServerThread extends Thread {
                         results.close();
         
                         break; 
+                    }
+                    else if (message.toUpperCase().startsWith("/SEND ")){
+                        String user_target = message.substring("/SEND ".length());
+                        sendSQLQuery.executeQuery("SELECT ip FROM threadlookup WHERE username = '" + user_target + "';");
+                        if (results.next()) {
+                        
+                        } else {
+                            System.out.println("user not found"); 
+                            outToClient.writeBytes("/SEND ERR"+user_target+'\n');
+                        }
                     }
                     else if (message.equalsIgnoreCase("/PING")) {
                     }
