@@ -18,7 +18,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ChatClientFileSender {
-
     private Socket senderSocket = null; 
     private DataOutputStream outToPeer; 
     private BufferedReader inFromPeer;
@@ -64,6 +63,7 @@ public class ChatClientFileSender {
             } 
             else 
                 ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "\nFile " + filename + " peer refused file transfer. \n\n"); 
+            buffStream.close();
             outToPeer.close();
             inFromPeer.close(); 
             senderSocket.close(); 
