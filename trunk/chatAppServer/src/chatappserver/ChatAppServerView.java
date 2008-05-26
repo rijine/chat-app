@@ -14,7 +14,6 @@ import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.net.Inet4Address;
 import java.net.ServerSocket;
 import javax.swing.Timer;
 import javax.swing.Icon;
@@ -433,7 +432,7 @@ public class ChatAppServerView extends FrameView {
                 // Create the first channel called 'main'
                 sendSQLQuery.execute("CREATE TABLE IF NOT EXISTS `chan_main` (`usernames` varchar(256) NOT NULL,PRIMARY KEY (`usernames`)) ENGINE=InnoDB DEFAULT CHARSET=latin1");
                 // create threadlookupid
-                sendSQLQuery.execute("CREATE TABLE IF NOT EXISTS `threadlookup` (`username` varchar(255) NOT NULL,`threadid` bigint(20) NOT NULL,PRIMARY KEY  (`threadid`),UNIQUE KEY `username` (`username`)) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+                sendSQLQuery.execute("CREATE TABLE IF NOT EXISTS `threadlookup` (`username` varchar(255) NOT NULL,`threadid` bigint(20) NOT NULL,`ip` varchar(256) NOT NULL,PRIMARY KEY  (`threadid`),UNIQUE KEY `username` (`username`)) ENGINE=InnoDB DEFAULT CHARSET=latin1");
                 // create table user
                 sendSQLQuery.execute("CREATE TABLE IF NOT EXISTS `user` (`username` varchar(256) NOT NULL,`loggedin` tinyint(1) NOT NULL default '0',`imageurl` varchar(256) default NULL,`fname` varchar(256) NOT NULL,`lname` varchar(256) NOT NULL,`password` varchar(256) NOT NULL,`nickname` varchar(256) NOT NULL,`email` varchar(256) NOT NULL,PRIMARY KEY  (`username`)) ENGINE=InnoDB DEFAULT CHARSET=latin1");
                 // insert default users
