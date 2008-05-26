@@ -355,12 +355,9 @@ public class ServerThread extends Thread {
                             outToClient.writeBytes("/TIM1 " + String.valueOf(now)+'\n');
                         } else if (message.startsWith("/TIM2 ")) { // user replied to a request from the server
                             String tmp = message.substring("/TIM2 ".length());  // holds nickname that initiated the call, the receiver username, and the date. 
-                            String nick_requester = tmp.substring(tmp.indexOf(" ")); 
-                            nick_requester = nick_requester.substring(0, nick_requester.indexOf(" ")); 
-                            String user_receiver = message.substring("/TIM2 ".length() + nick_requester.length() +1); 
-                            System.out.println(tmp); 
-                            System.out.println(nick_requester);
-                            System.out.println(user_receiver);
+                            String nick_requester = tmp.substring(tmp.indexOf(" ")+1); 
+                            String user_receiver = nick_requester.substring(0, nick_requester.indexOf(" ")); 
+                            nick_requester = tmp.substring(0, tmp.indexOf(" ")); 
                             String date = tmp.substring(nick_requester.length()+user_receiver.length()+1); 
                             
                             sendSQLQuery.executeQuery("SELECT nickname FROM user WHERE username = '" + user_receiver + "';");
