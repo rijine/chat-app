@@ -436,7 +436,7 @@ public class ChatAppServerView extends FrameView {
                 // create table user
                 sendSQLQuery.execute("CREATE TABLE IF NOT EXISTS `user` (`username` varchar(256) NOT NULL,`loggedin` tinyint(1) NOT NULL default '0',`imageurl` varchar(256) default NULL,`fname` varchar(256) NOT NULL,`lname` varchar(256) NOT NULL,`password` varchar(256) NOT NULL,`nickname` varchar(256) NOT NULL,`email` varchar(256) NOT NULL,PRIMARY KEY  (`username`)) ENGINE=InnoDB DEFAULT CHARSET=latin1");
                 // insert default users
-                sendSQLQuery.execute("INSERT INTO `user` (`username`, `loggedin`, `imageurl`, `fname`, `lname`, `password`, `nickname`, `email`) VALUES('kev1', 0, NULL, 'keva1', 'keva2', 'e10adc3949ba59abbe56e057f20f883e', 'kev1', 'kea@kea.com'),('kev2', 0, NULL, 'keab1', 'keab2', 'e10adc3949ba59abbe56e057f20f883e', 'kev2', 'kea2@kea2.com'),('test1', 0, NULL, 'first', 'last', 'e10adc3949ba59abbe56e057f20f883e', 'nick', 'test@asd.com');");
+                sendSQLQuery.execute("INSERT INTO `user` (`username`, `loggedin`, `imageurl`, `fname`, `lname`, `password`, `nickname`, `email`) VALUES('test2', 0, NULL, 'bla', 'bla', 'e10adc3949ba59abbe56e057f20f883e', 'test2', '123@456.com'),('test3', 0, NULL, 'asdasd', 'asdasd', 'e10adc3949ba59abbe56e057f20f883e', 'test3', '123@456.com'),('test1', 0, NULL, 'first', 'last', 'e10adc3949ba59abbe56e057f20f883e', 'nick', 'test@asd.com');");
                 
                 ResultSet results = null;
                 sendSQLQuery.executeQuery("SELECT name FROM channels WHERE name = 'main';");
