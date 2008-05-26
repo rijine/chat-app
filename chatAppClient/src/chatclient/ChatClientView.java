@@ -792,6 +792,7 @@ private String MD5Hash(String Input)
                             mainPanel.setVisible(true);                     // go back to main menu (login failed)
                         } else if (reply.equals("SUCC")) {
                             PanNewUser.setVisible(false);
+                            lblWelcome.setText("Welcome" + tfUserName.getText() + "!");
                             super.setComponent(PanChat);
                             PanChat.setVisible(true);                        // proceed to chat session
                             ChatClientChatHandler.connect(tfUserName.getText()); // initiate persistant connection for chatting. 
@@ -976,6 +977,7 @@ private String MD5Hash(String Input)
                 javax.swing.JOptionPane.showMessageDialog(super.getFrame(), "Invalid username/password...");
             } else if (reply.equals("SUCC")) {
                 mainPanel.setVisible(false);
+                lblWelcome.setText("Welcome " + tfUsernameLogin.getText() + "!");
                 super.setComponent(PanChat);
                 PanChat.setVisible(true);                                                   // view chat panel
                 ChatClientChatHandler.connect(tfUsernameLogin.getText()); // on login, we establish a persistant connection for chatting purposes. 

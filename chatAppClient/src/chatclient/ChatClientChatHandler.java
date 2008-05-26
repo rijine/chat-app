@@ -156,13 +156,12 @@ public class ChatClientChatHandler {
                 }
                 else if (message.startsWith("/WHOIS:")) {
                     message = message.substring("/WHOIS:".length());
-                    System.out.println(message);
+                    //System.out.println(message);
                     ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + message + "\n");
                 }
                 else if (message.startsWith("/MSG: ")) {
-                    System.out.println(message); 
                     String msg = message.substring("/MSG: ".length());
-                    ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "pm from "+msg.substring(msg.indexOf(" ")+1)+"\n");
+                    ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "Received a PM from " + msg + "\n");
                 }
                 else {
                     System.out.println("Invalid code sent by server..."); // this should never happen since the server should always send valid codes. 
@@ -198,13 +197,18 @@ public class ChatClientChatHandler {
         else if (message.toUpperCase().startsWith("/MSG ")) {
             String msg = message.substring("/MSG ".length());
             int rows[] = ChatClientView.tblUsers.getSelectedRows(); 
+            if (rows.length == 0) {
+                ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "You have not selected anyone\n");
+                return;
+            }
             String toSend = "/MSG "+String.valueOf(rows.length)+" "; // attach number of people we're sending the message to. 
             
             for (int i = 0; i < rows.length; i++) {
-                toSend += ChatClientView.tblUsers.getValueAt(i, 1)+" ";
+                toSend += ChatClientView.tblUsers.getValueAt(rows[i], 1)+" ";
             }
+            toSend = toSend.substring(0, toSend.length() - 1);
             toSend += ", "+msg; 
-            outToServer.writeBytes(toSend+'\n'); 
+            outToServer.writeBytes(toSend); 
         }
         else { // other text
             try {
