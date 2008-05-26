@@ -41,6 +41,7 @@ public class ChatAppServerUserList extends javax.swing.JDialog {
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(chatappserver.ChatAppServerApp.class).getContext().getActionMap(ChatAppServerUserList.class, this);
         closeButton.setAction(actionMap.get("closeUserList")); // NOI18N
+        closeButton.setMnemonic('c');
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(chatappserver.ChatAppServerApp.class).getContext().getResourceMap(ChatAppServerUserList.class);
         closeButton.setText(resourceMap.getString("closeButton.text")); // NOI18N
         closeButton.setName("closeButton"); // NOI18N

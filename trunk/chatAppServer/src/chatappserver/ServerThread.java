@@ -345,6 +345,7 @@ public class ServerThread extends Thread {
                         } else {
                             outToClient.writeBytes("/SEND ERR "+nick_target+'\n');
                         }
+                        results.close();
                     }
                     else if (message.equalsIgnoreCase("/PING")) {
                     }
@@ -428,6 +429,7 @@ public class ServerThread extends Thread {
                         
                         sendSQLQuery.executeQuery("SELECT nickname FROM user WHERE username = '" + username + "';"); 
                         results = sendSQLQuery.getResultSet(); 
+                        results.next(); 
                         String nick_sender = results.getString("nickname"); 
                         
                         for (int i = 0; i < numPM; i++) {
@@ -437,13 +439,14 @@ public class ServerThread extends Thread {
                             sendSQLQuery.executeQuery("SELECT threadid FROM threadlookup WHERE username = (SELECT username FROM user WHERE nickname = '" + nick_target + "');");
                             results = sendSQLQuery.getResultSet();
                             if (results.next()) {
-                                //ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))).send("/MSG: "+nick_sender+" "+pm);
+                                //ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))).send("/MSG: "+nick_sender+" "+pm); 
                             } else {
                                 // tell person who sent that the target just went offline... 
                                 // outToClient.writeBytes("/MSG ERR <nick>") -- and implement it on the client side. 
                             }
                             System.out.println("nick #: " + i + ": " + nick_target); 
                         }
+                        results.close();
                     }
                     else {
                         // invalid command
