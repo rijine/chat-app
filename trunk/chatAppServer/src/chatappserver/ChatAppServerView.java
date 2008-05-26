@@ -103,6 +103,7 @@ public class ChatAppServerView extends FrameView {
             JFrame mainFrame = ChatAppServerApp.getApplication().getMainFrame();
             userListBox = new ChatAppServerUserList(mainFrame);
             userListBox.setLocationRelativeTo(mainFrame);
+            return;
         }
         ChatAppServerApp.getApplication().show(userListBox);
     }
@@ -486,6 +487,7 @@ public class ChatAppServerView extends FrameView {
         // do we need this? we only create the server once... 
         settingsPanel.setVisible(false);
         super.setComponent(mainPanel);
+        showUserList();
         startServerWorker = new SwingWorker() {
             @Override
             protected Object doInBackground() throws Exception {
