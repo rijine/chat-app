@@ -299,6 +299,7 @@ private String MD5Hash(String Input)
 
         btntGuest.setMnemonic('s');
         btntGuest.setText(resourceMap.getString("btntGuest.text")); // NOI18N
+        btntGuest.setEnabled(false);
         btntGuest.setName("btntGuest"); // NOI18N
 
         tfPassLogin.setText(resourceMap.getString("tfPassLogin.text")); // NOI18N
@@ -325,7 +326,7 @@ private String MD5Hash(String Input)
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btntNewAcc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btntGuest))))
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -344,7 +345,7 @@ private String MD5Hash(String Input)
                     .addComponent(btntGuest))
                 .addGap(9, 9, 9)
                 .addComponent(btntLogin)
-                .addContainerGap(116, Short.MAX_VALUE))
+                .addContainerGap(115, Short.MAX_VALUE))
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -403,7 +404,7 @@ private String MD5Hash(String Input)
             .addGroup(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(statusMessageLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 171, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 157, Short.MAX_VALUE)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusAnimationLabel)
@@ -1037,13 +1038,17 @@ private String MD5Hash(String Input)
             else { // it's a command
                 // If we have time, change this so that it sends and waits for a reply from server in a seperate thread
                 if (toSend.equalsIgnoreCase("/DISC")) {
-                    tfSend.setEnabled(false); 
+                    //tfSend.setEnabled(false); 
+                    PanChat.setVisible(false);
+                    super.setComponent(mainPanel);
+                    mainPanel.setVisible(true); // simply go back to main menu
                     ChatClientChatHandler.disconnect();
                 }
                 else if (toSend.toUpperCase().startsWith("/SEND ") || 
                          toSend.toUpperCase().startsWith("/NICK ") ||
                          toSend.toUpperCase().startsWith("/WHOIS ") ||
-                         toSend.toUpperCase().startsWith("/MSG ")) {    
+                         toSend.toUpperCase().startsWith("/MSG ") ||
+                         toSend.toUpperCase().startsWith("/TIME") || toSend.toUpperCase().startsWith("/TIM0")) {    
                     ChatClientChatHandler.send(toSend + '\n');
                 }
                 else if (toSend.equalsIgnoreCase("/IGNORE")) {
@@ -1149,7 +1154,7 @@ private String MD5Hash(String Input)
     private javax.swing.JPasswordField tfPassword2;
     private javax.swing.JTextField tfSend;
     private javax.swing.JTextField tfUserName;
-    private javax.swing.JTextField tfUsernameLogin;
+    public static javax.swing.JTextField tfUsernameLogin;
     public static javax.swing.JTextPane txtMessages;
     // End of variables declaration//GEN-END:variables
 
