@@ -143,6 +143,15 @@ public class ChatClientChatHandler {
                         }
                     }
                 }
+                else if (message.startsWith("/NICK:")) {
+                    message = message.substring("/NICK:".length());
+                    if (message.startsWith("/EXISTS"))
+                        ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "Nickname already exists.\n");
+                    else {
+                        message = message.substring("/SUCC:".length());
+                    }
+                        
+                }
                 else {
                     System.out.println("Invalid code sent by server..."); // this should never happen since the server should always send vaid codes. 
                 }
