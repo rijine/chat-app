@@ -348,7 +348,7 @@ public class ServerThread extends Thread {
                     }
                     else if (message.equalsIgnoreCase("/PING")) {
                     }
-                    else if (message.substring(0, "/WHOIS ".length()).equalsIgnoreCase("/WHOIS ")) {
+                    else if (message.length() >= "/WHOIS ".length() && message.substring(0, "/WHOIS ".length()).equalsIgnoreCase("/WHOIS ")) {
                         String reply = null;
                         sendSQLQuery.executeQuery("SELECT * FROM user WHERE nickname = '" + message.substring("/WHOIS ".length()) + "';");
                         results = sendSQLQuery.getResultSet();
@@ -371,7 +371,7 @@ public class ServerThread extends Thread {
                     }
                     else if (message.equalsIgnoreCase("/TIME")) {
                     }
-                    else if (message.substring(0, "/NICK ".length()).equalsIgnoreCase("/NICK ")) {
+                    else if (message.length() >= "/NICK ".length() && message.substring(0, "/NICK ".length()).equalsIgnoreCase("/NICK ")) {
                         String reply = null;
                         sendSQLQuery.executeQuery("SELECT nickname FROM user WHERE nickname = '" + message.substring("/NICK ".length()) + "';");
                         results = sendSQLQuery.getResultSet();
@@ -423,20 +423,27 @@ public class ServerThread extends Thread {
                         strNumPM = strNumPM.substring(0, strNumPM.indexOf(" "));
                         int numPM = Integer.valueOf(strNumPM);
                         System.out.println(numPM); 
-                        String nicks = message.substring(message.indexOf(" ")+1, message.indexOf(",")); 
-                        System.out.println(nicks); 
+                        String nicks = message.substring(message.indexOf(" ", "/MSG ".length())+1, message.indexOf(",")); 
+                        System.out.println("nicks are: "+nicks); 
+                        
+                        sendSQLQuery.executeQuery("SELECT nickname FROM user WHERE username = '" + username + "');"); 
+                        results = sendSQLQuery.getResultSet(); 
+                        String nick_sender = results.getString("nickname"); 
                         
                         for (int i = 0; i < numPM; i++) {
-                            String nick_target = (nicks = nicks.substring(0, nicks.indexOf(" "))); 
-                            System.out.println("nick #: "+i+": "+nick_target); 
-                        }/*
-                        String nick_target = message.substring("/MSG ".length());
-                        results = sendSQLQuery.getResultSet();
-                        if (results.next()) { // username is online 
-                            outToClient.writeBytes("/MSG "+results.getString("ip")+'\n');
-                        } else { // username is not online
-                            outToClient.writeBytes("/SEND ERR "+nick_target+'\n');
-                        }*/
+                            String nick_target = nicks.substring(0, nicks.indexOf(" "));
+                            nicks = nicks.substring(nicks.indexOf(" ")+1); 
+                            // send message to nick_target
+                            sendSQLQuery.executeQuery("SELECT threadid FROM threadlookup WHERE username = (SELECT username FROM user WHERE nickname = '" + nick_target + "');");
+                            results = sendSQLQuery.getResultSet();
+                            if (results.next()) {
+                                //ChatAppServerView.llThreads.find(Long.parseLong(results.getString("threadid"))).send("/MSG: "+nick_sender+" "+pm);
+                            } else {
+                                // tell person who sent that the target just went offline... 
+                                // outToClient.writeBytes("/MSG ERR <nick>") -- and implement it on the client side. 
+                            }
+                            System.out.println("nick #: " + i + ": " + nick_target); 
+                        }
                     }
                     else {
                         // invalid command
