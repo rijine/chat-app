@@ -267,7 +267,7 @@ public class ServerThread extends Thread {
             String message;
             while (true) { 
                 message = inFromClient.readLine();  // get new message
-                if  (message.startsWith("-")) {
+                if  (message.startsWith("-")) { // message is normal text
                     message = message.substring(1);
                     // broadcast message to others.
                     sendSQLQuery.executeQuery("SELECT * FROM chan_main;");
@@ -306,7 +306,7 @@ public class ServerThread extends Thread {
                             usernames += results.getString("usernames").toLowerCase() + ",";
                         }
 
-                        // Conver username to nickname
+                        // Convert username to nickname
                         sendSQLQuery.executeQuery("SELECT nickname FROM user WHERE username = '" + username.toLowerCase() + "';");
                         results = sendSQLQuery.getResultSet();
                         if (results.next())
@@ -416,6 +416,27 @@ public class ServerThread extends Thread {
                             results.close();
                         }
                         outToClient.writeBytes(reply);
+                    }
+                    else if (message.toUpperCase().startsWith("/MSG ")) {
+                        String pm = message.substring(message.indexOf(","));
+                        String strNumPM = message.substring(message.indexOf(" ")+1); 
+                        strNumPM = strNumPM.substring(0, strNumPM.indexOf(" "));
+                        int numPM = Integer.valueOf(strNumPM);
+                        System.out.println(numPM); 
+                        String nicks = message.substring(message.indexOf(" ")+1, message.indexOf(",")); 
+                        System.out.println(nicks); 
+                        
+                        for (int i = 0; i < numPM; i++) {
+                            String nick_target = (nicks = nicks.substring(0, nicks.indexOf(" "))); 
+                            System.out.println("nick #: "+i+": "+nick_target); 
+                        }/*
+                        String nick_target = message.substring("/MSG ".length());
+                        results = sendSQLQuery.getResultSet();
+                        if (results.next()) { // username is online 
+                            outToClient.writeBytes("/MSG "+results.getString("ip")+'\n');
+                        } else { // username is not online
+                            outToClient.writeBytes("/SEND ERR "+nick_target+'\n');
+                        }*/
                     }
                     else {
                         // invalid command
