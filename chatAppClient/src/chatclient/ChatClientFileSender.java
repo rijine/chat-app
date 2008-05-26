@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,18 +22,15 @@ public class ChatClientFileSender {
     private Socket senderSocket = null; 
     private DataOutputStream outToPeer; 
     private BufferedReader inFromPeer;
-    private String receiverHostname; 
+    private InetAddress receiverIP; 
     private int receiverPort; 
     
-    ChatClientFileSender(String hostname, String filename) {
+    ChatClientFileSender(InetAddress IP, String filename) {
         BufferedReader inputStream = null;
         try {
             inputStream = new BufferedReader(new FileReader("settings.ini"));
             inputStream.readLine(); 
-            receiverHostname = hostname; 
-            //
-            receiverHostname = "localhost";
-            //
+            receiverIP = IP;
             receiverPort = Integer.parseInt(inputStream.readLine())+1;
             inputStream.close();
             
@@ -47,7 +45,7 @@ public class ChatClientFileSender {
                 return; 
             }
             
-            senderSocket = new Socket(receiverHostname, receiverPort); 
+            senderSocket = new Socket(receiverIP, receiverPort); 
             outToPeer = new DataOutputStream(senderSocket.getOutputStream());
             inFromPeer = new BufferedReader(new InputStreamReader(senderSocket.getInputStream()));
             

@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -55,7 +56,7 @@ public class ChatClientChatHandler {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
         };
-        
+
         clientSocket = new Socket(hostname, port);
         outToServer = new DataOutputStream(clientSocket.getOutputStream()); // tell server i want to establish a persistent connection
         outToServer.writeBytes("CHAT:"+username+"\n");
@@ -109,20 +110,25 @@ public class ChatClientChatHandler {
             String message = inFromServer.readLine(); // when socket closes, this will throw an exception? 
             
             //// we have to add something to check if data is simple chat data, or special commands.. (similar to what we did in server side -- we might have to also append '-' to msgs on the server side when sending) 
-            if (message.startsWith("/") || bSendingFile) { // if server sent a special command 
-                if (message.startsWith("/SEND") || bSendingFile) { // ----------   bSendingFile is tmp here and in the previous line, DONT FORGET TO REMOVE IT !!! 
+            if (message.startsWith("/")) { // if server sent a special command 
+                if (message.startsWith("/SEND")) { 
                     if (bSendingFile) {
-                        final String hostname = message.substring("/SEND ".length());//, message.indexOf(",")); // message now holds the IP address of the person to send to. 
-                        // we have to create a new thread to send the data through. 
-                        SwingWorker fileSender = new SwingWorker() {
-                            @Override
-                            protected Object doInBackground() throws Exception {
-                                new ChatClientFileSender(hostname, fileLocation); 
-                                throw new UnsupportedOperationException("Not supported yet.");
-                            }
-                        };
+                        if (message.substring("/SEND ".length()).startsWith("ERR")) {
+                            ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "User " + message.substring(message.indexOf("ERR")+3) + "is not logged in. \n");
+                        }
+                        else { // send file 
+                            final InetAddress IP = InetAddress.getByName(message.substring("/SEND ".length()+1)); // IP now holds the IP address of the person to send to. 
+                            // we have to create a new thread to send the data through. 
+                            SwingWorker fileSender = new SwingWorker() {
+                                @Override
+                                protected Object doInBackground() throws Exception {
+                                    new ChatClientFileSender(IP, fileLocation); 
+                                    throw new UnsupportedOperationException("Not supported yet.");
+                                }
+                            };
+                            fileSender.execute();
+                        }
                         bSendingFile = false; 
-                        fileSender.execute();
                     }
                     else // this won't happen anymore... 
                         ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "\nYou can only send one file at a time\n\n"); // deprecated
@@ -170,13 +176,19 @@ public class ChatClientChatHandler {
             return; 
         }
         if (message.toUpperCase().startsWith("/SEND ")) { // special case, we need to save the filename, so that when the server replies with the target address, we would still remember what to send. 
+            if (message.indexOf(" ", "/SEND ".length()) == -1) {
+                ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "You didn't specify which file to send. \n"); 
+                bSendingFile = false;
+                return; 
+            }
             if (bSendingFile) { // since we can only remember one location, we can't send another file beofre the first one establishes a connection with its target destination. 
                 ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "Cannot send files this fast...\n");
                 return;
             }
             bSendingFile = true;
             fileLocation = message.substring("/SEND ".length(), message.length()-1); // store the file location of the file we want to send.
-            // still need to send to server
+            String username = message.substring("/SEND ".length(), message.indexOf(" ", "/SEND ".length()));
+            outToServer.writeBytes("/SEND "+username+'\n'); // send to server /SEND username
         }
         else { // normal text
             try {
