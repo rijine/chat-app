@@ -6,4 +6,5 @@
 
 
 == Client ==
-  * add hotkeys 
+  * add list of commands (/cmd?)
+  * F1 for help
