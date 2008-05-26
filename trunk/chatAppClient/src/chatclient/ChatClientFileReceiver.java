@@ -34,11 +34,12 @@ public class ChatClientFileReceiver extends Thread{
     public void run() {
         System.out.println("Receiver socket........"); 
         try {
-            inFromPeer = new DataInputStream(new BufferedInputStream(connectionSocket.getInputStream()));
             outToPeer = new DataOutputStream(connectionSocket.getOutputStream());
-            inFromPeerMetaData = new BufferedReader(new InputStreamReader(System.in));
-            
+            inFromPeerMetaData = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
             String metadata = inFromPeerMetaData.readLine();
+            inFromPeerMetaData.close(); 
+            
+            inFromPeer = new DataInputStream(new BufferedInputStream(connectionSocket.getInputStream()));
             String filename = metadata.substring(0,metadata.indexOf("/"));
             ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "\nFile " + filename + " was offered to you, for free! \n\n"); 
             int fileSize = Integer.parseInt(metadata.substring(metadata.indexOf("/")+1));
@@ -52,7 +53,6 @@ public class ChatClientFileReceiver extends Thread{
             bus.close();
             ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "\nFile " + filename + " successfully received. \n\n"); 
             
-            inFromPeerMetaData.close(); 
             outToPeer.close(); 
             inFromPeer.close(); 
             connectionSocket.close();
