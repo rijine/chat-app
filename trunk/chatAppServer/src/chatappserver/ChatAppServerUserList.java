@@ -6,10 +6,13 @@
 
 package chatappserver;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import org.jdesktop.application.Action;
 
 public class ChatAppServerUserList extends javax.swing.JDialog {
-    
+
     /** Creates new form ChatAppServerUserList */
     public ChatAppServerUserList(java.awt.Frame parent) {
         super(parent);
@@ -73,12 +76,20 @@ public class ChatAppServerUserList extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    public static void updateUserList() {
-        System.out.println("I'm here");
+    public static void updateUserList(java.sql.Connection connectToMysql) throws SQLException {
+            Statement sendSQLQuery = null;
+            ResultSet results = null;
+            sendSQLQuery = connectToMysql.createStatement();
+            sendSQLQuery.executeQuery("SELECT username FROM threadlookup");
+            results = sendSQLQuery.getResultSet();
+            listUsers.setText(null);
+            while(results.next()) {
+                listUsers.setText(listUsers.getText() + results.getString("username") + "\n");
+            }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeButton;
-    private javax.swing.JTextPane listUsers;
+    private static javax.swing.JTextPane listUsers;
     private javax.swing.JScrollPane usersScrollPane;
     // End of variables declaration//GEN-END:variables
     
