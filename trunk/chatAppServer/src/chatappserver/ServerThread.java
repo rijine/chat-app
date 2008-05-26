@@ -426,7 +426,7 @@ public class ServerThread extends Thread {
                         String nicks = message.substring(message.indexOf(" ", "/MSG ".length())+1, message.indexOf(",")); 
                         System.out.println("nicks are: "+nicks); 
                         
-                        sendSQLQuery.executeQuery("SELECT nickname FROM user WHERE username = '" + username + "');"); 
+                        sendSQLQuery.executeQuery("SELECT nickname FROM user WHERE username = '" + username + "';"); 
                         results = sendSQLQuery.getResultSet(); 
                         String nick_sender = results.getString("nickname"); 
                         
