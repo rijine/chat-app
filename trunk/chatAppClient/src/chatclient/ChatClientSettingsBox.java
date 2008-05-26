@@ -1,7 +1,6 @@
 /*
  * ChatClientSettingsBox.java
  *
- * Created on May 15, 2008, 9:03 PM
  */
 
 package chatclient;
