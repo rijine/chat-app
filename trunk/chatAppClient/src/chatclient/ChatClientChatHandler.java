@@ -155,6 +155,23 @@ public class ChatClientChatHandler {
                     if (message.startsWith("/EXISTS"))
                         ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "Nickname already exists.\n");
                 }
+                else if (message.startsWith("/TIM")) {
+                    if (message.startsWith("/TIM0")) {           // receiving time request from server. 
+                        String nick_requester = message.substring("/TIM0 ".length());
+                        java.util.Date now = new java.util.Date(); 
+                        outToServer.writeBytes("/TIM2 "+ nick_requester + " " + ChatClientView.tfUsernameLogin.getText() + " " + String.valueOf(now) + '\n');
+                    } else if (message.startsWith("/TIM1 ")) { // receiving time from server. 
+                        String date = message.substring("/TIM1 ".length());
+                        ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "Time at server is: " + date + "\n");
+                    } else if (message.startsWith("/TIM2")) { // receiving time from another user. 
+                        String nick_target = message.substring("/TIM2 ".length()); 
+                        nick_target = nick_target.substring(0, nick_target.indexOf(" ")); 
+                        String date = message.substring("/TIM2".length() + nick_target.length() + 1);
+                        ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "Time at " + nick_target + " is:" + date + "\n");
+                    } else {
+                        System.out.println("Invalid code for /TIM received from server... "); 
+                    }
+                }
                 else if (message.startsWith("/WHOIS:")) {
                     message = message.substring("/WHOIS:".length());
                     ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + message + "\n");
@@ -238,7 +255,8 @@ public class ChatClientChatHandler {
             toSend = toSend.substring(0, toSend.length() - 1);
             toSend += ", "+msg; 
             outToServer.writeBytes(toSend); 
-        }
+        } else if (message.toUpperCase().startsWith("/TIME  ")) // two spaces --> not allowed. 
+            ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "Time should be followed by one space, then a nickname. (or just /time)\n");
         else { // other text
             try {
                 outToServer.writeBytes(message);
