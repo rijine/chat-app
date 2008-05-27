@@ -35,8 +35,8 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="ftfPort" max="32767" attributes="1"/>
-                          <Component id="txtServer" alignment="0" min="-2" pref="139" max="-2" attributes="1"/>
+                          <Component id="ftPort" max="32767" attributes="1"/>
+                          <Component id="tfServer" alignment="0" min="-2" pref="139" max="-2" attributes="1"/>
                       </Group>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
@@ -46,6 +46,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="saveButton" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <Component id="chkTimeStamps" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="22" max="32767" attributes="0"/>
           </Group>
@@ -62,12 +63,14 @@
                       <Component id="lblPort" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
-                      <Component id="txtServer" min="-2" max="-2" attributes="0"/>
+                      <Component id="tfServer" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="ftfPort" min="-2" max="-2" attributes="0"/>
+                      <Component id="ftPort" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace min="-2" pref="177" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="chkTimeStamps" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="153" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="cancelButton" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
                   <Component id="defaultButton" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
@@ -84,33 +87,46 @@
         <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
           <action class="chatclient.ChatClientSettingsBox" id="cancelSettingsBox" methodName="cancelSettingsBox"/>
         </Property>
+        <Property name="mnemonic" type="int" value="99"/>
         <Property name="text" type="java.lang.String" resourceKey="cancelButton.text"/>
         <Property name="name" type="java.lang.String" value="cancelButton" noResource="true"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lblServer">
       <Properties>
+        <Property name="displayedMnemonic" type="int" value="114"/>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="tfServer"/>
+        </Property>
         <Property name="text" type="java.lang.String" resourceKey="lblServer.text"/>
         <Property name="name" type="java.lang.String" value="lblServer" noResource="true"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lblPort">
       <Properties>
+        <Property name="displayedMnemonic" type="int" value="112"/>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="ftPort"/>
+        </Property>
         <Property name="text" type="java.lang.String" resourceKey="lblPort.text"/>
         <Property name="name" type="java.lang.String" value="lblPort" noResource="true"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="txtServer">
+    <Component class="javax.swing.JTextField" name="tfServer">
       <Properties>
-        <Property name="text" type="java.lang.String" resourceKey="txtServer.text"/>
-        <Property name="name" type="java.lang.String" value="txtServer" noResource="true"/>
+        <Property name="text" type="java.lang.String" resourceKey="tfServer.text"/>
+        <Property name="name" type="java.lang.String" value="tfServer" noResource="true"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JButton" name="defaultButton">
       <Properties>
         <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
           <action class="chatclient.ChatClientSettingsBox" id="defaultSettingsBox" methodName="defaultSettingsBox"/>
         </Property>
+        <Property name="mnemonic" type="int" value="100"/>
         <Property name="text" type="java.lang.String" resourceKey="defaultButton.text"/>
         <Property name="name" type="java.lang.String" value="defaultButton" noResource="true"/>
       </Properties>
@@ -120,21 +136,36 @@
         <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
           <action class="chatclient.ChatClientSettingsBox" id="saveSettings" methodName="saveSettings"/>
         </Property>
+        <Property name="mnemonic" type="int" value="115"/>
         <Property name="text" type="java.lang.String" resourceKey="saveButton.text"/>
         <Property name="name" type="java.lang.String" value="saveButton" noResource="true"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JFormattedTextField" name="ftfPort">
+    <Component class="javax.swing.JFormattedTextField" name="ftPort">
       <Properties>
         <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
           <Format format="#0" subtype="-1" type="0"/>
         </Property>
-        <Property name="text" type="java.lang.String" resourceKey="ftfPort.text"/>
-        <Property name="name" type="java.lang.String" value="ftfPort" noResource="true"/>
+        <Property name="text" type="java.lang.String" resourceKey="ftPort.text"/>
+        <Property name="name" type="java.lang.String" value="ftPort" noResource="true"/>
       </Properties>
       <Events>
-        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="ftfPortFocusLost"/>
+        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="ftPortFocusLost"/>
       </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="chkTimeStamps">
+      <Properties>
+        <Property name="mnemonic" type="int" value="116"/>
+        <Property name="selected" type="boolean" value="true"/>
+        <Property name="text" type="java.lang.String" resourceKey="chkTimeStamps.text"/>
+        <Property name="name" type="java.lang.String" value="chkTimeStamps" noResource="true"/>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
+      </AuxValues>
     </Component>
   </SubComponents>
 </Form>

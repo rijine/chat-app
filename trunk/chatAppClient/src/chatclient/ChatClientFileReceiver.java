@@ -41,7 +41,7 @@ public class ChatClientFileReceiver extends Thread{
             
             inFromPeer = new DataInputStream(new BufferedInputStream(connectionSocket.getInputStream()));
             String filename = metadata.substring(0,metadata.indexOf("/"));
-            ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "\nFile " + filename + " was offered to you, for free! \n\n"); 
+            ChatClientView.addMessage("File " + filename + " was offered to you, for free! "); 
             int fileSize = Integer.parseInt(metadata.substring(metadata.indexOf("/")+1));
             byte file[] =new byte[fileSize];
             // ask for user input, do you want to accept? popup or whatever... 
@@ -57,7 +57,7 @@ public class ChatClientFileReceiver extends Thread{
             BufferedOutputStream bus=new BufferedOutputStream(new FileOutputStream(new File(targetpath+"/"+filename)));
             bus.write(file,0,file.length);
             bus.close();
-            ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "\nFile " + filename + " successfully received. \n\n"); 
+            ChatClientView.addMessage("File " + filename + " successfully received. "); 
             
             inFromPeerMetaData.close();
             outToPeer.close(); 

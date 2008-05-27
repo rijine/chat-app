@@ -41,7 +41,7 @@ public class ChatClientFileSender {
             byte[] fileArray = new byte[(int)f.length()];
             
             if (!f.exists()) {
-                ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "\nFile not found\n\n");
+                ChatClientView.addMessage("File not found"); 
                 return; 
             }
             
@@ -55,13 +55,13 @@ public class ChatClientFileSender {
             outToPeer.writeBytes(filename+"/"+Integer.toString(fileArray.length) + '\n');     // tell target what the filename and the length are. 
             String ready = inFromPeer.readLine();  // wait for target to request start of transfer
             if (ready.equals("ACK")) { // client accepted the request 
-                ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "\nSending"+ filename + "("+fileArray.length+" bytes)"+"\n\n");
+                ChatClientView.addMessage("Sending"+ filename + "("+fileArray.length+" bytes)"); 
                 outToPeer.write(fileArray,0,fileArray.length); // send the file to the target. 
                 outToPeer.flush(); // just in case
-                ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "\nFile " + filename + " successfully sent. \n\n"); 
+                ChatClientView.addMessage("File " + filename + " successfully sent. "); 
             } 
             else 
-                ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "\nFile " + filename + " peer refused file transfer. \n\n"); 
+                ChatClientView.addMessage("File " + filename + " peer refused file transfer. "); 
             buffStream.close();
             outToPeer.close();
             inFromPeer.close(); 

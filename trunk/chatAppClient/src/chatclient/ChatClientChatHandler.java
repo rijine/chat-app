@@ -115,7 +115,7 @@ public class ChatClientChatHandler {
                 if (message.startsWith("/SEND")) {
                     if (bSendingFile) {
                         if (message.substring("/SEND ".length()).startsWith("ERR")) {
-                            ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "User " + message.substring(message.indexOf("ERR")+3) + "is not logged in. \n");
+                            ChatClientView.addMessage("User " + message.substring(message.indexOf("ERR")+3) + "is not logged in. ");
                         }
                         else { // send file 
                             final InetAddress IP = InetAddress.getByName(message.substring("/SEND ".length()+1)); // IP now holds the IP address of the person to send to. 
@@ -132,7 +132,7 @@ public class ChatClientChatHandler {
                         bSendingFile = false; 
                     }
                     else // this won't happen anymore... 
-                        ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "\nYou can only send one file at a time\n\n"); // deprecated
+                        ChatClientView.addMessage("You can only send one file at a time... "); // deprecated
                 }
                 // if server sends /UPDA:, update the user list
                 else if (message.startsWith("/UPDA:")) {
@@ -153,7 +153,7 @@ public class ChatClientChatHandler {
                 else if (message.startsWith("/NICK:")) {
                     message = message.substring("/NICK:".length());
                     if (message.startsWith("/EXISTS"))
-                        ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "Nickname already exists.\n");
+                        ChatClientView.addMessage("Nickname already exists.");
                 }
                 else if (message.startsWith("/TIM")) {
                     if (message.startsWith("/TIM0")) {           // receiving time request from server. 
@@ -162,19 +162,19 @@ public class ChatClientChatHandler {
                         outToServer.writeBytes("/TIM2 "+ nick_requester + " " + ChatClientView.tfUsernameLogin.getText() + " " + String.valueOf(now) + '\n');
                     } else if (message.startsWith("/TIM1 ")) { // receiving time from server. 
                         String date = message.substring("/TIM1 ".length());
-                        ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "Time at server is: " + date + "\n");
+                        ChatClientView.addMessage("Time at server is: " + date);
                     } else if (message.startsWith("/TIM2")) { // receiving time from another user. 
                         String nick_target = message.substring("/TIM2 ".length()); 
                         nick_target = nick_target.substring(0, nick_target.indexOf(" ")); 
                         String date = message.substring("/TIM2".length() + nick_target.length() + 1);
-                        ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "Time at " + nick_target + " is:" + date + "\n");
+                        ChatClientView.addMessage("Time at " + nick_target + " is:" + date); 
                     } else {
                         System.out.println("Invalid code for /TIM received from server... "); 
                     }
                 }
                 else if (message.startsWith("/WHOIS:")) {
                     message = message.substring("/WHOIS:".length());
-                    ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + message + "\n");
+                    ChatClientView.addMessage(message);
                 }
                 else if (message.startsWith("/MSG: ")) {
                     String msg = message.substring("/MSG: ".length());
@@ -193,7 +193,7 @@ public class ChatClientChatHandler {
                         inputStream.close();
                     }
                     if (!isIgnored)
-                        ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "Received a PM from " + msg + "\n");
+                        ChatClientView.addMessage("Received a PM from " + msg);
                 }
                 else 
                     System.out.println("Invalid code sent by server..."); // this should never happen since the server should always send valid codes. 
@@ -213,7 +213,7 @@ public class ChatClientChatHandler {
                     inputStream.close();
                 }
                 if (!isIgnored)
-                    ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + message + "\n");
+                    ChatClientView.addMessage(message); 
             }
         }
     }
@@ -227,12 +227,12 @@ public class ChatClientChatHandler {
         }
         if (message.toUpperCase().startsWith("/SEND ")) { // special case, we need to save the filename, so that when the server replies with the target address, we would still remember what to send. 
             if (message.indexOf(" ", "/SEND ".length()) == -1) { // user put: "/send nick", without specifying a filename
-                ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "You didn't specify which file to send. \n"); 
+                ChatClientView.addMessage("You didn't specify which file to send. "); 
                 bSendingFile = false;
                 return; 
             }
             if (bSendingFile) { // since we can only remember one location, we can't send another file beofre the first one establishes a connection with its target destination. 
-                ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "Cannot send files this fast...\n");
+                ChatClientView.addMessage("Cannot send files this fast...");
                 return;
             }
             bSendingFile = true;
@@ -244,7 +244,7 @@ public class ChatClientChatHandler {
             String msg = message.substring("/MSG ".length());
             int rows[] = ChatClientView.tblUsers.getSelectedRows(); 
             if (rows.length == 0) {
-                ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "You have not selected anyone\n");
+                ChatClientView.addMessage("You have not selected anyone. ");
                 return;
             }
             String toSend = "/MSG "+String.valueOf(rows.length)+" "; // attach number of people we're sending the message to. 
@@ -256,7 +256,7 @@ public class ChatClientChatHandler {
             toSend += ", "+msg; 
             outToServer.writeBytes(toSend); 
         } else if (message.toUpperCase().startsWith("/TIME  ")) // two spaces --> not allowed. 
-            ChatClientView.txtMessages.setText(ChatClientView.txtMessages.getText() + "Time should be followed by one space, then a nickname. (or just /time)\n");
+            ChatClientView.addMessage("Time should be followed by one space, then a nickname. (or just /time)");
         else { // other text
             try {
                 outToServer.writeBytes(message);
