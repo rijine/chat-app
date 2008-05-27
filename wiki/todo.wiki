@@ -8,8 +8,7 @@
 
 == Client ==
   * add list of commands (/cmd?)
-  * add option in settings.ini for file 
+  * add option in settings.ini for file saving locations... 
   * F1 for help
-  * timestamps (+ add option in settings.ini (checkbox) 
   * add grayed out radio buttons for broadcast mode or client/server mode. (focus on client server for now) 
   * file lock to only allow one client instance at a time
