@@ -27,6 +27,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Calendar;
 import java.util.regex.Pattern;
 import javax.swing.Timer;
 import javax.swing.Icon;
@@ -42,6 +43,7 @@ public class ChatClientView extends FrameView {
         super(app);
 
         initComponents();
+        readSettings(); 
         
         // status bar initialization - message timeout, idle icon and busy animation, etc
         ResourceMap resourceMap = getResourceMap();
@@ -118,13 +120,6 @@ public class ChatClientView extends FrameView {
     public String sendMessageToServer(String code, String message) throws FileNotFoundException, IOException {
         String query; 
         String reply = null; 
-        String hostname;
-        int port;
-        
-        BufferedReader inputStream = new BufferedReader(new FileReader("settings.ini"));    // takes the server IP and port from the settings.ini file at the client side. 
-        hostname = inputStream.readLine();
-        port = Integer.parseInt(inputStream.readLine());
-        inputStream.close();
         
         Socket clientSocket = null;
         try {
@@ -169,32 +164,83 @@ public class ChatClientView extends FrameView {
  * It is used to encrypt the passwords before sending it to the server. This provides security against evesdroppers, but also renders the server unable to know what the user password is. 
  * Therefore, the server administrator cannot access user accounts, since the passwords  will also be stored in the database as md5 hashes. 
  */
-private String MD5Hash(String Input)
-    {
-         String pass = Input;
-         
-         StringBuffer hexString = new StringBuffer();
-        byte[] defaultBytes = pass.getBytes();
-        try{
-         MessageDigest algorithm = MessageDigest.getInstance("MD5");
-         algorithm.reset();
-         algorithm.update(defaultBytes);
-         byte messageDigest[] = algorithm.digest();
+private String MD5Hash(String Input) {
+    String pass = Input;
+    StringBuffer hexString = new StringBuffer();
+    byte[] defaultBytes = pass.getBytes();
+    try{
+        MessageDigest algorithm = MessageDigest.getInstance("MD5");
+        algorithm.reset();
+        algorithm.update(defaultBytes);
+        byte messageDigest[] = algorithm.digest();
 
-         for (int i=0;i<messageDigest.length;i++) {
+        for (int i=0;i<messageDigest.length;i++) {
             String hex = Integer.toHexString(0xFF & messageDigest[i]); 
             if(hex.length()==1)
-            hexString.append('0');
-
+                hexString.append('0');
             hexString.append(hex);
-     }
-     pass = hexString+"";
+        }
+        pass = hexString+"";
     }
     catch(NoSuchAlgorithmException nsae){
         System.out.println("Coulnd't encrypt password... "); 
-      }
+    }
     return hexString.toString(); 
 }
+    /*
+    * This function reads the settings file and sets the values of variables accordingly. 
+    */
+    public static void readSettings() {
+        // actually, this function shoulnd't read from the settings file, it should read from the fields in the settings panel, like the following three lines do... 
+        // however the settings box isn't created yet... how did you fix that when you encountered this problem earlier? 
+        // (we don't want to read from file in case file doesn't exist for example, the settings box fixes that on creation...) etc
+        /*
+        hostname = ChatClientSettingsBox.tfServer.getText(); 
+        port = Integer.valueOf(ChatClientSettingsBox.ftPort.getText()); 
+        timeStamps = ChatClientSettingsBox.chkTimeStamps.isSelected();
+      */
+      // remove the code that follows after the previous one works.       
+            BufferedReader inputStream = null;    // takes the server IP and port from the settings.ini file at the client side. 
+        try {
+            inputStream = new BufferedReader(new FileReader("settings.ini"));
+            hostname = inputStream.readLine();
+            port = Integer.parseInt(inputStream.readLine());
+            timeStamps = Boolean.parseBoolean(inputStream.readLine());
+        } catch (IOException ex) {
+            javax.swing.JOptionPane.showMessageDialog(null, "Invalid settings file...", "Invalid settings!", javax.swing.JOptionPane.ERROR_MESSAGE);
+            Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NumberFormatException ex) {
+            javax.swing.JOptionPane.showMessageDialog(null, "Invalid settings file... NumberFormatException was raised! ", "Invalid settings!", javax.swing.JOptionPane.ERROR_MESSAGE);
+            Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                inputStream.close();
+            } catch (IOException ex) {
+                Logger.getLogger(ChatClientView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } // end remove code.. 
+    }
+
+    /* This function updates the main window with new data (text). 
+    *  Will be expanded to support channels etc.
+     * Takes as first parameter the text to add, and as second parameters a boolean which, when set, forces removal of timestamps. 
+    */ 
+    public static void addMessage(String newText) {
+        addMessage(newText, false); 
+    }
+    public static void addMessage(String newText, boolean noStamps) {
+        //we might want to set max scrollback option. 
+        java.util.Date now = new java.util.Date(); 
+        int hours = now.getHours();
+        int minutes = now.getMinutes(); 
+        int seconds = now.getSeconds(); 
+        //note we can't use Calendar.get(Calendar.MINUTES) etc, because they're not static.... think of a workaround... for now, just stick to the deprecated functions.. 
+        if (!timeStamps || noStamps) // if options specify not to use timestamps, or if noStamps was forced, don't put timestamps. 
+            txtMessages.setText(txtMessages.getText() + newText +"\n");
+        else 
+            txtMessages.setText(txtMessages.getText() + hours + ":" + minutes + ":" + seconds + ":" + " " + newText +"\n");
+    }
+    
 
  // <editor-fold defaultstate="collapsed" desc="etc">
     /** This method is called from within the constructor to
@@ -355,6 +401,7 @@ private String MD5Hash(String Input)
         fileMenu.setName("fileMenu"); // NOI18N
 
         settingsMenuItem.setAction(actionMap.get("showSettingsBox")); // NOI18N
+        settingsMenuItem.setMnemonic('s');
         settingsMenuItem.setText(resourceMap.getString("settingsMenuItem.text")); // NOI18N
         settingsMenuItem.setName("settingsMenuItem"); // NOI18N
         settingsMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -1054,7 +1101,7 @@ private String MD5Hash(String Input)
                 else if (toSend.equalsIgnoreCase("/IGNORE")) {
                     int rows[] = ChatClientView.tblUsers.getSelectedRows(); 
                     if (rows.length == 0) {
-                        txtMessages.setText(txtMessages.getText() + "You have not selected anyone\n");
+                        addMessage("You have not selected anyone"); 
                         return;
                     }
                     PrintWriter outputStream = new PrintWriter(new FileWriter("ignore.ini"));
@@ -1067,7 +1114,7 @@ private String MD5Hash(String Input)
                 else if (toSend.equalsIgnoreCase("/UNIGNORE")) {
                     int rows[] = ChatClientView.tblUsers.getSelectedRows(); 
                     if (rows.length == 0) {
-                        txtMessages.setText(txtMessages.getText() + "You have not selected anyone\n");
+                        addMessage("You have not selected anyone"); 
                         return;
                     }
                     PrintWriter outputStream = new PrintWriter(new FileWriter("ignoreTemp.ini"));
@@ -1087,7 +1134,7 @@ private String MD5Hash(String Input)
                     }
                 }
                 else {
-                    txtMessages.setText(txtMessages.getText() + "Invalid Command\n"); // display "invalid command" in the main text area. 
+                    addMessage("Invalid Command"); // display "invalid command" in the main text area. 
                 }
             }
             tfSend.setText(""); // clear text field
@@ -1163,8 +1210,12 @@ private String MD5Hash(String Input)
     private final Icon idleIcon;
     private final Icon[] busyIcons = new Icon[15];
     private int busyIconIndex = 0;
-
+    
     private JDialog aboutBox;
     private JDialog settingsBox;
+    private static String hostname;
+    private static int port; 
+    
     private boolean bEmail = false, bUname = false, bPass = false, bNick = false, bFName = false, bLName = false;
+    private static boolean timeStamps = false; 
 }
