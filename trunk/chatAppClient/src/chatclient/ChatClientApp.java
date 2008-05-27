@@ -4,6 +4,9 @@
 
 package chatclient;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 
@@ -16,7 +19,11 @@ public class ChatClientApp extends SingleFrameApplication {
      * At startup create and show the main frame of the application.
      */
     @Override protected void startup() {
-        show(new ChatClientView(this));
+        try {
+            show(new ChatClientView(this));
+        } catch (IOException ex) {
+            Logger.getLogger(ChatClientApp.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
