@@ -27,7 +27,6 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Calendar;
 import java.util.regex.Pattern;
 import javax.swing.Timer;
 import javax.swing.Icon;
@@ -39,10 +38,11 @@ import javax.swing.JFrame;
  * The application's main frame.
  */
 public class ChatClientView extends FrameView {
-    public ChatClientView(SingleFrameApplication app) {
+    public ChatClientView(SingleFrameApplication app) throws IOException {
         super(app);
 
         initComponents();
+        showSettingsBox();
         readSettings(); 
         
         // status bar initialization - message timeout, idle icon and busy animation, etc
@@ -155,6 +155,7 @@ public class ChatClientView extends FrameView {
             JFrame mainFrame = ChatClientApp.getApplication().getMainFrame();
             settingsBox = new ChatClientSettingsBox(mainFrame);
             settingsBox.setLocationRelativeTo(mainFrame);
+            return;
         }
         ChatClientApp.getApplication().show(settingsBox);
     }
