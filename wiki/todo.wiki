@@ -24,3 +24,5 @@
   * add user privileges similar to ops in IRC (owndership rights to channels etc) 
   * add ability to kick/ban user
   * make ignoring IP based as opposed to nickname based. 
+  * add /me
+  * add /ping
